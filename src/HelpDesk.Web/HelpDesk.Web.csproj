@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Account\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
