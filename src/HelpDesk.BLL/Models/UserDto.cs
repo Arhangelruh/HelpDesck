@@ -3,7 +3,7 @@
     /// <summary>
     /// Transport model from User profile
     /// </summary>
-    class UserDto
+    public class UserDto
     {
         /// <summary>
         /// Active Directory Name 

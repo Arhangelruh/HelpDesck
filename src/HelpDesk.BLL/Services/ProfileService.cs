@@ -1,21 +1,19 @@
-﻿using HelpDesk.BLL.Models;
-using HelpDesk.Common.Interfaces;
+﻿using HelpDesk.BLL.Interfaces;
+using HelpDesk.BLL.Models;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.DirectoryServices;
-
 
 namespace HelpDesk.BLL.Services
 {
     /// <inheritdoc cref="IProfileService<T>"/>
-    class ProfileService : IProfileService
+    public class ProfileService : IProfileService
     {
         private readonly UserManager<User> _userManager;
 
-        public ProfileService (UserManager<User> userManager)
+        public ProfileService(UserManager<User> userManager)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
@@ -31,6 +29,8 @@ namespace HelpDesk.BLL.Services
 
             search.SearchScope = SearchScope.Subtree;
 
+            try
+            {
                 foreach (SearchResult result in search.FindAll())
                 {
                     var entry = result.GetDirectoryEntry();
@@ -46,9 +46,13 @@ namespace HelpDesk.BLL.Services
                         //    NumberFull = entry.Properties["telephoneNumber"].Value != null ? long.Parse(entry.Properties["telephoneNumber"].Value.ToString()) : 0,
                         MobileNumber = entry.Properties["mobile"].Value != null ? entry.Properties["mobile"].Value.ToString() : "NoN",
                         NumberFull = entry.Properties["telephoneNumber"].Value != null ? entry.Properties["telephoneNumber"].Value.ToString() : "NoN",
-                    });                
+                    });
                 }
-            return users;
+                return users;
+            }
+            catch {
+                return users;
+            }
         }
     }
 }
