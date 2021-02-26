@@ -1,48 +1,63 @@
 ﻿namespace HelpDesk.BLL.Models
 {
     /// <summary>
-    /// Transport model from User profile
+    /// Transport model from User profile.
     /// </summary>
     public class UserDto
     {
         /// <summary>
-        /// Active Directory Name 
+        /// Login. 
+        /// </summary>
+        public string Login { get; set; }
+
+        /// <summary>
+        /// Active Directory Name. 
         /// </summary>
         public string ADName { get; set; }
 
         /// <summary>
-        /// First name
+        /// First name.
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Last name
+        /// Last name.
         /// </summary>
         public string LastName { get; set; }
 
         /// <summary>
-        /// Display name
+        /// Display name.
         /// </summary>
         public string DisplayName { get; set; }
 
         /// <summary>
-        /// Description
+        /// Description.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// EMail
+        /// EMail.
         /// </summary>
         public string EMail { get; set; }
 
         /// <summary>
-        ///  Phone
+        ///  Phone.
         /// </summary>
         public string NumberFull { get; set; }
 
         /// <summary>
-        /// Mobile Phone
+        /// Mobile Phone.
         /// </summary>
         public string MobileNumber { get; set; }
+
+        /// <summary>
+        /// User admin or no.
+        /// </summary>
+        public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// user SID in AD. 
+        /// </summary>
+        public string UserSID { get; set; }
     }
 }

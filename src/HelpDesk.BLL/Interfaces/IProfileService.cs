@@ -5,6 +5,10 @@ namespace HelpDesk.BLL.Interfaces
 {
     public interface IProfileService
     {
-        public List<UserDto> ADOrgStructSync();
+        /// <summary>
+        /// Get users from Active Directory.
+        /// </summary>
+        /// <returns></returns>
+        public List<UserDto> ADGetUsers();
     }
 }
