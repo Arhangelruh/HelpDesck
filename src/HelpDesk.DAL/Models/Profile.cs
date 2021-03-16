@@ -35,6 +35,11 @@ namespace HelpDesk.DAL.Models
         public string MiddleName { get; set; }
 
         /// <summary>
+        /// Sid from users AD
+        /// </summary>
+        public string UserSid { get; set; }
+
+        /// <summary>
         /// Navigation to User problem.
         /// </summary>
         public ICollection<UserProblem> UsersProblem { get; set; }

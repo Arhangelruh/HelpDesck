@@ -26,6 +26,11 @@
         public string LastName { get; set; }
 
         /// <summary>
+        /// Last name.
+        /// </summary>
+        public string MiddleName { get; set; }
+
+        /// <summary>
         /// Display name.
         /// </summary>
         public string DisplayName { get; set; }

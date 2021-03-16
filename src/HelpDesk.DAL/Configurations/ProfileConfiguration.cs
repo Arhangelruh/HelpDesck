@@ -31,6 +31,9 @@ namespace HelpDesk.DAL.Configurations
             builder.Property(profile => profile.MiddleName)
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium);
 
+            builder.Property(profile => profile.UserSid)
+                .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium);
+
             builder.HasOne(profile => profile.User)
                 .WithOne(user => user.Profile)
                 .HasForeignKey<Profile>(profile => profile.UserId)
