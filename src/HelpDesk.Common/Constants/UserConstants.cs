@@ -6,6 +6,11 @@
     public class UserConstants
     {
         /// <summary>
+        /// First admin.
+        /// </summary>
+        public const string FirstAdmin = "Sysadmin";
+
+        /// <summary>
         /// User first password.
         /// </summary>
         public const string FirstPassword = "Qwerty123*";

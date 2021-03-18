@@ -1,5 +1,7 @@
-﻿using HelpDesk.DAL.Models;
+﻿using HelpDesk.Common.Interfaces;
+using HelpDesk.DAL.Models;
 using HelpDesk.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,16 +13,18 @@ namespace HelpDesk.Web.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IEmailService _emailService;
 
         /// <summary>
         /// Сonstructor.
         /// </summary>
         /// <param name="userManager"></param>
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailService emailService)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
         }
 
         /// <summary>
@@ -127,6 +131,47 @@ namespace HelpDesk.Web.Controllers
                 {
                     ModelState.AddModelError(string.Empty, "Пользователь не найден");
                 }
+            }
+            return View(model);
+        }
+
+        /// <summary>
+        /// Forgote password model.
+        /// </summary>
+        /// <returns>Viwe from password request</returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Request password recovery
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Result password recovery</returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword",
+                    "Account",
+                    new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
+
+                await _emailService.SendEmailAsync(model.Email, "Reset Password",
+                    $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                return View("ForgotPasswordConfirmation");
             }
             return View(model);
         }
