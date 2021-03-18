@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.11.1" />
     <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
   </ItemGroup>
 
