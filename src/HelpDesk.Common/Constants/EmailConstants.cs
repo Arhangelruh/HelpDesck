@@ -30,6 +30,6 @@
         /// <summary>
         /// SMTP port
         /// </summary>
-        public const int Port = 000;
+        public const int Port = 500;
     }
 }
