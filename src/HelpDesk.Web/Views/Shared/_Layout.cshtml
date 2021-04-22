@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/css/app.css" rel="stylesheet" asp-append-version="true" />
+    @RenderSection("css", false)
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header">
+                <a class="logo" asp-controller="Home" asp-action="Index">Help Desk</a>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link active">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">FAQ</a>
+                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Profile" asp-action="Profile">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Logout">Login</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                          <form method="get" asp-controller="Account" asp-action="Login">
+                          <button class="nav-item" type="submit" title="Вход">Вход</button>
+                          </form>                    
+                        </li>
+                    }
+                </ul>
+                <div class="header-image"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>

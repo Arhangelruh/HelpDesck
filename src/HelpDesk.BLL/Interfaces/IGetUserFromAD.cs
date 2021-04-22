@@ -6,7 +6,7 @@ namespace HelpDesk.BLL.Interfaces
     /// <summary>
     /// Service from get user in active directory.
     /// </summary>
-    interface IGetUserFromAD
+    public interface IGetUserFromAD
     {
         /// <summary>
         /// Get users from Active Directory.

@@ -1,3 +1,7 @@
+using HelpDesk.BLL.Repository;
+using HelpDesk.BLL.Services;
+using HelpDesk.BLL.Interfaces;
+using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Context;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +24,11 @@ namespace HelpDesk.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IProfileService, ProfileService>();
+
             services.AddDbContext<HelpDeskContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
 

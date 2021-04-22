@@ -7,7 +7,7 @@ using System.Text;
 namespace HelpDesk.BLL.Services
 {
     /// <inheritdoc cref="IGetUserFromAD<T>"/>
-    class GetUserFromAD
+    public class GetUserFromAD
     {
         public List<UserDto> ADGetUsers()
         {
