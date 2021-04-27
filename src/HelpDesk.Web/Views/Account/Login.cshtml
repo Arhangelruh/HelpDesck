@@ -4,16 +4,16 @@
       asp-route-returnUrl="@Model.ReturnUrl">
     <div>
         <h2>Вход в приложение</h2>
-        <div asp-validation-summary="ModelOnly"></div>
+        <div asp-validation-summary="ModelOnly" class="text_error"></div>
         <div class="formslabel">
             <label asp-for="UserName"></label><br />
-            <input asp-for="UserName" />
-            <span asp-validation-for="UserName"></span>
+            <input asp-for="UserName" /><br />
+            <span asp-validation-for="UserName" class="text_error"></span>
         </div>
         <div class="formslabel">
             <label asp-for="Password"></label><br />
-            <input asp-for="Password" />
-            <span asp-validation-for="Password"></span>
+            <input asp-for="Password" /><br />
+            <span asp-validation-for="Password" class="text_error"></span>
         </div>
         <div class="forms__bottom">
             <div class="formslabel">
@@ -21,7 +21,7 @@
                 <input asp-for="RememberMe" />
             </div>
             <div class="formslabel">
-                <input class="button" type="submit" value="Войти" />
+                <input class="button_classic" type="submit" value="Войти" />
             </div>
             <div>
             </div>

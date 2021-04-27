@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using HelpDesk.Common.Constants;
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -22,21 +24,33 @@
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Profile" asp-action="Profile">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Logout">Login</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                          <form method="get" asp-controller="Account" asp-action="Login">
-                          <button class="nav-item" type="submit" title="Вход">Вход</button>
-                          </form>                    
-                        </li>
-                    }
+                        if (User.IsInRole(UserConstants.AdminRole))
+                {
+                <li class="nav-item">
+                    <form method="post" asp-controller="Account" asp-action="Logout">
+                        <button class="nav-item noClick" type="submit" title="Вход">Пользователи</button>
+                    </form>
+                </li>
+                }
+                            <li class="nav-item">
+                                <form method="get" asp-controller="Profile" asp-action="Profile">
+                                    <button class="nav-item noClick" type="submit" title="Профиль">Профиль</button>
+                                </form>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" asp-controller="Account" asp-action="Logout">
+                                    <button class="nav-item noClick" type="submit" title="Выход">Выход</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <form method="get" asp-controller="Account" asp-action="Login">
+                                    <button class="nav-item noClick" type="submit" title="Вход">Вход</button>
+                                </form>
+                            </li>
+                        }
                 </ul>
                 <div class="header-image"></div>
             </div>

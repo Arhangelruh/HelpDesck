@@ -269,13 +269,24 @@ namespace HelpDesk.BLL.Services
                 return new ProfileDto();
             }
 
+            var user = await _userManager.FindByIdAsync(userId);
+            string mobileNumber = user.PhoneNumber;
+            string Email = user.Email;
+            if (user == null)
+            {
+                mobileNumber = "Null";
+                Email = "Null";
+            }
+
             var profile = new ProfileDto
             {
                 UserId = profileDataModel.UserId,
                 FirstName = profileDataModel.FirstName,
                 LastName = profileDataModel.LastName,
                 MiddleName = profileDataModel.MiddleName,
-                UserSid = profileDataModel.UserSid
+                UserSid = profileDataModel.UserSid,
+                MobileNumber = mobileNumber,
+                Email = Email
             };
             profile.Id = profileDataModel.Id;
             return profile;

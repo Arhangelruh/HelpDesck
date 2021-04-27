@@ -10,7 +10,7 @@ namespace HelpDesk.Web.ViewModels
         /// <summary>
         /// Email.
         /// </summary>
-        [Required(ErrorMessage = "Поле не может быть пустым")]
+        [Required(ErrorMessage = "Поле Email не может быть пустым")]
         [EmailAddress]
         public string Email { get; set; }
     }

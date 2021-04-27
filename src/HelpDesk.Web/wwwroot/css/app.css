@@ -11,6 +11,25 @@ button{
     font-size: medium;
 }
 
+.button_classic{
+    cursor: pointer;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.5);
+    font-style: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: rgb(2, 61, 61);
+    margin: 10px;
+}
+
+.button_classic:hover {
+    background: #93a1b6;
+}
+
+.noClick:focus{
+    outline: none;
+}
+
 .header {
     background-color:rgb(11 22 42);
     width: 100%;
@@ -64,4 +83,47 @@ h1 {
     text-align: center;  
     list-style: none;
     line-height: 30px;
+}
+
+.forms{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5em;
+    width: 20em;
+    min-width: 20em;
+}
+
+.formslabel{
+    margin: 0.5em;
+}
+
+/* Profile Page*/
+
+.wrapper_profile {
+    display: flex;
+    margin-top: 5%;
+    padding: 40px;
+}
+
+.changeprofile {
+    display: grid;
+    align-items: center;
+    text-align: left;
+}
+
+.formprofile {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.a_element {
+    display: flex;
+}
+
+.a_text {
+    margin-left: 3pt;
+}
+
+.text_error{
+    color: red;
 }

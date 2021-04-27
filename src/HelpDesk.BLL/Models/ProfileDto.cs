@@ -30,5 +30,15 @@
         /// Sid from users AD.
         /// </summary>
         public string UserSid { get; set; }
+
+        /// <summary>
+        /// Mobile number.
+        /// </summary>
+        public string MobileNumber { get; set; }
+
+        /// <summary>
+        /// Email
+        /// </summary>
+        public string Email { get; set; }
     }
 }

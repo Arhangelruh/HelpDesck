@@ -1,0 +1,22 @@
+﻿@model ProfileViewModel
+
+<form class="forms" method="post" asp-controller="Profile" asp-action="EditProfile">
+    <div class="formslabel">
+        <label asp-for="FirstName">Фамилия</label><br />
+        <input asp-for="FirstName" />
+        <span asp-validation-for="FirstName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="LastName">Имя</label><br />
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="MiddleName">Отчество</label><br />
+        <input asp-for="MiddleName" />
+        <span asp-validation-for="MiddleName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <input class="button_classic" type="submit" value="Сохранить" />
+    </div>
+</form>
