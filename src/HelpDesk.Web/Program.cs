@@ -1,4 +1,5 @@
 using HelpDesk.BLL.Services;
+using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,8 @@ namespace HelpDesk.Web
                 {
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await RoleInitializer.InitializeAsync(userManager, rolesManager);
+                    var profileManager = services.GetRequiredService<IRepository<Profile>>();
+                    await RoleInitializer.InitializeAsync(userManager, rolesManager, profileManager);
                 }
                 catch (Exception ex)
                 {

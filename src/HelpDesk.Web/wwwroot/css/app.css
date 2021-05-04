@@ -22,6 +22,10 @@ button{
     margin: 10px;
 }
 
+.button_whith_border{
+    border: solid;
+}
+
 .button_classic:hover {
     background: #93a1b6;
 }
@@ -126,4 +130,39 @@ h1 {
 
 .text_error{
     color: red;
+}
+
+/* Table*/
+
+.users-table{
+   min-width: 700px;
+   margin: 10px;
+   border: 1px black;
+}
+
+.panel-heading{
+display: flex;
+justify-content: space-evenly;
+}
+
+.panel-heading-text{
+ margin: 10px;
+ padding: 6px 16px;
+}
+
+table{
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin: auto;
+    width: 100%;
+}
+
+th{
+    border: 1px solid black;
+    background-color: #b9ced7; 
+}
+
+ td{
+    border: 1px solid black; 
+    text-align: center;
 }

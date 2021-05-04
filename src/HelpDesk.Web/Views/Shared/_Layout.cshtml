@@ -27,7 +27,7 @@
                         if (User.IsInRole(UserConstants.AdminRole))
                 {
                 <li class="nav-item">
-                    <form method="post" asp-controller="Account" asp-action="Logout">
+                    <form method="get" asp-controller="Profile" asp-action="UserProfiles">
                         <button class="nav-item noClick" type="submit" title="Вход">Пользователи</button>
                     </form>
                 </li>

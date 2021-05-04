@@ -1,5 +1,6 @@
 ﻿using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Models;
+using HelpDesk.Common.Constants;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
 using HelpDesk.Web.ViewModels;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HelpDesk.Web.Controllers
@@ -19,7 +21,6 @@ namespace HelpDesk.Web.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly IProfileService _profileService;
-        private readonly IEmailService _emailService;
 
         /// <summary>
         /// Constructor
@@ -27,11 +28,10 @@ namespace HelpDesk.Web.Controllers
         /// <param name="userManager"></param>
         /// <param name="signInManager"></param>
         /// <param name="profileService"></param>
-        public ProfileController(UserManager<User> userManager, IProfileService profileService, IEmailService emailService)
+        public ProfileController(UserManager<User> userManager, IProfileService profileService)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));
-            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+            _profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));            
         }
 
         /// <summary>
@@ -154,6 +154,48 @@ namespace HelpDesk.Web.Controllers
             user.Email = model.Email;
             await _userManager.UpdateAsync(user);
             return RedirectToAction("Profile");
+        }
+
+        /// <summary>
+        /// Get profiles
+        /// </summary>
+        /// <returns>List profile model</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> UserProfiles()
+        {                        
+            var profiles = await _profileService.GetAsyncProfiles();
+            var models = new List<UserViewModel>();
+
+            foreach(var profile in profiles)
+            {
+                var user = await _userManager.FindByIdAsync(profile.UserId);
+                var ifAdmin = await _userManager.IsInRoleAsync(user, UserConstants.AdminRole);
+                string role;
+                if (ifAdmin)
+                {
+                     role = UserConstants.AdminRole;
+                }
+                else
+                {
+                     role = UserConstants.UserRole;
+                }
+
+                models.Add(
+                new UserViewModel
+                {
+                    Id = profile.Id,
+                    Login = user.UserName,
+                    FirstName = profile.FirstName,
+                    LastName = profile.LastName,
+                    MiddleName = profile.MiddleName,
+                    Email = profile.Email,
+                    Phone = profile.MobileNumber,
+                    IsAdmin = role
+                });
+            }
+
+            return View(models);
         }
     }
 }

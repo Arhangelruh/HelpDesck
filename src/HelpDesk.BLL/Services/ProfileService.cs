@@ -332,5 +332,34 @@ namespace HelpDesk.BLL.Services
             getUser.LockoutEnd = DateTime.UtcNow.AddYears(-1);
             await _userManager.UpdateAsync(getUser);
         }
+
+        public async Task<IEnumerable<ProfileDto>> GetAsyncProfiles()
+        {
+            var profileDtos = new List<ProfileDto>();
+            var usersDto = _userManager.Users;
+
+            if (!usersDto.Any())
+            {
+                return profileDtos;
+            }
+            var profiles = await _repository.GetAll().AsNoTracking().ToListAsync();
+
+            foreach (var user in usersDto)
+            {
+                var profile = profiles.FirstOrDefault(c => c.UserId.Equals(user.Id));
+
+                profileDtos.Add(new ProfileDto { 
+                 Id = profile.Id,
+                 UserId = profile.UserId,
+                 FirstName = profile.FirstName,
+                 LastName = profile.LastName,
+                 MiddleName = profile.MiddleName,
+                 Email = user.Email,
+                 MobileNumber = user.PhoneNumber,
+                });                
+            }
+           
+            return profileDtos;
+        }
     }
 }

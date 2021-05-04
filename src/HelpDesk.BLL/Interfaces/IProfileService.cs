@@ -64,5 +64,11 @@ namespace HelpDesk.BLL.Interfaces
         /// <param name="profile">profileDto model</param>
         /// <returns>result</returns>
         Task ReLock(ProfileDto profile);
+
+        /// <summary>
+        /// Get profiles
+        /// </summary>      
+        /// <returns>list userDto</returns>
+        Task<IEnumerable<ProfileDto>> GetAsyncProfiles();
     }
 }

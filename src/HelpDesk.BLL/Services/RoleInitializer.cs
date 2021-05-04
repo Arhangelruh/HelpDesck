@@ -1,5 +1,7 @@
 ﻿using HelpDesk.BLL.Interfaces;
+using HelpDesk.BLL.Models;
 using HelpDesk.Common.Constants;
+using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
@@ -11,11 +13,12 @@ namespace HelpDesk.BLL.Services
     /// </summary>
     public class RoleInitializer
     {
+
         /// <summary>
         /// Create user and admin role and first administrator.
         /// </summary>
         /// <returns>result</returns>
-        public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository)
         {
             string userName = UserConstants.FirstAdmin;
             
@@ -36,6 +39,7 @@ namespace HelpDesk.BLL.Services
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, UserConstants.AdminRole);
+                    await repository.AddAsync(new Profile { UserId = admin.Id });
                 }
             }
         }
