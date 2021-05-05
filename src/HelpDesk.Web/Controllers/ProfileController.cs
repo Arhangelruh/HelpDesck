@@ -228,6 +228,15 @@ namespace HelpDesk.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserViewModel model)
         {
+            List<string> roles = new List<string>();
+
+            foreach (var role in _roleManager.Roles)
+            {
+                roles.Add(role.Name);
+            }
+            roles.Reverse();
+            ViewBag.roles = new SelectList(roles);
+
             if (ModelState.IsValid)
             {
                 var user = new User { Email = model.Email, PhoneNumber = model.Phone, UserName = model.Login };
@@ -250,7 +259,16 @@ namespace HelpDesk.Web.Controllers
                         };
 
                         await _profileService.AddProfileAsync(profile);
-                        await _userManager.AddToRoleAsync(user, model.IsAdmin);
+                        var addrole = await _userManager.AddToRoleAsync(user, model.IsAdmin);
+                        if (addrole.Succeeded)
+                        {
+                            return RedirectToAction("UserProfiles");
+                        }
+                        else
+                        {
+                            
+                            return View(model);
+                        }
                     }
                     else
                     {
@@ -265,7 +283,8 @@ namespace HelpDesk.Web.Controllers
                     return Content("Пользователь с таким логином уже существует");
                 }
             }
-            return RedirectToAction("UserProfiles");
+            //return RedirectToAction("UserProfiles");
+            return View(model);
         }
     }
 }

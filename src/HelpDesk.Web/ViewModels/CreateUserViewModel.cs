@@ -48,13 +48,13 @@ namespace HelpDesk.Web.ViewModels
         /// <summary>
         /// User admin or no.
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Обновите страницу это поле не может быть пустым")]
         public string IsAdmin { get; set; }
 
         /// <summary>
         /// Password
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Пароль не может быть пустым")]
         [DataType(DataType.Password)]
         [StringLength(100, ErrorMessage = "Поле {0} должно иметь минимум {2} и максимум {1} символов.", MinimumLength = 3)]
         [Display(Name = "Пароль")]
@@ -63,7 +63,7 @@ namespace HelpDesk.Web.ViewModels
         /// <summary>
         /// Confirm password
         /// </summary>
-        [Required]
+        [Required(ErrorMessage = "Введите подтверждение пароля")]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         [DataType(DataType.Password)]
         [Display(Name = "Подтвердить пароль")]

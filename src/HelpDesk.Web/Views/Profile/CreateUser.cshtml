@@ -33,18 +33,18 @@
     </div>
     <div class="formslabel">
         <label asp-for="Login">Логин</label><br />
-        <input asp-for="Login" />
+        <input asp-for="Login" /><br />
         <span asp-validation-for="Login" class="text_error"></span>
     </div>
     <div class="formslabel">
         <label asp-for="Password">Пароль</label><br />
-        <input asp-for="Password" />
+        <input asp-for="Password" /><br />
         <span asp-validation-for="Password" class="text_error"></span>
     </div>
     <div class="formslabel">
         <label asp-for="PasswordConfirm">Подтверждение пароля</label><br />
-        <input asp-for="PasswordConfirm" />
-        <span asp-validation-for="PasswordConfirm"></span>
+        <input asp-for="PasswordConfirm" /><br />
+        <span asp-validation-for="PasswordConfirm" class="text_error"></span>
     </div>
     <div class="formslabel">
         <input class="button_classic" type="submit" value="Сохранить" />
