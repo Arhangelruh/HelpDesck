@@ -40,6 +40,7 @@ namespace HelpDesk.BLL.Services
                 {
                     await userManager.AddToRoleAsync(admin, UserConstants.AdminRole);
                     await repository.AddAsync(new Profile { UserId = admin.Id });
+                    await repository.SaveChangesAsync();
                 }
             }
         }

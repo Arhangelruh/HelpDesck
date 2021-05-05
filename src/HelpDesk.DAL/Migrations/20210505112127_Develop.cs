@@ -4,10 +4,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HelpDesk.DAL.Migrations
 {
-    public partial class initial : Migration
+    public partial class Develop : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "event");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -45,6 +48,20 @@ namespace HelpDesk.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventTime",
+                schema: "event",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Time = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventTime", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,7 +192,8 @@ namespace HelpDesk.DAL.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(127)", maxLength: 127, nullable: true),
                     LastName = table.Column<string>(type: "character varying(127)", maxLength: 127, nullable: true),
-                    MiddleName = table.Column<string>(type: "character varying(127)", maxLength: 127, nullable: true)
+                    MiddleName = table.Column<string>(type: "character varying(127)", maxLength: 127, nullable: true),
+                    UserSid = table.Column<string>(type: "character varying(127)", maxLength: 127, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -326,6 +344,10 @@ namespace HelpDesk.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "EventTime",
+                schema: "event");
 
             migrationBuilder.DropTable(
                 name: "UserProblems");

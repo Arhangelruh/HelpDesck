@@ -32,7 +32,13 @@ namespace HelpDesk.Web
             services.AddDbContext<HelpDeskContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(opt=> {
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireDigit = false;
+            })
                .AddEntityFrameworkStores<HelpDeskContext>()
                .AddDefaultTokenProviders();
 

@@ -24,6 +24,13 @@ namespace HelpDesk.BLL.Interfaces
         Task AddUserAsync(UserDto user);
 
         /// <summary>
+        /// Add profile.
+        /// </summary>
+        /// <param name="user">profiledto model</param>
+        /// <returns>result from add profile to database</returns>
+        Task AddProfileAsync(ProfileDto profile);
+
+        /// <summary>
         /// Edit user.
         /// </summary>
         /// <param name="user">userDto model</param>

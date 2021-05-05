@@ -191,6 +191,24 @@ namespace HelpDesk.BLL.Services
             }
         }
 
+        public async Task AddProfileAsync(ProfileDto profile)
+        {
+            if (profile is null)
+            {
+                throw new ArgumentNullException(nameof(profile));
+            }
+            var userProfile = new Profile
+            {
+                UserId = profile.UserId,
+                FirstName = profile.FirstName,
+                LastName = profile.LastName,
+                MiddleName = profile.MiddleName,
+            };
+
+            await _repository.AddAsync(userProfile);
+            await _repository.SaveChangesAsync();
+        }
+
         public async Task EditUserAsync(UserDto user)
         {
 
@@ -361,5 +379,6 @@ namespace HelpDesk.BLL.Services
            
             return profileDtos;
         }
+
     }
 }
