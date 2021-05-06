@@ -47,5 +47,10 @@ namespace HelpDesk.Web.ViewModels
         /// User admin or no.
         /// </summary>
         public string IsAdmin { get; set; }
+
+        /// <summary>
+        /// Check account status
+        /// </summary>
+        public bool Locking { get; set; }
     }
 }

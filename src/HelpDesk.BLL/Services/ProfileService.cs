@@ -325,28 +325,18 @@ namespace HelpDesk.BLL.Services
             await _repository.SaveChangesAsync();
         }
 
-        public async Task Locking(ProfileDto profile)
-        {
-            if (profile is null)
-            {
-                throw new ArgumentNullException(nameof(profile));
-            }
-
-            var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(profile.Id));
-            var getUser = await _userManager.FindByIdAsync(profile.UserId);
+        public async Task Locking(int profileId)
+        {               
+            var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(profileId));
+            var getUser = await _userManager.FindByIdAsync(getProfile.UserId);
             getUser.LockoutEnd = DateTime.UtcNow.AddYears(200);
             await _userManager.UpdateAsync(getUser);
         }
 
-        public async Task ReLock(ProfileDto profile)
+        public async Task UnLock(int profileId)
         {
-            if (profile is null)
-            {
-                throw new ArgumentNullException(nameof(profile));
-            }
-
-            var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(profile.Id));
-            var getUser = await _userManager.FindByIdAsync(profile.UserId);
+            var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(profileId));
+            var getUser = await _userManager.FindByIdAsync(getProfile.UserId);
             getUser.LockoutEnd = DateTime.UtcNow.AddYears(-1);
             await _userManager.UpdateAsync(getUser);
         }

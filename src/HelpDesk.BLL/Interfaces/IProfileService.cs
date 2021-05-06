@@ -63,14 +63,14 @@ namespace HelpDesk.BLL.Interfaces
         /// </summary>
         /// <param name="profile">profileDto model</param>
         /// <returns>result from Lock</returns>
-        Task Locking(ProfileDto profile);
+        Task Locking(int profileId);
 
         /// <summary>
         /// Relock user
         /// </summary>
         /// <param name="profile">profileDto model</param>
         /// <returns>result</returns>
-        Task ReLock(ProfileDto profile);
+        Task UnLock(int profileId);
 
         /// <summary>
         /// Get profiles

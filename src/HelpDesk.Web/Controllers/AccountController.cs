@@ -104,6 +104,7 @@ namespace HelpDesk.Web.Controllers
         /// <param name="model"></param>
         /// <returns>Change password result</returns>
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)

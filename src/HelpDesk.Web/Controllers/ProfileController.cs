@@ -1,7 +1,6 @@
 ﻿using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Models;
 using HelpDesk.Common.Constants;
-using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
 using HelpDesk.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -48,14 +46,14 @@ namespace HelpDesk.Web.Controllers
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
             var profile = await _profileService.GetProfileByUserId(user.Id);
-            var model = new ProfileViewModel 
-            { 
+            var model = new ProfileViewModel
+            {
                 FirstName = profile.FirstName,
                 LastName = profile.LastName,
                 MiddleName = profile.MiddleName,
                 Email = user.Email,
                 Phone = user.PhoneNumber
-            };            
+            };
             return View(model);
         }
 
@@ -63,6 +61,7 @@ namespace HelpDesk.Web.Controllers
         /// Change password model
         /// </summary>
         /// <returns>User model</returns>
+        [Authorize]
         public async Task<IActionResult> EditProfile()
         {
             var username = User.Identity.Name;
@@ -79,6 +78,7 @@ namespace HelpDesk.Web.Controllers
         /// <returns>Result edit profile</returns>
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProfile(ProfileViewModel editProfile)
         {
             var username = User.Identity.Name;
@@ -119,6 +119,7 @@ namespace HelpDesk.Web.Controllers
         /// <returns>Rezult change phone number</returns>
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePhoneNumber(ProfileViewModel number)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -150,10 +151,11 @@ namespace HelpDesk.Web.Controllers
         /// <returns>Generate tocken and send email message</returns>
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeEmail(ProfileViewModel model)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            
+
             user.Email = model.Email;
             await _userManager.UpdateAsync(user);
             return RedirectToAction("Profile");
@@ -166,22 +168,29 @@ namespace HelpDesk.Web.Controllers
         [Authorize(Roles = UserConstants.AdminRole)]
         [HttpGet]
         public async Task<IActionResult> UserProfiles()
-        {                        
+        {
             var profiles = await _profileService.GetAsyncProfiles();
             var models = new List<UserViewModel>();
 
-            foreach(var profile in profiles)
+            foreach (var profile in profiles)
             {
                 var user = await _userManager.FindByIdAsync(profile.UserId);
                 var ifAdmin = await _userManager.IsInRoleAsync(user, UserConstants.AdminRole);
                 string role;
+                bool Locking = false;
+
                 if (ifAdmin)
                 {
-                     role = UserConstants.AdminRole;
+                    role = UserConstants.AdminRole;
                 }
                 else
                 {
-                     role = UserConstants.UserRole;
+                    role = UserConstants.UserRole;
+                }
+
+                if (user.LockoutEnd >= DateTime.UtcNow)
+                {
+                    Locking = true;
                 }
 
                 models.Add(
@@ -194,7 +203,8 @@ namespace HelpDesk.Web.Controllers
                     MiddleName = profile.MiddleName,
                     Email = profile.Email,
                     Phone = profile.MobileNumber,
-                    IsAdmin = role
+                    IsAdmin = role,
+                    Locking = Locking
                 });
             }
 
@@ -210,8 +220,8 @@ namespace HelpDesk.Web.Controllers
         public IActionResult CreateUser()
         {
             List<string> roles = new List<string>();
-            
-            foreach(var role in _roleManager.Roles)
+
+            foreach (var role in _roleManager.Roles)
             {
                 roles.Add(role.Name);
             }
@@ -225,7 +235,9 @@ namespace HelpDesk.Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Confirm email view</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(CreateUserViewModel model)
         {
             List<string> roles = new List<string>();
@@ -266,7 +278,7 @@ namespace HelpDesk.Web.Controllers
                         }
                         else
                         {
-                            
+
                             return View(model);
                         }
                     }
@@ -283,8 +295,35 @@ namespace HelpDesk.Web.Controllers
                     return Content("Пользователь с таким логином уже существует");
                 }
             }
-            //return RedirectToAction("UserProfiles");
             return View(model);
+        }
+
+        /// <summary>
+        /// Lock user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>result add to table</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> Lock(int Id)
+        {
+            await _profileService.Locking(Id);
+            
+            return RedirectToAction("UserProfiles");
+        }
+
+        /// <summary>
+        /// Unlock user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>result add to table</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> UnLock(int Id)
+        {
+            await _profileService.UnLock(Id);
+
+            return RedirectToAction("UserProfiles");
         }
     }
 }
