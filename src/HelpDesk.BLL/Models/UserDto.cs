@@ -6,6 +6,11 @@
     public class UserDto
     {
         /// <summary>
+        /// Id. 
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Login. 
         /// </summary>
         public string Login { get; set; }
@@ -59,6 +64,11 @@
         /// User admin or no.
         /// </summary>
         public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// User role.
+        /// </summary>
+        public string Role { get; set; }
 
         /// <summary>
         /// user SID in AD. 

@@ -325,5 +325,101 @@ namespace HelpDesk.Web.Controllers
 
             return RedirectToAction("UserProfiles");
         }
+
+        /// <summary>
+        /// Get user
+        /// </summary>
+        /// <returns>Edituser model</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> EditUser(int Id)
+        {
+            var profile = await _profileService.GetProfileByIdAsync(Id);
+            var user = await _userManager.FindByIdAsync(profile.UserId);
+
+
+            List<string> roles = new List<string>();
+
+            foreach (var role in _roleManager.Roles)
+            {
+                roles.Add(role.Name);
+            }
+            roles.Reverse();
+            ViewBag.roles = new SelectList(roles);
+
+            var model = new EditUserViewModel
+            {
+                UserId = user.Id,
+                Login = user.UserName,
+                FirstName = profile.FirstName,
+                LastName = profile.LastName,
+                MiddleName = profile.MiddleName,
+                Email = user.Email,
+                Phone = user.PhoneNumber
+            };
+            return View(model);
+        }
+
+        /// <summary>
+        /// Edit user
+        /// </summary>
+        /// <param name="editUser"></param>
+        /// <returns>Result edit user account</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
+        {
+            List<string> roles = new List<string>();
+
+            foreach (var role in _roleManager.Roles)
+            {
+                roles.Add(role.Name);
+            }
+            roles.Reverse();
+            ViewBag.roles = new SelectList(roles);
+
+            if (ModelState.IsValid)
+            {
+                var searchUser = await _userManager.FindByNameAsync(model.Login);
+
+                if (searchUser != null && searchUser.Id !=model.UserId)
+                {
+                    return Content("Пользователь с таким логином уже существует");                   
+                }
+                else
+                {
+                    if (model.Password != null)
+                    {
+                        var getUser = await _userManager.FindByIdAsync(model.UserId);
+                        if (getUser != null)
+                        {
+                            var token = await _userManager.GeneratePasswordResetTokenAsync(getUser);
+                            var changePassword = await _userManager.ResetPasswordAsync(getUser, token, model.Password);
+                            if (!changePassword.Succeeded)
+                            {
+                                return View(model);
+                            }
+                        }
+                    }
+
+                    var user = new UserDto
+                    {
+                        Id = model.UserId,
+                        Login = model.Login,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        MiddleName = model.MiddleName,
+                        EMail = model.Email,
+                        MobileNumber = model.Phone,
+                        Role = model.Role
+                    };
+                    await _profileService.EditUserAsync(user);
+                    return RedirectToAction("UserProfiles");
+                }
+            }
+
+            return View(model);
+        }
     }
 }

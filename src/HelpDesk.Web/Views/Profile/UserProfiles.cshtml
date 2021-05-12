@@ -27,18 +27,18 @@
         <td>@if (profile.Locking)
         {
             <a asp-controller="Profile" asp-action="Unlock" asp-route-id="@profile.Id">
-                <img title="Изменить" src="/images/Lock.svg" />
+                <img title="Разблокировать" src="/images/Lock.svg" />
             </a>
         }
         else
         {
             <a asp-controller="Profile" asp-action="Lock" asp-route-id="@profile.Id">
-                <img title="Изменить" src="/images/Unlock.svg" />
+                <img title="Заблокировать" src="/images/Unlock.svg" />
             </a>
         }
         </td>
         <td>
-            <a asp-controller="Profile" asp-action="Edit" asp-route-id="@profile.Id">
+            <a asp-controller="Profile" asp-action="EditUser" asp-route-id="@profile.Id">
                 <img title="Изменить" src="/images/Edit.svg" />
             </a>
         </td>

@@ -17,13 +17,6 @@ namespace HelpDesk.BLL.Interfaces
         Task AddAsyncUsers(List<UserDto> users);
 
         /// <summary>
-        /// Add user.
-        /// </summary>
-        /// <param name="user">userdto model</param>
-        /// <returns>result from add user to database</returns>
-        Task AddUserAsync(UserDto user);
-
-        /// <summary>
         /// Add profile.
         /// </summary>
         /// <param name="user">profiledto model</param>
@@ -77,5 +70,11 @@ namespace HelpDesk.BLL.Interfaces
         /// </summary>      
         /// <returns>list userDto</returns>
         Task<IEnumerable<ProfileDto>> GetAsyncProfiles();
+
+        /// <summary>
+        /// Get profile
+        /// </summary>      
+        /// <returns>ProfileDto</returns>
+        Task<ProfileDto> GetProfileByIdAsync(int id);
     }
 }

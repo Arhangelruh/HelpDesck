@@ -129,68 +129,6 @@ namespace HelpDesk.BLL.Services
             }
         }
 
-        public async Task AddUserAsync(UserDto user) {
-
-            if (user is null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            var searchUser = await _userManager.FindByNameAsync(user.Login);
-            
-            if(searchUser == null)
-            {
-                var profile = new User
-                {
-                    Email = user.EMail,
-                    PhoneNumber = user.MobileNumber,
-                    UserName = user.Login,
-                };
-
-                var result = await _userManager.CreateAsync(profile, UserConstants.FirstPassword);
-
-                if (result.Succeeded)
-                {
-                    if (user.IsAdmin)
-                    {
-                        var checkRole = await _roleManager.FindByNameAsync(UserConstants.AdminRole);
-                        if (checkRole != null)
-                        {
-                            await _userManager.AddToRoleAsync(profile, UserConstants.AdminRole);
-                        }
-                        else
-                        {
-                            await _roleManager.CreateAsync(new IdentityRole(UserConstants.AdminRole));
-                            await _userManager.AddToRoleAsync(profile, UserConstants.AdminRole);
-                        }
-
-                    }
-                    else
-                    {
-                        var checkRole = await _roleManager.FindByNameAsync(UserConstants.UserRole);
-                        if (checkRole != null)
-                        {
-                            await _userManager.AddToRoleAsync(profile, UserConstants.UserRole);
-                        }
-                        else
-                        {
-                            await _roleManager.CreateAsync(new IdentityRole(UserConstants.UserRole));
-                            await _userManager.AddToRoleAsync(profile, UserConstants.UserRole);
-                        }
-                    }
-
-                    var userProfile = new Profile
-                    {
-                        UserId = profile.Id,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName
-                    };
-                    await _repository.AddAsync(userProfile);
-                    await _repository.SaveChangesAsync();
-                }
-            }
-        }
-
         public async Task AddProfileAsync(ProfileDto profile)
         {
             if (profile is null)
@@ -217,45 +155,29 @@ namespace HelpDesk.BLL.Services
                 throw new ArgumentNullException(nameof(user));
             }
 
-            var searchUser = await _userManager.FindByNameAsync(user.Login);
+            var searchUser = await _userManager.FindByIdAsync(user.Id);
             var searchProfile = await _repository.GetEntityAsync(profile => profile.UserId == searchUser.Id);
             searchProfile.FirstName = user.FirstName;
             searchProfile.MiddleName = user.MiddleName;
             searchProfile.LastName = user.LastName;
             _repository.Update(searchProfile);
             await _repository.SaveChangesAsync();
-            
-            if (user.IsAdmin)
-            {
-                var checkRole = await _roleManager.FindByNameAsync(UserConstants.AdminRole);
-                if (checkRole != null)
-                {
-                    await _userManager.AddToRoleAsync(searchUser, UserConstants.AdminRole);
-                }
-                else
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(UserConstants.AdminRole));
-                    await _userManager.AddToRoleAsync(searchUser, UserConstants.AdminRole);
-                }
-
-            }
-            else
-            {
-                var checkRole = await _roleManager.FindByNameAsync(UserConstants.UserRole);
-                if (checkRole != null)
-                {
-                    await _userManager.AddToRoleAsync(searchUser, UserConstants.UserRole);
-                }
-                else
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(UserConstants.UserRole));
-                    await _userManager.AddToRoleAsync(searchUser, UserConstants.UserRole);
+           
+            if (user.Role != null) {
+                var checkRole = await _userManager.IsInRoleAsync(searchUser, user.Role);
+                if (!checkRole) {
+                    var userRoles = await _userManager.GetRolesAsync(searchUser);
+                    foreach( var roles in userRoles)
+                    {
+                        await _userManager.RemoveFromRoleAsync(searchUser, roles);
+                    }
+                    await _userManager.AddToRoleAsync(searchUser, user.Role);
                 }
             }
             searchUser.UserName = user.Login;
             searchUser.Email = user.EMail;
             searchUser.PhoneNumber = user.MobileNumber;
-
+            
             await _userManager.UpdateAsync(searchUser);
         }
 
@@ -370,5 +292,18 @@ namespace HelpDesk.BLL.Services
             return profileDtos;
         }
 
+        public async Task<ProfileDto> GetProfileByIdAsync(int id)
+        {            
+            var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(id));
+            var profile = new ProfileDto
+            {
+                Id = getProfile.Id,
+                UserId = getProfile.UserId,
+                FirstName = getProfile.FirstName,
+                LastName = getProfile.LastName,
+                MiddleName = getProfile.MiddleName
+            };
+            return profile;
+        }
     }
 }
