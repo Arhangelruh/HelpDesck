@@ -1,0 +1,48 @@
+﻿@model EditUserViewModel
+
+<form class="forms" method="post" asp-controller="Profile" asp-action="EditUser">
+    <input type="hidden" asp-for="UserId" />
+    <div class="formslabel">
+        <label asp-for="FirstName">Фамилия</label><br />
+        <input asp-for="FirstName" />
+        <span asp-validation-for="FirstName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="LastName">Имя</label><br />
+        <input asp-for="LastName" />
+        <span asp-validation-for="LastName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="MiddleName">Отчество</label><br />
+        <input asp-for="MiddleName" />
+        <span asp-validation-for="MiddleName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="Phone">Телефон</label><br />
+        <input asp-for="Phone" />
+        <span asp-validation-for="Phone" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="Email">Email</label><br />
+        <input asp-for="Email" />
+        <span asp-validation-for="Email" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="Role">Роль</label><br />
+        <select id="priority" class="input" asp-for="Role" asp-items="ViewBag.roles"></select>
+        <span asp-validation-for="Role" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="Login">Логин</label><br />
+        <input asp-for="Login" /><br />
+        <span asp-validation-for="Login" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="Password">Пароль</label><br />
+        <input asp-for="Password" /><br />
+        <span asp-validation-for="Password" class="text_error"></span>
+    </div>    
+    <div class="formslabel">
+        <input class="button_classic" type="submit" value="Сохранить" />
+    </div>
+</form>

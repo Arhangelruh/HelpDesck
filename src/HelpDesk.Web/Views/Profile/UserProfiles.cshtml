@@ -1,0 +1,53 @@
+﻿@model IEnumerable<UserViewModel>
+
+<div class="users-table">
+    <div class="panel-heading">
+        <div class="panel-heading-text">Пользователи</div>
+        <form method="get" asp-controller="Profile" asp-action="CreateUser">
+            <button class="button_classic button_whith_border" type="submit" title="Создать">Создать</button>
+        </form>
+    </div>
+    <table class="table">
+        <tr>
+            <th>Login</th>
+            <th>ФИО</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Роль</th>
+            <th>Статус</th>
+        </tr>
+        @foreach (var profile in Model)
+            {
+    <tr>
+        <td>@profile.Login</td>
+        <td>@profile.LastName @profile.FirstName @profile.MiddleName</td>
+        <td>@profile.Email</td>
+        <td>@profile.Phone</td>
+        <td>@profile.IsAdmin</td>
+        <td>@if (profile.Locking)
+        {
+            <a asp-controller="Profile" asp-action="Unlock" asp-route-id="@profile.Id">
+                <img title="Разблокировать" src="/images/Lock.svg" />
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Profile" asp-action="Lock" asp-route-id="@profile.Id">
+                <img title="Заблокировать" src="/images/Unlock.svg" />
+            </a>
+        }
+        </td>
+        <td>
+            <a asp-controller="Profile" asp-action="EditUser" asp-route-id="@profile.Id">
+                <img title="Изменить" src="/images/Edit.svg" />
+            </a>
+        </td>
+        <td>
+            <a asp-controller="Profile" asp-action="DeleteUser" asp-route-id="@profile.Id">
+                <img title="Удалить" src="/images/Delete.svg" />
+            </a>
+        </td>
+    </tr>                
+            }
+    </table>
+</div>

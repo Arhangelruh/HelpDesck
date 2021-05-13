@@ -1,0 +1,20 @@
+﻿@using HelpDesk.Common.Constants;
+
+@{
+    ViewData["Title"] = "Help Desk";
+}
+
+<body>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="greeting">
+                <h1>Добро пожаловать</h1>
+            </div>
+        }
+        else
+        {
+            <div class="greeting">
+                <h1 class="text_greeting">Добро пожаловать на страницу приложения</h1>
+            </div>
+        }
+</body>

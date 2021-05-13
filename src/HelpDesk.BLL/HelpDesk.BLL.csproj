@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.11.1" />
+    <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HelpDesk.Common\HelpDesk.Common.csproj" />
     <ProjectReference Include="..\HelpDesk.DAL\HelpDesk.DAL.csproj" />
   </ItemGroup>
