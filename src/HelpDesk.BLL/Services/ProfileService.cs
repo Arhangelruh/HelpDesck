@@ -318,5 +318,36 @@ namespace HelpDesk.BLL.Services
             };
             return profile;
         }
+
+        public async Task DeleteUserAsync(int id)
+        {
+            var profile = await _repository.GetEntityAsync(profile => profile.Id.Equals(id));
+            if (profile != null)
+            {
+                var user = await _userManager.FindByIdAsync(profile.UserId);
+                var userProblems = await _repositoryUserProblem
+                    .GetAll()
+                    .AsNoTracking()
+                    .Where(problem => problem.ProfileId == profile.Id)
+                    .ToListAsync();
+
+                if (userProblems.Any())
+                {
+                    foreach (var userProblem in userProblems)
+                    {
+                        _repositoryUserProblem.Delete(userProblem);
+                        await _repositoryUserProblem.SaveChangesAsync();
+                    }
+                }
+
+                _repository.Delete(profile);
+                await _repository.SaveChangesAsync();
+
+                if(user != null)
+                {
+                    await _userManager.DeleteAsync(user);
+                }
+            }            
+        }
     }
 }

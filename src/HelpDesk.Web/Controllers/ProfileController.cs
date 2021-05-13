@@ -329,6 +329,7 @@ namespace HelpDesk.Web.Controllers
         /// <summary>
         /// Get user
         /// </summary>
+        /// <param name="id"></param>
         /// <returns>Edituser model</returns>
         [Authorize(Roles = UserConstants.AdminRole)]
         [HttpGet]
@@ -420,6 +421,19 @@ namespace HelpDesk.Web.Controllers
             }
 
             return View(model);
+        }
+
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>Result delete user account</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<ActionResult> DeleteUser(int id)
+        {
+           await _profileService.DeleteUserAsync(id);
+            return RedirectToAction("UserProfiles");
         }
     }
 }

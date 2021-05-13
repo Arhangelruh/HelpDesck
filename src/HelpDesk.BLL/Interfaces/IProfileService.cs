@@ -52,29 +52,35 @@ namespace HelpDesk.BLL.Interfaces
         Task EditProfile(ProfileDto profile);
 
         /// <summary>
-        /// Lock user
+        /// Lock user.
         /// </summary>
         /// <param name="profile">profileDto model</param>
         /// <returns>result from Lock</returns>
         Task Locking(int profileId);
 
         /// <summary>
-        /// Relock user
+        /// Relock user.
         /// </summary>
         /// <param name="profile">profileDto model</param>
         /// <returns>result</returns>
         Task UnLock(int profileId);
 
         /// <summary>
-        /// Get profiles
+        /// Get profiles.
         /// </summary>      
         /// <returns>list userDto</returns>
         Task<IEnumerable<ProfileDto>> GetAsyncProfiles();
 
         /// <summary>
-        /// Get profile
+        /// Get profile.
         /// </summary>      
         /// <returns>ProfileDto</returns>
         Task<ProfileDto> GetProfileByIdAsync(int id);
+
+        /// <summary>
+        /// Delete user.
+        /// </summary>      
+        /// <returns>return result</returns>
+        Task DeleteUserAsync(int id);
     }
 }
