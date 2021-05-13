@@ -18,12 +18,14 @@ namespace HelpDesk.BLL.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IRepository<Profile> _repository;
+        private readonly IRepository<UserProblem> _repositoryUserProblem;
 
-        public ProfileService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository)
+        public ProfileService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository, IRepository<UserProblem> repositoryUserProblem)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repositoryUserProblem = repositoryUserProblem ?? throw new ArgumentNullException(nameof(repositoryUserProblem));
         }
 
         public async Task AddAsyncUsers(List<UserDto> users)
@@ -107,6 +109,22 @@ namespace HelpDesk.BLL.Services
 
                     if (searchProfile.UserSid != userAD.UserSID)
                     {
+                        
+                        var usersProblem = await _repositoryUserProblem
+                        .GetAll()
+                        .AsNoTracking()
+                        .Where(problem => problem.ProfileId == searchProfile.Id)
+                        .ToListAsync();
+
+                        if (usersProblem.Any())
+                        {
+                            foreach (var userProblem in usersProblem)
+                            {
+                                _repositoryUserProblem.Delete(userProblem);
+                                await _repositoryUserProblem.SaveChangesAsync();
+                            }
+                        }
+
                         var userProfile = new Profile
                         {
                             FirstName = userAD.FirstName,
@@ -117,12 +135,7 @@ namespace HelpDesk.BLL.Services
                         searchProfile.LastName = userAD.LastName;
                         searchProfile.MiddleName = "null";
                         _repository.Update(searchProfile);
-                        await _repository.SaveChangesAsync();
-                        
-                        //Refactor: поскольку словить ошибку что такой логин в идентити уже есть но его sid отличен от уже имеющегося
-                        //мы можем не только в случае восстановления учетной записи но и в случае заведения новой с теми же инициалами
-                        //целесообразно здесь делать чистку связующей таблицы что бы пользователь не видел прошлых задач (как новый пользователь)
-
+                        await _repository.SaveChangesAsync();                       
                     }
                    
                 }
