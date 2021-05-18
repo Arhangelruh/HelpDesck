@@ -26,7 +26,7 @@ namespace HelpDesk.BLL.Services
                 byte[] domainSIdArray = (byte[])dir.Properties["objectSid"].Value;
                 SecurityIdentifier domainSId = new SecurityIdentifier(domainSIdArray, 0);
                 SecurityIdentifier domainAdminsSId = new SecurityIdentifier(WellKnownSidType.AccountDomainAdminsSid, domainSId);
-                DirectoryEntry groupEntry = new DirectoryEntry(string.Format("LDAP://<SID={0}>", BuildOctetString(domainAdminsSId)));
+                DirectoryEntry groupEntry = new DirectoryEntry(string.Format("LDAP://<SID={0}>", BuildOctetString(domainAdminsSId).GetAwaiter().GetResult()));
                 string adminDn = groupEntry.Properties["distinguishedname"].Value as string;
 
                 await Task.Run(() =>
