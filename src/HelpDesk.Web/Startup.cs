@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Hangfire;
+using Hangfire.PostgreSql;
 
 namespace HelpDesk.Web
 {
@@ -29,6 +31,7 @@ namespace HelpDesk.Web
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IProfileService, ProfileService>();
 
+            services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
             services.AddDbContext<HelpDeskContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
 
@@ -56,6 +59,20 @@ namespace HelpDesk.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
+            });
+                
+            app.UseHangfireServer();
+            //BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget"));
+            //BackgroundJob.Schedule(()=> Console.WriteLine("Delayed"),TimeSpan.FromDays(1));
+            
+            RecurringJob.AddOrUpdate(() => Console.WriteLine("Minutely Job"), "0-59 * * * *");
+            var id = BackgroundJob.Enqueue(() => Console.WriteLine("Hello, "));
+            
 
             app.UseEndpoints(endpoints =>
             {
