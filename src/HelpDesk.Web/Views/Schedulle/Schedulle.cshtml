@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ReccuringJobViewModel>
+
+
+<div class="users-table">
+    <div class="panel-heading">
+        <div class="panel-heading-text">Планировщик заданий</div>
+        <form method="get" asp-controller="Schedulle" asp-action="CreateJob">
+                <button class="button_classic button_whith_border" type="submit" title="Создать">Создать</button>
+            </form>
+    </div>
+   
+        @if (!Model.Any())
+        {
+          <div class="message"><p><b>Нет запущенных заданий</b></p> 
+              механизм добавления заданий предусматривает создание повторяющегося задания на получение данных пользователей из Active Directory
+              и добавление их в базу данных.
+          </div>        
+        }
+        else
+        {
+          <table class="table">
+            <tr>
+                <th>ID задания</th>
+                <th>Cron расписание</th>
+                <th>Job</th>
+            </tr>
+           @foreach (var job in Model)
+             {
+          <tr>
+              <td>@job.Id</td>
+              <td>@job.Cron</td>
+              <td>@job.Job</td>
+              <td>
+                  <a asp-controller="Schedulle" asp-action="EditJob" asp-route-id="@job.Id">
+                      <img title="Изменить" src="/images/Edit.svg" />
+                  </a>
+              </td>
+              <td>
+            <a asp-controller="Schedulle" asp-action="DeleteJob" asp-route-id="@job.Id">
+                <img title="Удалить" src="/images/Delete.svg" />
+            </a>
+              </td>
+          </tr>
+             }
+           </table>
+           <div class="message">
+             Вы можете посмотреть более подробную информацию по вашим заданиям на странице
+             <a href="~/hangfire">Hangfire</a>.</div>
+        }
+</div>

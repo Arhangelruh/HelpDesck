@@ -1,6 +1,8 @@
+using Hangfire;
+using Hangfire.PostgreSql;
+using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Repository;
 using HelpDesk.BLL.Services;
-using HelpDesk.BLL.Interfaces;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Context;
 using HelpDesk.DAL.Models;
@@ -10,8 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Hangfire;
-using Hangfire.PostgreSql;
 
 namespace HelpDesk.Web
 {
@@ -30,12 +30,16 @@ namespace HelpDesk.Web
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IGetUserFromAD, GetUserFromAD>();
+            services.AddScoped<IEventService, EventService>();
 
             services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
             services.AddDbContext<HelpDeskContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+                
+            options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
 
-            services.AddIdentity<User, IdentityRole>(opt=> {
+            services.AddIdentity<User, IdentityRole>(opt =>
+            {
                 opt.Password.RequiredLength = 3;
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireLowercase = false;
@@ -60,19 +64,11 @@ namespace HelpDesk.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
             });
-                
             app.UseHangfireServer();
-            //BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget"));
-            //BackgroundJob.Schedule(()=> Console.WriteLine("Delayed"),TimeSpan.FromDays(1));
-            
-            RecurringJob.AddOrUpdate(() => Console.WriteLine("Minutely Job"), "0-59 * * * *");
-            var id = BackgroundJob.Enqueue(() => Console.WriteLine("Hello, "));
-            
 
             app.UseEndpoints(endpoints =>
             {

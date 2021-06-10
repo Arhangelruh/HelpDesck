@@ -1,0 +1,30 @@
+﻿@model ReccuringJobViewModel
+
+
+<form class="forms" method="post" asp-controller="Schedulle" asp-action="CreateJob">
+    <div class="formslabel">
+        <label asp-for="Cron">Расписание планировщика в Cron формате</label><br />
+        <input asp-for="Cron" /><br />
+        <span asp-validation-for="Cron" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <input class="button_classic" type="submit" value="Сохранить" />
+    </div>
+</form>
+
+<div class="forms">
+    <p>
+        Обратите внимание на заполнение строки в формате Cron.
+        Строка содержит пять колонок которые задают время выполнения (минута, час, день, месяц, день недели), в них может находиться число, список чисел, разделённых запятыми, диапазон чисел, разделённых дефисом, символы * или /.-
+    </p>
+    <pre>
+* * * * *  выполняемая команда
+- - - - -
+| | | | |
+| | | | ----- день недели (0—7) (воскресенье = 0 или 7)
+| | | ------- месяц (1—12)
+| | --------- день (1—31)
+| ----------- час (0—23)
+------------- минута (0—59)
+  </pre>
+</div>
