@@ -25,12 +25,10 @@ namespace HelpDesk.BLL.Services
             {
                 throw new ArgumentNullException(nameof(cron));
             }
-            //await Task.Run(() =>
-            //{
-            //    RecurringJob.AddOrUpdate(() => JobAddUserToBase().GetAwaiter().GetResult(), cron);
-            //});
             await Task.Run(() =>
-            { RecurringJob.AddOrUpdate(() => Console.WriteLine("Minutely Job"), cron); });
+            {
+                RecurringJob.AddOrUpdate(() => JobAddUserToBase(), cron);
+            });
         }
 
         public async Task EditJobScheduller(string id, string cron)
@@ -40,10 +38,10 @@ namespace HelpDesk.BLL.Services
                 throw new ArgumentNullException(nameof(id));
             }
 
-            //await Task.Run(() =>
-            //{
-            //    RecurringJob.AddOrUpdate(id,() => JobAddUserToBase().GetAwaiter().GetResult(), cron);
-            //});
+            await Task.Run(() =>
+            {
+                RecurringJob.AddOrUpdate(id, () => JobAddUserToBase().GetAwaiter().GetResult(), cron);
+            });
 
             await Task.Run(() =>
             { RecurringJob.AddOrUpdate(id,() => Console.WriteLine("Minutely Job"), cron); });
@@ -79,7 +77,7 @@ namespace HelpDesk.BLL.Services
 
         public async Task JobAddUserToBase()
         {
-            var listUsers = await _getuser.ADGetUsers();
+            var listUsers = _getuser.ADGetUsers().GetAwaiter().GetResult();
             if (listUsers.Any())
             {
                 await _profile.AddAsyncUsers(listUsers);

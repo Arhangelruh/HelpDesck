@@ -44,46 +44,46 @@ namespace HelpDesk.BLL.Services
                     UserName = userAD.Login,                    
                 };
 
-                var searchUser = await _userManager.FindByNameAsync(userAD.Login);
+                var searchUser = _userManager.FindByNameAsync(userAD.Login).GetAwaiter().GetResult();
                 
                 if (searchUser == null)
                 {
                     if (userAD.UserSID != null)
                     {
-                        var searchUserbySid = await GetUserBySid(userAD.UserSID);
+                        var searchUserbySid = GetUserBySid(userAD.UserSID).GetAwaiter().GetResult();
 
                         if (searchUserbySid == null)
                         {
 
-                            var result = await _userManager.CreateAsync(user, UserConstants.FirstPassword);
+                            var result = _userManager.CreateAsync(user, UserConstants.FirstPassword).GetAwaiter().GetResult();
 
                             if (result.Succeeded)
                             {
                                 if (userAD.IsAdmin)
                                 {
-                                    var checkRole = await _roleManager.FindByNameAsync(UserConstants.AdminRole);
+                                    var checkRole = _roleManager.FindByNameAsync(UserConstants.AdminRole).GetAwaiter().GetResult();
                                     if (checkRole != null)
                                     {
-                                        await _userManager.AddToRoleAsync(user, UserConstants.AdminRole);
+                                         _userManager.AddToRoleAsync(user, UserConstants.AdminRole).GetAwaiter().GetResult();
                                     }
                                     else
                                     {
-                                        await _roleManager.CreateAsync(new IdentityRole(UserConstants.AdminRole));
-                                        await _userManager.AddToRoleAsync(user, UserConstants.AdminRole);
+                                         _roleManager.CreateAsync(new IdentityRole(UserConstants.AdminRole)).GetAwaiter().GetResult();
+                                         _userManager.AddToRoleAsync(user, UserConstants.AdminRole).GetAwaiter().GetResult();
                                     }
                                     
                                 }
                                 else
                                 {
-                                    var checkRole = await _roleManager.FindByNameAsync(UserConstants.UserRole);
+                                    var checkRole = _roleManager.FindByNameAsync(UserConstants.UserRole).GetAwaiter().GetResult();
                                     if (checkRole != null)
                                     {
-                                        await _userManager.AddToRoleAsync(user, UserConstants.UserRole);
+                                         _userManager.AddToRoleAsync(user, UserConstants.UserRole).GetAwaiter().GetResult();
                                     }
                                     else
                                     {
-                                        await _roleManager.CreateAsync(new IdentityRole(UserConstants.UserRole));
-                                        await _userManager.AddToRoleAsync(user, UserConstants.UserRole);
+                                         _roleManager.CreateAsync(new IdentityRole(UserConstants.UserRole)).GetAwaiter().GetResult();
+                                        _userManager.AddToRoleAsync(user, UserConstants.UserRole).GetAwaiter().GetResult();
                                     }                                   
                                 }
 
@@ -105,7 +105,7 @@ namespace HelpDesk.BLL.Services
                 }
                 else
                 {
-                    var searchProfile = await _repository.GetEntityAsync(profile => profile.UserId.Equals(searchUser.Id));
+                    var searchProfile =  _repository.GetEntityAsync(profile => profile.UserId.Equals(searchUser.Id)).GetAwaiter().GetResult();
 
                     if (searchProfile.UserSid != userAD.UserSID)
                     {
@@ -200,7 +200,7 @@ namespace HelpDesk.BLL.Services
 
             if (profileDataModel is null)
             {
-                return new User();
+                return null;
             }
 
             var userDataModel = await _userManager.FindByIdAsync(profileDataModel.UserId);
