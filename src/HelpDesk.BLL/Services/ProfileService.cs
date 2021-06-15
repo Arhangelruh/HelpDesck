@@ -39,9 +39,9 @@ namespace HelpDesk.BLL.Services
             {
                 var user = new User
                 {
-                    Email = userAD.EMail,
-                    PhoneNumber = userAD.MobileNumber,
-                    UserName = userAD.Login,                    
+                    Email = CheckFromNull(userAD.EMail).GetAwaiter().GetResult(),
+                    PhoneNumber = CheckFromNull(userAD.MobileNumber).GetAwaiter().GetResult(),
+                    UserName = CheckFromNull(userAD.Login).GetAwaiter().GetResult(),                    
                 };
 
                 var searchUser = _userManager.FindByNameAsync(userAD.Login).GetAwaiter().GetResult();
@@ -89,9 +89,9 @@ namespace HelpDesk.BLL.Services
 
                                 var userProfile = new Profile
                                 {
-                                    UserId = user.Id,
-                                    FirstName = userAD.FirstName,
-                                    LastName = userAD.LastName,
+                                    UserId = CheckFromNull(user.Id).GetAwaiter().GetResult(),
+                                    FirstName = CheckFromNull(userAD.FirstName).GetAwaiter().GetResult(),
+                                    LastName = CheckFromNull(userAD.LastName).GetAwaiter().GetResult(),
                                 };
                                 await _repository.AddAsync(userProfile);
                                 await _repository.SaveChangesAsync();
@@ -127,13 +127,13 @@ namespace HelpDesk.BLL.Services
 
                         var userProfile = new Profile
                         {
-                            FirstName = userAD.FirstName,
-                            LastName = userAD.LastName,
-                            UserSid = userAD.UserSID
+                            FirstName = CheckFromNull(userAD.FirstName).GetAwaiter().GetResult(),
+                            LastName = CheckFromNull(userAD.LastName).GetAwaiter().GetResult(),
+                            UserSid = CheckFromNull(userAD.UserSID).GetAwaiter().GetResult()
                         };
-                        searchProfile.FirstName = userAD.FirstName;                        
-                        searchProfile.LastName = userAD.LastName;
-                        searchProfile.MiddleName = "null";
+                        searchProfile.FirstName = CheckFromNull(userAD.FirstName).GetAwaiter().GetResult();                        
+                        searchProfile.LastName = CheckFromNull(userAD.LastName).GetAwaiter().GetResult(); 
+                        searchProfile.MiddleName = null;
                         _repository.Update(searchProfile);
                         await _repository.SaveChangesAsync();                       
                     }
@@ -348,6 +348,27 @@ namespace HelpDesk.BLL.Services
                     await _userManager.DeleteAsync(user);
                 }
             }            
+        }
+
+        public async Task <string> CheckFromNull (string value) {
+
+            if (value is null) {
+                return null;
+            }
+
+             var result =  await Task.Run(() =>
+            {
+                if (value == "NoN" || value == "null")
+                {
+                    return null;
+                }
+                else
+                {
+                    return value;
+                }
+            });
+
+            return result;
         }
     }
 }
