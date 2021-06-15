@@ -28,5 +28,10 @@ namespace HelpDesk.BLL.Interfaces
         /// Delete job.
         /// </summary>
         Task DeleteJobScheduller(string id);
+
+        /// <summary>
+        /// Add users from ActiveDirectory to base;
+        /// </summary>
+        Task JobAddUserToBase();
     }
 }

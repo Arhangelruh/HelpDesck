@@ -82,5 +82,12 @@ namespace HelpDesk.BLL.Interfaces
         /// </summary>      
         /// <returns>return result</returns>
         Task DeleteUserAsync(int id);
+
+        /// <summary>
+        /// Check string value, values "NoN" or "null" change on null.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns> string value or null</returns>
+        Task<string> CheckFromNull(string value);
     }
 }

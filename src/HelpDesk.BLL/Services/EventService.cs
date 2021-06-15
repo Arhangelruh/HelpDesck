@@ -40,11 +40,8 @@ namespace HelpDesk.BLL.Services
 
             await Task.Run(() =>
             {
-                RecurringJob.AddOrUpdate(id, () => JobAddUserToBase().GetAwaiter().GetResult(), cron);
+                RecurringJob.AddOrUpdate(id, () => JobAddUserToBase(), cron);
             });
-
-            await Task.Run(() =>
-            { RecurringJob.AddOrUpdate(id,() => Console.WriteLine("Minutely Job"), cron); });
         }
 
         public async Task <RecurringJobDto> GetJobScheduller(string id)
