@@ -3,14 +3,14 @@
 <form class="forms" method="post" asp-controller="Profile" asp-action="EditUser">
     <input type="hidden" asp-for="UserId" />
     <div class="formslabel">
-        <label asp-for="FirstName">Фамилия</label><br />
-        <input asp-for="FirstName" />
-        <span asp-validation-for="FirstName" class="text_error"></span>
-    </div>
-    <div class="formslabel">
-        <label asp-for="LastName">Имя</label><br />
+        <label asp-for="LastName">Фамилия</label><br />
         <input asp-for="LastName" />
         <span asp-validation-for="LastName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="FirstName">Имя</label><br />
+        <input asp-for="FirstName" />
+        <span asp-validation-for="FirstName" class="text_error"></span>
     </div>
     <div class="formslabel">
         <label asp-for="MiddleName">Отчество</label><br />
@@ -41,7 +41,7 @@
         <label asp-for="Password">Пароль</label><br />
         <input asp-for="Password" /><br />
         <span asp-validation-for="Password" class="text_error"></span>
-    </div>    
+    </div>
     <div class="formslabel">
         <input class="button_classic" type="submit" value="Сохранить" />
     </div>
