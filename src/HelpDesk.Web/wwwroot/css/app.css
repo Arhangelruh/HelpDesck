@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 * {
     margin: 0;
@@ -165,4 +165,16 @@ th{
  td{
     border: 1px solid black; 
     text-align: center;
+}
+
+.message {
+    text-align: center;
+    margin-top: 2em;
+}
+
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    margin: 1em 0px;
 }

@@ -1,6 +1,4 @@
-﻿using HelpDesk.BLL.Interfaces;
-using HelpDesk.BLL.Models;
-using HelpDesk.Common.Constants;
+﻿using HelpDesk.Common.Constants;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +19,7 @@ namespace HelpDesk.BLL.Services
         public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository)
         {
             string userName = UserConstants.FirstAdmin;
-            
+
 
             if (await roleManager.FindByNameAsync(UserConstants.AdminRole) == null)
             {
