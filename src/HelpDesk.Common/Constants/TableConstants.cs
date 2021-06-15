@@ -29,10 +29,5 @@
         /// Transaction Users.
         /// </summary>
         public const string UserProblems = nameof(UserProblems);
-
-        /// <summary>
-        /// Event time.
-        /// </summary>
-        public const string EventTime = nameof(EventTime);
     }
 }

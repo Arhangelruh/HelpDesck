@@ -40,11 +40,6 @@ namespace HelpDesk.DAL.Context
         /// </summary>
         public DbSet<UserProblem> UserProblems { get; set; }
 
-        /// <summary>
-        /// Event time.
-        /// </summary>
-        public DbSet<EventTime> EventTimes { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder));
@@ -52,8 +47,7 @@ namespace HelpDesk.DAL.Context
             modelBuilder.ApplyConfiguration(new ProfileConfiguration());
             modelBuilder.ApplyConfiguration(new StatusConfiguration());
             modelBuilder.ApplyConfiguration(new ProblemConfiguration());
-            modelBuilder.ApplyConfiguration(new UserProblemConfiguration());
-            modelBuilder.ApplyConfiguration(new EventTimeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserProblemConfiguration());            
 
             base.OnModelCreating(modelBuilder);
         }
