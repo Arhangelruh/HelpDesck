@@ -1,0 +1,35 @@
+﻿@model IEnumerable<StatusViewModel>
+
+<div class="users-table">
+    <div class="panel-heading">
+        <div class="panel-heading-text">Статусы</div>
+        <form method="get" asp-controller="Request" asp-action="Statuses">
+            <button class="button_classic button_whith_border" type="submit" title="Создать">Создать</button>
+        </form>
+    </div>
+    <table class="table">
+        <tr>
+            <th>Наименование</th>
+            <th>Очередность</th>
+            <th>Доступность пользователю</th>
+        </tr>
+        @foreach (var status in Model)
+        {
+            <tr>
+                <td>@status.StatusName</td>
+                <td>@status.Queue</td>
+                <td>@status.Access</td>                
+                <td>
+                   <a asp-controller="Request" asp-action="EditStatus" asp-route-id="@status.Id">
+                    <img title="Изменить" src="/images/Edit.svg" />
+                   </a>
+                </td>
+                <td>
+                    <a asp-controller="Request" asp-action="DeleteStatus" asp-route-id="@status.Id">
+                     <img title="Удалить" src="/images/Delete.svg" />
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
