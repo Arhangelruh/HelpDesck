@@ -1,4 +1,6 @@
-﻿using HelpDesk.Common.Constants;
+﻿using HelpDesk.BLL.Interfaces;
+using HelpDesk.BLL.Models;
+using HelpDesk.Common.Constants;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Identity;
@@ -9,17 +11,16 @@ namespace HelpDesk.BLL.Services
     /// <summary>
     /// Create user and admin role and first administrator.
     /// </summary>
-    public class RoleInitializer
+    public class Initializer
     {
 
         /// <summary>
         /// Create user and admin role and first administrator.
         /// </summary>
         /// <returns>result</returns>
-        public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository)
+        public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository, IRequestsService requestsService)
         {
-            string userName = UserConstants.FirstAdmin;
-
+            string userName = UserConstants.FirstAdmin;            
 
             if (await roleManager.FindByNameAsync(UserConstants.AdminRole) == null)
             {
@@ -40,6 +41,16 @@ namespace HelpDesk.BLL.Services
                     await repository.AddAsync(new Profile { UserId = admin.Id });
                     await repository.SaveChangesAsync();
                 }
+            }
+
+            if(await requestsService.SearchStatusAsync(1) == null)
+            {
+                await requestsService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.FirstStatus, Queue = 1, Access = true });
+            }
+
+            if (await requestsService.SearchStatusAsync(2) == null)
+            {
+                await requestsService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.SecondStatus, Queue = 2, Access = true });
             }
         }
     }

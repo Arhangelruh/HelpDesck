@@ -1,14 +1,10 @@
-﻿using HelpDesk.Common.Interfaces;
-using System.Collections.Generic;
-
-namespace HelpDesk.DAL.Models
+﻿namespace HelpDesk.BLL.Models
 {
-    /// <summary>
-    /// Status.
-    /// </summary>
-    public class Status : IHasDbIdentity
+    public class StatusDto
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Status id.
+        /// </summary>
         public int Id { get; set; }
 
         /// <summary>
@@ -25,11 +21,5 @@ namespace HelpDesk.DAL.Models
         /// Access status from user.
         /// </summary>
         public bool Access { get; set; }
-
-        /// <summary>
-        /// Navigation to ProblemStatus.
-        /// </summary>
-        public ICollection<Problem> Problems { get; set; }
-
     }
 }

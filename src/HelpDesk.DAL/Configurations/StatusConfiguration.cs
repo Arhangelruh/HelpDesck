@@ -17,11 +17,17 @@ namespace HelpDesk.DAL.Configurations
             builder = builder ?? throw new ArgumentNullException(nameof(builder));
 
             builder.ToTable(TableConstants.Statuses)
-                .HasKey(status => status.Id);
+                .HasKey(status => status.Id);           
 
             builder.Property(status => status.StatusName)
-                .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium);
+                .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium)
+                .IsRequired();
 
+            builder.Property(status => status.Queue)
+                .IsRequired();
+
+            builder.Property(status => status.Access)
+                .IsRequired();
         }
     }
 }

@@ -32,6 +32,7 @@ namespace HelpDesk.Web
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IGetUserFromAD, GetUserFromAD>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IRequestsService, RequestsService>();
 
             services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
             services.AddDbContext<HelpDeskContext>(options =>

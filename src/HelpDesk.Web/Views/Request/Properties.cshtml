@@ -1,0 +1,19 @@
+﻿
+<div class="container_properties">
+    <p>Данная страничка предназначена для выполнения пользовательских настроек.</p>
+    <div class="properties">        
+            <form method="get" asp-controller="Request" asp-action="Properties">
+                <button class="properties_item" type="submit" title="Статусы">
+                <div class="button_img">
+                    <img src="../images/Status.svg" alt="Статусы">
+                    <div class="text_img">Статусы</div>
+                    </div>
+                </button>
+            </form>
+    </div>
+</div>
+
+
+@section css {
+<link href="~/css/request.css" rel="stylesheet" asp-append-version="true" />
+}
