@@ -18,7 +18,7 @@ namespace HelpDesk.BLL.Services
         /// Create user and admin role and first administrator.
         /// </summary>
         /// <returns>result</returns>
-        public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository, IRequestsService requestsService)
+        public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository, IStatusService statusService)
         {
             string userName = UserConstants.FirstAdmin;            
 
@@ -43,14 +43,14 @@ namespace HelpDesk.BLL.Services
                 }
             }
 
-            if(await requestsService.SearchStatusAsync(1) == null)
+            if(await statusService.SearchStatusAsync(1) == null)
             {
-                await requestsService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.FirstStatus, Queue = 1, Access = true });
+                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.FirstStatus, Queue = 1, Access = true });
             }
 
-            if (await requestsService.SearchStatusAsync(2) == null)
+            if (await statusService.SearchStatusAsync(2) == null)
             {
-                await requestsService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.SecondStatus, Queue = 2, Access = true });
+                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.SecondStatus, Queue = 2, Access = true });
             }
         }
     }

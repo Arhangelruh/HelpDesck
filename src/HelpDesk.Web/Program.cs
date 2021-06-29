@@ -26,8 +26,8 @@ namespace HelpDesk.Web
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var profileManager = services.GetRequiredService<IRepository<Profile>>();
-                    var requestService = services.GetRequiredService<IRequestsService>();
-                    await Initializer.InitializeAsync(userManager, rolesManager, profileManager, requestService);
+                    var statusService = services.GetRequiredService<IStatusService>();
+                    await Initializer.InitializeAsync(userManager, rolesManager, profileManager, statusService);
                 }
                 catch (Exception ex)
                 {
