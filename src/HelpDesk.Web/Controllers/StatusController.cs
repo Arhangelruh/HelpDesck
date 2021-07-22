@@ -54,7 +54,8 @@ namespace HelpDesk.Web.Controllers
                         Access = status.Access
                     });
                 }
-                return View(models);
+                
+                return View(models.OrderBy(model=>model.Queue));
             }
             else
             {
