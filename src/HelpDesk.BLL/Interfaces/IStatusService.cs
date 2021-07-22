@@ -30,7 +30,7 @@ namespace HelpDesk.BLL.Interfaces
         /// <summary>
         /// Delete status.
         /// </summary>        
-        Task DeleteStatusAsync(StatusDto statusDto);
+        Task<bool> DeleteStatusAsync(StatusDto statusDto);
 
         /// <summary>
         /// Get status by queue.

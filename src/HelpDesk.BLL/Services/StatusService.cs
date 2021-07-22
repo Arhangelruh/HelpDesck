@@ -76,7 +76,7 @@ namespace HelpDesk.BLL.Services
             await _repositoryStatus.SaveChangesAsync();
         }
 
-        public async Task DeleteStatusAsync(StatusDto statusDto)
+        public async Task<bool> DeleteStatusAsync(StatusDto statusDto)
         {
             if (statusDto is null)
             {
@@ -93,7 +93,9 @@ namespace HelpDesk.BLL.Services
                 var status = await _repositoryStatus.GetEntityAsync(status => status.Id == statusDto.Id);
                 _repositoryStatus.Delete(status);
                 await _repositoryStatus.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
         public async Task<StatusDto> SearchStatusAsync(int queue)

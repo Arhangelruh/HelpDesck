@@ -187,6 +187,21 @@ pre {
     margin: 1em 0px;
 }
 
+.Delete_Status{
+    cursor: pointer;
+    position: relative;
+}
+
+.Delete_Status .tooltiptext{
+    display: none;
+    position: absolute;
+    left: -300px;  
+    padding: 5px;
+    z-index: 2;
+    background-color: #000000a6;
+    color: #fff;
+}
+
 @media (max-width:925px) {
 
     .header-image-block{

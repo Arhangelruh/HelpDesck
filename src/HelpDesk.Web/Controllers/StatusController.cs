@@ -221,5 +221,34 @@ namespace HelpDesk.Web.Controllers
             }
             return View(model);
         }
+
+        /// <summary>
+        /// Model for delete status.
+        /// </summary>
+        /// <returns>View model for delete status</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> DeleteStatus(int id)
+        {
+            var getStatusDto = await _statusService.GetStatusByIdAsync(id);
+
+            if (getStatusDto.Queue != 1 && getStatusDto.Queue != 2)
+            {
+                var result = await _statusService.DeleteStatusAsync(getStatusDto);
+                if (result)
+                {
+                    //return RedirectToAction("Statuses");
+                    return Json("success");
+                }
+                else
+                {
+                    return Json("error");
+                }
+            }
+            else
+            {
+                return Json("error");
+            }          
+        }
     }
 }
