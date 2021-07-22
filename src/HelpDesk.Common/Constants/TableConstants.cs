@@ -29,5 +29,10 @@
         /// Transaction Users.
         /// </summary>
         public const string UserProblems = nameof(UserProblems);
+
+        /// <summary>
+        /// Requests comments.
+        /// </summary>
+        public const string Comments = nameof(Comments);
     }
 }
