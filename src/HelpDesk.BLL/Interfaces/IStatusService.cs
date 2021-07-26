@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace HelpDesk.BLL.Interfaces
 {
     /// <summary>
-    /// Class from works whith requests.
+    /// Class from works whith statuses.
     /// </summary>
     public interface IStatusService
     {
