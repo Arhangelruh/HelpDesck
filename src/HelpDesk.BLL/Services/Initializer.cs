@@ -52,6 +52,11 @@ namespace HelpDesk.BLL.Services
             {
                 await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.SecondStatus, Queue = 2, Access = true });
             }
+
+            if (await statusService.SearchStatusAsync(3) == null)
+            {
+                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.ThirdStatus, Queue = 3, Access = true });
+            }
         }
     }
 }

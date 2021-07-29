@@ -161,10 +161,10 @@ namespace HelpDesk.Web.Controllers
             {
                 var getStatus = await _statusService.GetStatusByIdAsync(model.Id);
 
-                if (getStatus.Queue != 1 && getStatus.Queue != 2)
+                if (getStatus.Queue != 1 && getStatus.Queue != 2 && model.Queue != 3)
                 {
 
-                    if (model.Queue != 1 && model.Queue != 2)
+                    if (model.Queue != 1 && model.Queue != 2 && model.Queue != 3)
                     {
                         var statuses = await _statusService.GetStatusesAsync();
                         var checkStatus = statuses.FirstOrDefault(queue => queue.Queue == model.Queue);
@@ -233,12 +233,11 @@ namespace HelpDesk.Web.Controllers
         {
             var getStatusDto = await _statusService.GetStatusByIdAsync(id);
 
-            if (getStatusDto.Queue != 1 && getStatusDto.Queue != 2)
+            if (getStatusDto.Queue != 1 && getStatusDto.Queue != 2 && getStatusDto.Queue != 3)
             {
                 var result = await _statusService.DeleteStatusAsync(getStatusDto);
                 if (result)
                 {
-                    //return RedirectToAction("Statuses");
                     return Json("success");
                 }
                 else

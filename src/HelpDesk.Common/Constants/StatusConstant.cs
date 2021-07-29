@@ -6,13 +6,18 @@
     public static class StatusConstant
     {
         /// <summary>
-        /// First admin.
+        /// First status.
         /// </summary>
         public const string FirstStatus = "Черновик";
 
         /// <summary>
-        /// User first password.
+        /// Second status.
         /// </summary>
         public const string SecondStatus = "Новая";
+
+        /// <summary>
+        /// Third status.
+        /// </summary>
+        public const string ThirdStatus = "В работе";
     }
 }
