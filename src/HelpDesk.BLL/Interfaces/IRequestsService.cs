@@ -13,39 +13,39 @@ namespace HelpDesk.BLL.Interfaces
         /// Add request to base.
         /// </summary>
         /// <param name="request">Dto model</param>
-        Task AddRequest(RequestDto request);
+        Task AddRequestAsync(RequestDto request);
 
         /// <summary>
         /// Get all request.
         /// </summary>
         /// <returns>List Requests</returns>       
-        Task  <List<RequestDto>> GetAllRequests();
+        Task  <List<RequestDto>> GetAllRequestsAsync();
 
         /// <summary>
         /// Get all request by user.
         /// </summary>
         /// <param name="profileId">Profile id</param>
         /// <returns>List Requests from user creator</returns>
-        Task<List<RequestDto>> GetRequestsByUser(int profileId);
+        Task<List<RequestDto>> GetRequestsByUserAsync(int profileId);
 
         /// <summary>
         /// Get request by id.
         /// </summary>
         /// <param name="id">Request id</param>
         /// <returns>Request model</returns>
-        Task<RequestDto> GetRequestById(int id);
+        Task<RequestDto> GetRequestByIdAsync(int id);
 
         /// <summary>
         /// Change status from request.
         /// </summary>
         /// <param name="request">Request dto</param>
         /// <param name="statusId">Status id</param>
-        Task ChangeStatus(RequestDto request, int statusId);
+        Task ChangeStatusAsync(RequestDto request, int statusId);
 
         /// <summary>
         /// Add request to base.
         /// </summary>
         /// <param name="request">Dto model</param>
-        Task DeleteRequest(RequestDto request);
+        Task DeleteRequestAsync(RequestDto request);
     }
 }

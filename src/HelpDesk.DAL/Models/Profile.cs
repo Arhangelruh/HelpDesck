@@ -43,10 +43,5 @@ namespace HelpDesk.DAL.Models
         /// Navigation to User problem.
         /// </summary>
         public ICollection<UserProblem> UsersProblem { get; set; }
-
-        /// <summary>
-        /// Navigation to Problem.
-        /// </summary>
-        public ICollection<Problem> Problems { get; set; }
     }
 }

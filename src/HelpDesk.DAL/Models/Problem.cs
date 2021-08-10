@@ -38,14 +38,6 @@ namespace HelpDesk.DAL.Models
         public DateTime? CloseDate { get; set; }
 
         /// <inheritdoc/>
-        public int ProfileCreatorId { get; set; }
-
-        /// <summary>
-        /// Navigation to Profile.
-        /// </summary>
-        public Profile Profile { get; set; }
-
-        /// <inheritdoc/>
         public int StatusId { get; set; }
 
         /// <summary>
@@ -62,5 +54,6 @@ namespace HelpDesk.DAL.Models
         /// Navigation to Comments.
         /// </summary>
         public ICollection<Comments> Comments { get; set; }
+
     }
 }

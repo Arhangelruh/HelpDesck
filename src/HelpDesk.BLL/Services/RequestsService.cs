@@ -1,7 +1,9 @@
 ﻿using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Models;
+using HelpDesk.Common.Constants;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,32 +15,55 @@ namespace HelpDesk.BLL.Services
     public class RequestsService : IRequestsService
     {
         private readonly IRepository<Problem> _repositoryProblem;
+        private readonly IRepository<UserProblem> _repositoryUserProblem;
+        private readonly IRepository<Profile> _repositoryProfile;        
+        private readonly UserManager<User> _userManager;
+        private readonly IRepository<Status> _repositoryStatus;
 
-        public RequestsService(IRepository<Problem> repositoryProblem) {
+        public RequestsService(IRepository<Problem> repositoryProblem,
+            IRepository<UserProblem> repositoryUserProblem,
+            IRepository<Profile> repositoryProfile,
+            UserManager<User> userManager,
+            IRepository<Status> repositoryStatus) {
             _repositoryProblem = repositoryProblem ?? throw new ArgumentNullException(nameof(repositoryProblem));
+            _repositoryUserProblem = repositoryUserProblem ?? throw new ArgumentNullException(nameof(repositoryUserProblem));
+            _repositoryProfile = repositoryProfile ?? throw new ArgumentNullException(nameof(repositoryProfile));            
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _repositoryStatus = repositoryStatus ?? throw new ArgumentNullException(nameof(repositoryStatus));
         }
-        public async Task AddRequest(RequestDto request)
+        public async Task AddRequestAsync(RequestDto request)
         {
             if (request is null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
 
+            var status = await _repositoryStatus.GetEntityAsync(status => status.Queue == 1);
+            var dateRequest = DateTime.Now;
+
             var newRequest = new Problem
             {                
                 Theme = request.Theme,
                 Description = request.Description,
                 Ip = request.Ip,
-                IncomingDate = request.IncomingDate,
-                ProfileCreatorId = request.ProfileCreatorId,
-                StatusId = request.StatusId
+                IncomingDate = dateRequest,                
+                StatusId = status.Id,                
             };
 
             await _repositoryProblem.AddAsync(newRequest);
             await _repositoryProblem.SaveChangesAsync();
+
+            var newConnectionUserProblem = new UserProblem
+            {
+                ProblemId = newRequest.Id,
+                ProfileId = request.ProfileCreatorId
+            };
+
+            await _repositoryUserProblem.AddAsync(newConnectionUserProblem);
+            await _repositoryUserProblem.SaveChangesAsync();
         }
 
-        public async Task ChangeStatus(RequestDto request, int statusId)
+        public async Task ChangeStatusAsync(RequestDto request, int statusId)
         {
             if (request is null)
             {
@@ -52,7 +77,7 @@ namespace HelpDesk.BLL.Services
             await _repositoryProblem.SaveChangesAsync();
         }
 
-        public async Task DeleteRequest(RequestDto request)
+        public async Task DeleteRequestAsync(RequestDto request)
         {
             if (request is null)
             {
@@ -69,30 +94,77 @@ namespace HelpDesk.BLL.Services
             await _repositoryProblem.SaveChangesAsync();
         }
 
-        public async Task<List<RequestDto>> GetAllRequests()
+        public async Task<List<RequestDto>> GetAllRequestsAsync()
         {
             var requestDtos = new List<RequestDto>();
             var requests = await _repositoryProblem.GetAll().AsNoTracking().ToListAsync();
 
+            
 
             foreach (var request in requests)
             {
-                requestDtos.Add(new RequestDto
+                             
+                var dtoModel = new RequestDto
                 {
                     Id = request.Id,
                     Theme = request.Theme,
                     Description = request.Description,
                     Ip = request.Ip,
                     IncomingDate = request.IncomingDate,
-                    ProfileCreatorId = request.ProfileCreatorId,
                     StatusId = request.StatusId
-                });
+                };
+
+                var firstUserProblem = await _repositoryUserProblem.GetEntityAsync(problem => problem.ProblemId == request.Id);
+
+                if (firstUserProblem != null)
+                {
+                    var getProfile = await _repositoryProfile.GetEntityAsync(profile => profile.Id.Equals(firstUserProblem.ProfileId));
+                    if (getProfile != null)
+                    {
+                        var searchUser = await _userManager.FindByIdAsync(getProfile.UserId);
+                        if (searchUser != null)
+                        {
+
+                            var checkRole = await _userManager.IsInRoleAsync(searchUser, UserConstants.AdminRole);
+                            if (checkRole)
+                            {                           
+                                var doubleUserProblem = await _repositoryUserProblem
+                                    .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                                if (doubleUserProblem != null)
+                                {
+                                    dtoModel.ProfileAdminId = getProfile.Id;
+                                    dtoModel.ProfileCreatorId = doubleUserProblem.ProfileId;
+                                }
+                                else
+                                {
+                                    dtoModel.ProfileAdminId = getProfile.Id;
+                                }
+                            }
+                            else
+                            {
+                                var doubleUserProblem = await _repositoryUserProblem
+                                    .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                                if (doubleUserProblem != null)
+                                {
+                                    dtoModel.ProfileCreatorId = getProfile.Id;
+                                    dtoModel.ProfileAdminId = doubleUserProblem.ProfileId;
+                                }
+                                else
+                                {
+                                    dtoModel.ProfileCreatorId = getProfile.Id;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                requestDtos.Add(dtoModel);
             }
 
             return requestDtos;
         }
 
-        public async Task<RequestDto> GetRequestById(int id)
+        public async Task<RequestDto> GetRequestByIdAsync(int id)
         {
             var request = await _repositoryProblem.GetEntityWithoutTrackingAsync(request => request.Id == id);
             if (request is null)
@@ -100,47 +172,93 @@ namespace HelpDesk.BLL.Services
                 return new RequestDto();
             }
 
-            var requestDto = new RequestDto
+            var dtoModel = new RequestDto
             {
                 Id = request.Id,
                 Theme = request.Theme,
                 Description = request.Description,
                 Ip = request.Ip,
                 IncomingDate = request.IncomingDate,
-                ProfileCreatorId = request.ProfileCreatorId,
                 StatusId = request.StatusId
             };
 
-            return requestDto;
+            var firstUserProblem = await _repositoryUserProblem.GetEntityAsync(problem => problem.ProblemId == request.Id);
+
+            if (firstUserProblem != null)
+            {
+                var getProfile = await _repositoryProfile.GetEntityAsync(profile => profile.Id.Equals(firstUserProblem.ProfileId));
+                if (getProfile != null)
+                {
+                    var searchUser = await _userManager.FindByIdAsync(getProfile.UserId);
+                    if (searchUser != null)
+                    {
+
+                        var checkRole = await _userManager.IsInRoleAsync(searchUser, UserConstants.AdminRole);
+                        if (checkRole)
+                        {
+                            var doubleUserProblem = await _repositoryUserProblem
+                                .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                            dtoModel.ProfileAdminId = getProfile.Id;
+                            dtoModel.ProfileCreatorId = doubleUserProblem.ProfileId;
+                        }
+                        else
+                        {
+                            var doubleUserProblem = await _repositoryUserProblem
+                                .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                            dtoModel.ProfileCreatorId = getProfile.Id;
+                            dtoModel.ProfileAdminId = doubleUserProblem.ProfileId;
+
+                        }
+                    }
+                }
+            }
+
+            return dtoModel;
         }
 
-        public async Task<List<RequestDto>> GetRequestsByUser(int profileId)
+        public async Task<List<RequestDto>> GetRequestsByUserAsync(int profileId)
         {
             var requestDtos = new List<RequestDto>();
 
-            var requests = await _repositoryProblem
-             .GetAll()
-             .AsNoTracking()
-             .Where(request => request.ProfileCreatorId == profileId)
-             .ToListAsync();
+            var userRequests = await _repositoryUserProblem
+                .GetAll()
+                .AsNoTracking()
+                .Where(userrequest => userrequest.ProfileId == profileId)
+                .ToListAsync();
 
-            if (!requests.Any())
+            foreach (var requestId in userRequests)
             {
-                return requestDtos;
-            }
-
-            foreach (var request in requests)
-            {
-                requestDtos.Add(new RequestDto
+                var request = await _repositoryProblem.GetEntityAsync(problem => problem.Id.Equals(requestId.ProblemId));
+                var adminUser = await _repositoryUserProblem
+                    .GetEntityAsync(userrequest => userrequest.ProblemId == requestId.ProblemId
+                    && userrequest.ProfileId != profileId);
+                if (adminUser is null)
                 {
-                    Id = request.Id,
-                    Theme = request.Theme,
-                    Description = request.Description,
-                    Ip = request.Ip,
-                    IncomingDate = request.IncomingDate,
-                    ProfileCreatorId = request.ProfileCreatorId,
-                    StatusId = request.StatusId
-                });
+                    requestDtos.Add(new RequestDto
+                    {
+                        Id = request.Id,
+                        Theme = request.Theme,
+                        Description = request.Description,
+                        Ip = request.Ip,
+                        IncomingDate = request.IncomingDate,
+                        ProfileCreatorId = profileId,
+                        StatusId = request.StatusId
+                    });
+                }
+                else
+                {
+                    requestDtos.Add(new RequestDto
+                    {
+                        Id = request.Id,
+                        Theme = request.Theme,
+                        Description = request.Description,
+                        Ip = request.Ip,
+                        IncomingDate = request.IncomingDate,
+                        ProfileCreatorId = profileId,
+                        ProfileAdminId = adminUser.ProfileId,
+                        StatusId = request.StatusId
+                    });
+                }
             }
 
             return requestDtos;

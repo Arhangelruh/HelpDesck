@@ -38,6 +38,11 @@ namespace HelpDesk.BLL.Models
         public int ProfileCreatorId { get; set; }
 
         /// <summary>
+        /// Profile Administrator.
+        /// </summary>
+        public int ProfileAdminId { get; set; }
+
+        /// <summary>
         /// Status.
         /// </summary>
         public int StatusId { get; set; }

@@ -3,20 +3,22 @@ using System;
 using HelpDesk.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HelpDesk.DAL.Migrations
 {
     [DbContext(typeof(HelpDeskContext))]
-    partial class HelpDeskContextModelSnapshot : ModelSnapshot
+    [Migration("20210728072052_DeleteConnectionProblemProfile")]
+    partial class DeleteConnectionProblemProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.8")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Comments", b =>
@@ -53,8 +55,8 @@ namespace HelpDesk.DAL.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasMaxLength(127)
+                        .HasColumnType("character varying(127)");
 
                     b.Property<DateTime>("IncomingDate")
                         .HasColumnType("timestamp without time zone");

@@ -39,6 +39,48 @@
     color:white;
 }
 
+.message {
+    text-align: center;
+    margin-top: 2em;
+}
+
+/*Request form*/
+.requestform{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5em;
+    width: 40em;
+    min-width: 40em;
+}
+
+.requestformlabel{
+    margin: 0.5em;
+}
+
+.requestinput{
+    margin-top: 10px;
+    width: 100%;
+    height: 20px;
+}
+
+.requestinputIp{
+    margin-top: 10px;
+}
+
+.probleminput{
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    
+}
+
+.button_right{
+    margin-left: auto;
+    margin-right: 0px;
+    width: 110px;
+}
+
 /* Table*/
 
 .users-table{
@@ -72,6 +114,7 @@
   td{
      border: 1px solid black; 
      text-align: center;
+     cursor: pointer;
  }
  
  /*-------------------------------------------------------*/

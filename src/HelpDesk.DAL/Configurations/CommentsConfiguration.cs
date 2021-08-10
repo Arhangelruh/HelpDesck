@@ -20,7 +20,7 @@ namespace HelpDesk.DAL.Configurations
                 .IsRequired();
 
             builder.Property(comment => comment.Comment)
-                .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium)
+                .HasMaxLength(ConfigurationContants.SqlMaxLengthLong)
                 .IsRequired();
 
             builder.HasOne(Comments => Comments.Problem)
