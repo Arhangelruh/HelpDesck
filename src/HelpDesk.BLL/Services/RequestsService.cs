@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace HelpDesk.BLL.Services
 {
+    /// <inheritdoc cref="IRequestsService<T>"/>
     public class RequestsService : IRequestsService
     {
         private readonly IRepository<Problem> _repositoryProblem;
@@ -90,6 +91,20 @@ namespace HelpDesk.BLL.Services
                 return;
             }
 
+            var userconnections = await _repositoryUserProblem
+                .GetAll()
+                .AsNoTracking()
+                .Where(userproblem => userproblem.ProblemId == request.Id)
+                .ToListAsync();
+           
+            if (userconnections.Any())
+            {
+                foreach (var userconnection in userconnections) {
+                     _repositoryUserProblem.Delete(userconnection);
+                    await _repositoryUserProblem.SaveChangesAsync();
+                }
+            }
+
             _repositoryProblem.Delete(requestSearch);
             await _repositoryProblem.SaveChangesAsync();
         }
@@ -114,49 +129,9 @@ namespace HelpDesk.BLL.Services
                     StatusId = request.StatusId
                 };
 
-                var firstUserProblem = await _repositoryUserProblem.GetEntityAsync(problem => problem.ProblemId == request.Id);
-
-                if (firstUserProblem != null)
-                {
-                    var getProfile = await _repositoryProfile.GetEntityAsync(profile => profile.Id.Equals(firstUserProblem.ProfileId));
-                    if (getProfile != null)
-                    {
-                        var searchUser = await _userManager.FindByIdAsync(getProfile.UserId);
-                        if (searchUser != null)
-                        {
-
-                            var checkRole = await _userManager.IsInRoleAsync(searchUser, UserConstants.AdminRole);
-                            if (checkRole)
-                            {                           
-                                var doubleUserProblem = await _repositoryUserProblem
-                                    .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
-                                if (doubleUserProblem != null)
-                                {
-                                    dtoModel.ProfileAdminId = getProfile.Id;
-                                    dtoModel.ProfileCreatorId = doubleUserProblem.ProfileId;
-                                }
-                                else
-                                {
-                                    dtoModel.ProfileAdminId = getProfile.Id;
-                                }
-                            }
-                            else
-                            {
-                                var doubleUserProblem = await _repositoryUserProblem
-                                    .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
-                                if (doubleUserProblem != null)
-                                {
-                                    dtoModel.ProfileCreatorId = getProfile.Id;
-                                    dtoModel.ProfileAdminId = doubleUserProblem.ProfileId;
-                                }
-                                else
-                                {
-                                    dtoModel.ProfileCreatorId = getProfile.Id;
-                                }
-                            }
-                        }
-                    }
-                }
+                var userAndAdmin = await GetUserAndAdminProblemAsync(request);
+                dtoModel.ProfileCreatorId = userAndAdmin.ProfileCreatorId;
+                dtoModel.ProfileAdminId = userAndAdmin.ProfileAdminId;
 
                 requestDtos.Add(dtoModel);
             }
@@ -169,7 +144,7 @@ namespace HelpDesk.BLL.Services
             var request = await _repositoryProblem.GetEntityWithoutTrackingAsync(request => request.Id == id);
             if (request is null)
             {
-                return new RequestDto();
+                return null;
             }
 
             var dtoModel = new RequestDto
@@ -179,39 +154,12 @@ namespace HelpDesk.BLL.Services
                 Description = request.Description,
                 Ip = request.Ip,
                 IncomingDate = request.IncomingDate,
-                StatusId = request.StatusId
+                StatusId = request.StatusId,                
             };
 
-            var firstUserProblem = await _repositoryUserProblem.GetEntityAsync(problem => problem.ProblemId == request.Id);
-
-            if (firstUserProblem != null)
-            {
-                var getProfile = await _repositoryProfile.GetEntityAsync(profile => profile.Id.Equals(firstUserProblem.ProfileId));
-                if (getProfile != null)
-                {
-                    var searchUser = await _userManager.FindByIdAsync(getProfile.UserId);
-                    if (searchUser != null)
-                    {
-
-                        var checkRole = await _userManager.IsInRoleAsync(searchUser, UserConstants.AdminRole);
-                        if (checkRole)
-                        {
-                            var doubleUserProblem = await _repositoryUserProblem
-                                .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
-                            dtoModel.ProfileAdminId = getProfile.Id;
-                            dtoModel.ProfileCreatorId = doubleUserProblem.ProfileId;
-                        }
-                        else
-                        {
-                            var doubleUserProblem = await _repositoryUserProblem
-                                .GetEntityAsync(problem => problem.ProblemId == request.Id && problem.ProfileId != firstUserProblem.ProfileId);
-                            dtoModel.ProfileCreatorId = getProfile.Id;
-                            dtoModel.ProfileAdminId = doubleUserProblem.ProfileId;
-
-                        }
-                    }
-                }
-            }
+            var userAndAdmin = await GetUserAndAdminProblemAsync(request);
+            dtoModel.ProfileCreatorId = userAndAdmin.ProfileCreatorId;
+            dtoModel.ProfileAdminId = userAndAdmin.ProfileAdminId;
 
             return dtoModel;
         }
@@ -262,6 +210,55 @@ namespace HelpDesk.BLL.Services
             }
 
             return requestDtos;
+        }
+
+        public async Task <RequestDto> GetUserAndAdminProblemAsync(Problem problem)
+        {
+            var requestDtoModel = new RequestDto();
+
+            var firstUserProblem = await _repositoryUserProblem.GetEntityAsync(problem => problem.ProblemId == problem.Id);
+
+            if (firstUserProblem != null)
+            {
+                var getProfile = await _repositoryProfile.GetEntityAsync(profile => profile.Id.Equals(firstUserProblem.ProfileId));
+                if (getProfile != null)
+                {
+                    var searchUser = await _userManager.FindByIdAsync(getProfile.UserId);
+                    if (searchUser != null)
+                    {
+                        var checkRole = await _userManager.IsInRoleAsync(searchUser, UserConstants.AdminRole);
+                        if (checkRole)
+                        {
+                            var doubleUserProblem = await _repositoryUserProblem
+                                .GetEntityAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                            if (doubleUserProblem != null)
+                            {
+                                requestDtoModel.ProfileAdminId = getProfile.Id;
+                                requestDtoModel.ProfileCreatorId = doubleUserProblem.ProfileId;
+                            }
+                            else
+                            {
+                                requestDtoModel.ProfileAdminId = getProfile.Id;
+                            }
+                        }
+                        else
+                        {
+                            var doubleUserProblem = await _repositoryUserProblem
+                                .GetEntityAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                            if (doubleUserProblem != null)
+                            {
+                                requestDtoModel.ProfileCreatorId = getProfile.Id;
+                                requestDtoModel.ProfileAdminId = doubleUserProblem.ProfileId;
+                            }
+                            else
+                            {
+                                requestDtoModel.ProfileCreatorId = getProfile.Id;
+                            }
+                        }
+                    }
+                }
+            }
+            return requestDtoModel;
         }
     }
 }

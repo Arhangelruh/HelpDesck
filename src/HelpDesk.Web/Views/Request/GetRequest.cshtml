@@ -1,0 +1,32 @@
+﻿@model RequestViewModel
+
+
+    <div class="container_head">
+        <div>Заявка №@Model.Id</div>
+        <div>Тема: @Model.Theme</div>
+    </div>
+    <div class="container_buttoms">
+        @if (Model.StatusQueue == 1)
+        {
+            <div class="request_buttom">
+                <a class="a_buttom" asp-controller="Request" asp-action="DeleteRequest" asp-route-requestId="@Model.Id">Удалить</a>
+            </div>
+            <div class="request_buttom">
+                <a class="a_buttom" asp-controller="Request" asp-action="EditRequest" asp-route-id="@Model.Id">Редактировать</a>
+            </div>
+            <div class="request_buttom">
+                <a class="a_buttom" asp-controller="Request" asp-action="SendRequest" asp-route-id="@Model.Id">Отправить</a>
+            </div>
+                }
+            </div>
+            <div class="container_request"></div>
+
+
+
+
+
+
+
+            @section css {
+                <link href="~/css/request.css" rel="stylesheet" asp-append-version="true" />
+            }

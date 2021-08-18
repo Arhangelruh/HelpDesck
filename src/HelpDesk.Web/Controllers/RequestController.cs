@@ -19,13 +19,20 @@ namespace HelpDesk.Web.Controllers
         private readonly IRequestsService _requestsService;
         private readonly UserManager<User> _userManager;
         private readonly IProfileService _profileService;
+        private readonly ICommentService _commentService;
 
-        public RequestController(UserManager<User> userManager, IStatusService statusService, IRequestsService requestsService, IProfileService profileService)
+        public RequestController(
+            UserManager<User> userManager,
+            IStatusService statusService,
+            IRequestsService requestsService,
+            IProfileService profileService,
+            ICommentService commentService)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _statusService = statusService ?? throw new ArgumentNullException(nameof(statusService));
             _requestsService = requestsService ?? throw new ArgumentNullException(nameof(requestsService));
             _profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));
+            _commentService = commentService ?? throw new ArgumentNullException(nameof(commentService));
         }
 
         /// <summary>
@@ -51,7 +58,7 @@ namespace HelpDesk.Web.Controllers
             var modelsRequests = new List<RequestViewModel>();
 
             var statuses = await _statusService.GetStatusesAsync();
-            var profiles = await _profileService.GetAsyncProfiles();            
+            var profiles = await _profileService.GetAsyncProfiles();
 
             if (ifAdmin)
             {
@@ -60,52 +67,55 @@ namespace HelpDesk.Web.Controllers
                 {
                     foreach (var request in getRequests)
                     {
-                        var status = statuses.FirstOrDefault(status => status.Id == request.StatusId);
-                        var profile = profiles.FirstOrDefault(profile => profile.Id == request.ProfileCreatorId);
-                        var profileAdmin = profiles.FirstOrDefault(profile => profile.Id == request.ProfileAdminId);
-                        string profileName, administratorName;
-
-                        var requestCreate = request.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
-
-                        if (profile is null)
+                        if (request.StatusId != 1)
                         {
-                            profileName = "Not found";
-                        }
-                        else
-                        {
-                            profileName = profile.LastName + " " + profile.FirstName;
-                            if (profile.LastName is null && profile.FirstName is null)
+                            var status = statuses.FirstOrDefault(status => status.Id == request.StatusId);
+                            var profile = profiles.FirstOrDefault(profile => profile.Id == request.ProfileCreatorId);
+                            var profileAdmin = profiles.FirstOrDefault(profile => profile.Id == request.ProfileAdminId);
+                            string profileName, administratorName;
+
+                            var requestCreate = request.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
+
+                            if (profile is null)
                             {
-                                var getCreator = await _userManager.FindByIdAsync(profile.UserId);
-                                profileName = getCreator.UserName;
+                                profileName = "Not found";
                             }
-                        }
-
-                        if(profileAdmin is null)
-                        {
-                            administratorName = "Не в работе";
-                        }
-                        else
-                        {
-                            administratorName = profileAdmin.LastName + " " + profileAdmin.FirstName;
-                            if(profileAdmin.LastName is null && profileAdmin.FirstName is null)
+                            else
                             {
-                                var getAdmin = await _userManager.FindByIdAsync(profileAdmin.UserId);
-                                administratorName = getAdmin.UserName;
+                                profileName = profile.LastName + " " + profile.FirstName;
+                                if (profile.LastName is null && profile.FirstName is null)
+                                {
+                                    var getCreator = await _userManager.FindByIdAsync(profile.UserId);
+                                    profileName = getCreator.UserName;
+                                }
                             }
-                        }
 
-                        modelsRequests.Add(new RequestViewModel
-                        {
-                            Id = request.Id,
-                            Theme = request.Theme,
-                            Description = request.Description,
-                            Ip = request.Ip,
-                            Creator = profileName,
-                            Status = status.StatusName,
-                            IncomingDate = requestCreate,
-                            Admin = administratorName
-                        });
+                            if (profileAdmin is null)
+                            {
+                                administratorName = "Не в работе";
+                            }
+                            else
+                            {
+                                administratorName = profileAdmin.LastName + " " + profileAdmin.FirstName;
+                                if (profileAdmin.LastName is null && profileAdmin.FirstName is null)
+                                {
+                                    var getAdmin = await _userManager.FindByIdAsync(profileAdmin.UserId);
+                                    administratorName = getAdmin.UserName;
+                                }
+                            }
+
+                            modelsRequests.Add(new RequestViewModel
+                            {
+                                Id = request.Id,
+                                Theme = request.Theme,
+                                Description = request.Description,
+                                Ip = request.Ip,
+                                Creator = profileName,
+                                Status = status.StatusName,
+                                IncomingDate = requestCreate,
+                                Admin = administratorName
+                            });
+                        }
                     }
                 }
                 return View(modelsRequests);
@@ -171,7 +181,7 @@ namespace HelpDesk.Web.Controllers
         [Authorize(Roles = UserConstants.UserRole)]
         [HttpGet]
         public IActionResult AddRequest()
-        {            
+        {
             return View();
         }
 
@@ -192,11 +202,12 @@ namespace HelpDesk.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                var request = new RequestDto {
-                Theme = model.Theme,
-                Ip = model.Ip,
-                Description = model.Description,
-                ProfileCreatorId = profile.Id
+                var request = new RequestDto
+                {
+                    Theme = model.Theme,
+                    Ip = model.Ip,
+                    Description = model.Description,
+                    ProfileCreatorId = profile.Id
                 };
 
                 await _requestsService.AddRequestAsync(request);
@@ -204,6 +215,98 @@ namespace HelpDesk.Web.Controllers
                 return RedirectToAction("Requests");
             }
             return View(model);
+        }
+
+        /// <summary>
+        /// get request model.
+        /// </summary>
+        /// <returns>View model request info</returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetRequest(int requestId)
+        {
+            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
+            string userName, adminName;
+
+            var userProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileCreatorId);
+            var adminProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileAdminId);
+            if (userProfile is null)
+            {
+                userName = "Not Found";
+            }
+            else
+            {
+                if (userProfile.LastName != null || userProfile.FirstName != null)
+                {
+                    userName = userProfile.LastName + " " + userProfile.FirstName;
+                }
+                else
+                {
+                    var user = await _userManager.FindByIdAsync(userProfile.UserId);
+                    userName = user.UserName;
+                }
+            }
+
+            if (adminProfile is null)
+            {
+                adminName = "не назначен";
+            }
+            else
+            {
+                if (adminProfile.LastName != null || adminProfile.FirstName != null)
+                {
+                    adminName = adminProfile.LastName + " " + adminProfile.FirstName;
+                }
+                else
+                {
+                    var user = await _userManager.FindByIdAsync(adminProfile.UserId);
+                    adminName = user.UserName;
+                }
+            }
+
+            var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
+
+            var requestCreate = getRequestModel.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
+
+            var requestViewModel = new RequestViewModel
+            {
+                Id = getRequestModel.Id,
+                Theme = getRequestModel.Theme,
+                Description = getRequestModel.Description,
+                Ip = getRequestModel.Ip,
+                Creator = userName,
+                Status = status.StatusName,
+                StatusQueue = status.Queue,
+                IncomingDate = requestCreate,
+                Admin = adminName
+
+            };
+
+            return View(requestViewModel);
+        }
+
+        /// <summary>
+        /// delete request.
+        /// </summary>
+        /// <returns>View requests</returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> DeleteRequest(int requestId)
+        {
+            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
+
+            var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
+
+            if (status.Queue == 1)
+            {
+                await _commentService.DeleteCommentsAsync(getRequestModel.Id);
+                await _requestsService.DeleteRequestAsync(getRequestModel);
+                return RedirectToAction("Requests");
+            }
+            else
+            {
+                return Content("Нельзя удалить заявки отправленные в работу");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HelpDesk.BLL.Models;
+using HelpDesk.DAL.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -47,5 +48,12 @@ namespace HelpDesk.BLL.Interfaces
         /// </summary>
         /// <param name="request">Dto model</param>
         Task DeleteRequestAsync(RequestDto request);
+
+        /// <summary>
+        /// Get user creater requst and admin who support request.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <returns>RequestDto fields admin and user id</returns>
+        Task<RequestDto> GetUserAndAdminProblemAsync(Problem problem);
     }
 }

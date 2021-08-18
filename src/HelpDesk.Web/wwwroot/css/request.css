@@ -81,6 +81,8 @@
     width: 110px;
 }
 
+/*-------------------------------------------------------*/
+
 /* Table*/
 
 .users-table{
@@ -115,7 +117,58 @@
      border: 1px solid black; 
      text-align: center;
      cursor: pointer;
+     max-width: 1000px;
+     overflow: hidden;
  }
  
  /*-------------------------------------------------------*/
  
+ /*Request*/
+ .container {
+    width: 100%;
+    margin: 0 auto;
+    min-width: 830px;        
+}
+
+.container_head{
+    height: 70px;
+    padding: 20px 20px 10px 30px;
+    background-color:rgb(236, 231, 255);
+}
+
+.container_buttoms{
+    height: 50px;
+    padding: 0px 20px 5px 20px;
+    display: flex;
+}
+
+.request_buttom{
+    width: 120px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 7%;
+    background-color: inherit;
+    cursor: pointer;
+    border-style: outset;
+    border-color: darkslateblue;
+    text-align: center; 
+}
+
+.request_buttom:hover{
+background-color: #b7c4e7;
+}
+
+.container_request{
+    display: flex;
+}
+
+.a_buttom{
+    text-decoration: none;
+    font-size: small;
+    color: black;
+    height: 30px;
+    line-height: 30px;
+}
+
+
+/*-------------------------------------------------------*/

@@ -308,6 +308,10 @@ namespace HelpDesk.BLL.Services
         public async Task<ProfileDto> GetProfileByIdAsync(int id)
         {            
             var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(id));
+            if(getProfile is null)
+            {
+                return null;
+            }
             var profile = new ProfileDto
             {
                 Id = getProfile.Id,

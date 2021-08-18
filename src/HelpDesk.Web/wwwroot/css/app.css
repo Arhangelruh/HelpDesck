@@ -93,6 +93,7 @@ h1 {
     text-align: center;  
     list-style: none;
     line-height: 30px;
+    cursor: pointer;
 }
 
 .forms{

@@ -48,8 +48,14 @@ namespace HelpDesk.Web.ViewModels
         public string Status { get; set; }
 
         /// <summary>
+        /// Status queue
+        /// </summary>
+        public int StatusQueue { get; set; }
+
+        /// <summary>
         /// Incoming date.
         /// </summary>
         public string IncomingDate { get; set; }
+
     }
 }

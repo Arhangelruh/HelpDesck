@@ -35,7 +35,7 @@
             @foreach (var request in Model)
             {
 
-        <tr>
+        <tr onclick="location.href = '@Url.Action("GetRequest", "Request", new { requestId = request.Id })'">
             <td>@request.Id</td>
             <td>@request.Theme</td>
             <td>@request.IncomingDate</td>
