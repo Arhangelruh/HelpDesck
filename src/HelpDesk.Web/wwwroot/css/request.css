@@ -160,6 +160,32 @@ background-color: #b7c4e7;
 
 .container_request{
     display: flex;
+    width: 100%;
+}
+
+.description_request{
+    padding: 20px;
+    width: 80%;
+}
+
+.description{
+  padding-top: 10px;
+  border-top: outset;
+  border-bottom: ridge;
+}
+
+.users_request{
+    display: inline;
+    width: 20%;
+    padding: 20px;
+}
+
+.autor_request{
+    margin: 5px;
+}
+
+.admin_request{
+    margin: 20px 5px 5px 5px;
 }
 
 .a_buttom{

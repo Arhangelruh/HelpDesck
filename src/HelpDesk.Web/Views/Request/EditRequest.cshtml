@@ -1,0 +1,37 @@
+﻿@model RequestViewModel
+
+<div class="text_error message">
+    @Html.ValidationMessage("Error")
+</div>
+
+
+<form class="requestform" method="post" asp-controller="Request" asp-action="EditRequest">
+    <input type="hidden" asp-for="Id" />
+    <div class="requestformlabel">
+        <label class="requestlabel" asp-for="Theme">Тема</label><br />
+        <input class="requestinput" asp-for="Theme" />
+        <span asp-validation-for="Theme" class="text_error"></span>
+    </div>
+    <div class="requestformlabel">
+        <label class="requestlabel" asp-for="Ip">Ip адрес</label><br />
+        <input class="requestinputIp" type="text" name="Ip" placeholder="xxx.xxx.xxx.xxx" asp-for="Ip" />
+        <span asp-validation-for="Ip" class="text_error"></span>
+    </div>
+    <div class="requestformlabel">
+        <label class="requestproblem" asp-for="Description">Описание</label><br />
+        <textarea class="probleminput" rows="12" asp-for="Description"></textarea>
+        <span asp-validation-for="Description" class="text_error"></span>
+    </div>
+    <div class="requestformlabel  button_right">
+        <input class="button_classic" type="submit" value="Изменить" />
+    </div>
+</form>
+
+@section css {
+    <link href="~/css/request.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section js {
+    <script src="~/js/inputmask.js"></script>
+    <script src="~/js/ipmask.js" asp-append-version="true"></script>
+}

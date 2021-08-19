@@ -4,7 +4,9 @@ namespace HelpDesk.BLL.Models
 {
     public class RequestDto
     {
-        /// <inheritdoc/>
+        /// <summary>
+        /// Request id.
+        /// </summary>
         public int Id { get; set; }
 
         /// <summary>

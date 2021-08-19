@@ -260,5 +260,25 @@ namespace HelpDesk.BLL.Services
             }
             return requestDtoModel;
         }
+
+        public async Task EditRequestAsync(RequestDto request)
+        {
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            var requestSearch = await _repositoryProblem.GetEntityAsync(q => q.Id.Equals(request.Id));
+            if (requestSearch is null)
+            {
+                return;
+            }
+
+            requestSearch.Theme = request.Theme;
+            requestSearch.Description = request.Description;
+            requestSearch.Ip = request.Ip;
+            _repositoryProblem.Update(requestSearch);
+            await _repositoryProblem.SaveChangesAsync();
+        }
     }
 }

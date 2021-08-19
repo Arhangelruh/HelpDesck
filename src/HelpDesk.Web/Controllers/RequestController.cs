@@ -267,8 +267,9 @@ namespace HelpDesk.Web.Controllers
             var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
 
             var requestCreate = getRequestModel.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
+            var comments = await _commentService.GetCommentsByRequestAsync(requestId);
 
-            var requestViewModel = new RequestViewModel
+            var requestViewModel = new FullRequestViewModel
             {
                 Id = getRequestModel.Id,
                 Theme = getRequestModel.Theme,
@@ -278,8 +279,8 @@ namespace HelpDesk.Web.Controllers
                 Status = status.StatusName,
                 StatusQueue = status.Queue,
                 IncomingDate = requestCreate,
-                Admin = adminName
-
+                Admin = adminName,
+                Comments = comments
             };
 
             return View(requestViewModel);
@@ -306,6 +307,60 @@ namespace HelpDesk.Web.Controllers
             else
             {
                 return Content("Нельзя удалить заявки отправленные в работу");
+            }
+        }
+
+        /// <summary>
+        /// Model for edit raquest.
+        /// </summary>
+        /// <returns>View model for edit request if status request = firststatus </returns>
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> EditRequest(int requestId)
+        {
+            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
+            var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
+            if(status.Queue == 1) {
+                var requestViewModel = new RequestViewModel
+                {
+                    Id = getRequestModel.Id,
+                    Theme = getRequestModel.Theme,
+                    Description = getRequestModel.Description,
+                    Ip = getRequestModel.Ip                                                                                                
+                };
+                return View(requestViewModel);
+            }
+            else
+            {
+                return Content("Редактировать заявки отправленные в работу запрещено.");
+            }
+        }
+
+        /// <summary>
+        /// Edit problem
+        /// </summary>
+        /// <param name="editRequest"></param>
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRequest(RequestViewModel editRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var problem = new RequestDto
+                {
+                    Id = editRequest.Id,                   
+                    Theme = editRequest.Theme,
+                    Description = editRequest.Description,
+                    Ip = editRequest.Ip
+                };
+
+                await _requestsService.EditRequestAsync(problem);
+                return RedirectToAction("GetRequest", "Request", new { requestId = editRequest.Id});
+            }
+            else
+            {
+                return View(editRequest);
             }
         }
     }

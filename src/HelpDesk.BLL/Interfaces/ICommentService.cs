@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using HelpDesk.BLL.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HelpDesk.BLL.Interfaces
 {
@@ -12,5 +14,12 @@ namespace HelpDesk.BLL.Interfaces
         /// </summary>
         /// <param name="request">Dto model</param>
         Task DeleteCommentsAsync(int problemid);
+
+        /// <summary>
+        /// Get comments from request.
+        /// </summary>
+        /// <param name="problemid"></param>
+        /// <returns>list comments</returns>
+        Task<List<CommentDto>> GetCommentsByRequestAsync(int problemid);
     }
 }

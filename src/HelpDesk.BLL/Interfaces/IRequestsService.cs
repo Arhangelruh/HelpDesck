@@ -55,5 +55,11 @@ namespace HelpDesk.BLL.Interfaces
         /// <param name="problem"></param>
         /// <returns>RequestDto fields admin and user id</returns>
         Task<RequestDto> GetUserAndAdminProblemAsync(Problem problem);
+
+        /// <summary>
+        /// Edit request in base.
+        /// </summary>
+        /// <param name="request">Dto model</param>
+        Task EditRequestAsync(RequestDto request);
     }
 }
