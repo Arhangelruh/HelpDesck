@@ -363,5 +363,21 @@ namespace HelpDesk.Web.Controllers
                 return View(editRequest);
             }
         }
+
+        /// <summary>
+        /// Send problem
+        /// </summary>
+        /// <param name="requestId"></param>
+        [Authorize]
+        [HttpGet]     
+        public async Task<IActionResult> SendRequest(int requestId)
+        {
+            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
+            var status = await _statusService.SearchStatusAsync(2);
+
+            await _requestsService.ChangeStatusAsync(getRequestModel, status.Id);
+
+            return RedirectToAction("GetRequest", "Request", new { requestId });
+        }
     }
 }

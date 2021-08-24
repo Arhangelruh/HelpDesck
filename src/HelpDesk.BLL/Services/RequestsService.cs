@@ -39,7 +39,7 @@ namespace HelpDesk.BLL.Services
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var status = await _repositoryStatus.GetEntityAsync(status => status.Queue == 1);
+            var status = await _repositoryStatus.GetEntityWithoutTrackingAsync(status => status.Queue == 1);
             var dateRequest = DateTime.Now;
 
             var newRequest = new Problem
@@ -71,7 +71,7 @@ namespace HelpDesk.BLL.Services
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var editRequest = await _repositoryProblem.GetEntityAsync(q => q.Id.Equals(request.Id));
+            var editRequest = await _repositoryProblem.GetEntityWithoutTrackingAsync(q => q.Id.Equals(request.Id));
             editRequest.StatusId = statusId;
 
             _repositoryProblem.Update(editRequest);
@@ -85,7 +85,7 @@ namespace HelpDesk.BLL.Services
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var requestSearch = await _repositoryProblem.GetEntityAsync(q => q.Id.Equals(request.Id));
+            var requestSearch = await _repositoryProblem.GetEntityWithoutTrackingAsync(q => q.Id.Equals(request.Id));
             if (requestSearch is null)
             {
                 return;
@@ -100,7 +100,7 @@ namespace HelpDesk.BLL.Services
             if (userconnections.Any())
             {
                 foreach (var userconnection in userconnections) {
-                     _repositoryUserProblem.Delete(userconnection);
+                          _repositoryUserProblem.Delete(userconnection);
                     await _repositoryUserProblem.SaveChangesAsync();
                 }
             }
@@ -176,9 +176,9 @@ namespace HelpDesk.BLL.Services
 
             foreach (var requestId in userRequests)
             {
-                var request = await _repositoryProblem.GetEntityAsync(problem => problem.Id.Equals(requestId.ProblemId));
+                var request = await _repositoryProblem.GetEntityWithoutTrackingAsync(problem => problem.Id.Equals(requestId.ProblemId));
                 var adminUser = await _repositoryUserProblem
-                    .GetEntityAsync(userrequest => userrequest.ProblemId == requestId.ProblemId
+                    .GetEntityWithoutTrackingAsync(userrequest => userrequest.ProblemId == requestId.ProblemId
                     && userrequest.ProfileId != profileId);
                 if (adminUser is null)
                 {
@@ -216,11 +216,11 @@ namespace HelpDesk.BLL.Services
         {
             var requestDtoModel = new RequestDto();
 
-            var firstUserProblem = await _repositoryUserProblem.GetEntityAsync(problem => problem.ProblemId == problem.Id);
+            var firstUserProblem = await _repositoryUserProblem.GetEntityWithoutTrackingAsync(problem => problem.ProblemId == problem.Id);
 
             if (firstUserProblem != null)
             {
-                var getProfile = await _repositoryProfile.GetEntityAsync(profile => profile.Id.Equals(firstUserProblem.ProfileId));
+                var getProfile = await _repositoryProfile.GetEntityWithoutTrackingAsync(profile => profile.Id.Equals(firstUserProblem.ProfileId));
                 if (getProfile != null)
                 {
                     var searchUser = await _userManager.FindByIdAsync(getProfile.UserId);
@@ -230,7 +230,7 @@ namespace HelpDesk.BLL.Services
                         if (checkRole)
                         {
                             var doubleUserProblem = await _repositoryUserProblem
-                                .GetEntityAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                                .GetEntityWithoutTrackingAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
                             if (doubleUserProblem != null)
                             {
                                 requestDtoModel.ProfileAdminId = getProfile.Id;
@@ -244,7 +244,7 @@ namespace HelpDesk.BLL.Services
                         else
                         {
                             var doubleUserProblem = await _repositoryUserProblem
-                                .GetEntityAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                                .GetEntityWithoutTrackingAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
                             if (doubleUserProblem != null)
                             {
                                 requestDtoModel.ProfileCreatorId = getProfile.Id;
@@ -268,7 +268,7 @@ namespace HelpDesk.BLL.Services
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var requestSearch = await _repositoryProblem.GetEntityAsync(q => q.Id.Equals(request.Id));
+            var requestSearch = await _repositoryProblem.GetEntityWithoutTrackingAsync(q => q.Id.Equals(request.Id));
             if (requestSearch is null)
             {
                 return;

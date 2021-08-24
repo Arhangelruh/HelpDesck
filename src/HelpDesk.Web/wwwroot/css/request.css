@@ -134,6 +134,13 @@
     height: 70px;
     padding: 20px 20px 10px 30px;
     background-color:rgb(236, 231, 255);
+    display: flex;
+    justify-content: space-between;
+}
+
+.requeststatus{
+    width: auto;
+    margin-right: 20px;
 }
 
 .container_buttoms{
@@ -172,6 +179,10 @@ background-color: #b7c4e7;
   padding-top: 10px;
   border-top: outset;
   border-bottom: ridge;
+}
+
+.requestadress{
+    padding: 10px 10px 20px 10px;
 }
 
 .users_request{
