@@ -1,4 +1,5 @@
 ﻿@model FullRequestViewModel
+@using HelpDesk.Common.Constants;
 
 
 <div class="container_head">
@@ -13,23 +14,37 @@
 
 <div class="container_buttoms">
     @if (Model.StatusQueue == 1)
-    {        
-            <a class="a_buttom" asp-controller="Request" asp-action="DeleteRequest" asp-route-requestId="@Model.Id">
-                <div class="request_buttom">
-                    Удалить
-                </div>
-            </a>        
-            <a class="a_buttom" asp-controller="Request" asp-action="EditRequest" asp-route-requestId="@Model.Id">
+    {
+        <a class="a_buttom" asp-controller="Request" asp-action="DeleteRequest" asp-route-requestId="@Model.Id">
             <div class="request_buttom">
-                   Редактировать
+                Удалить
             </div>
-            </a>        
-            <a class="a_buttom" asp-controller="Request" asp-action="SendRequest" asp-route-requestId="@Model.Id">
-                <div class="request_buttom">
-                    Отправить
-                </div>
-            </a>
-        
+        </a>
+        <a class="a_buttom" asp-controller="Request" asp-action="EditRequest" asp-route-requestId="@Model.Id">
+            <div class="request_buttom">
+                Редактировать
+            </div>
+        </a>
+        <a class="a_buttom" asp-controller="Request" asp-action="SendRequest" asp-route-requestId="@Model.Id">
+            <div class="request_buttom">
+                Отправить
+            </div>
+        </a>
+
+    }
+    @if (Model.StatusQueue == 2)
+    {
+        @if (User.Identity.IsAuthenticated)
+        {
+            if (User.IsInRole(UserConstants.AdminRole))
+            {
+                <a class="a_buttom" asp-controller="Request" asp-action="InWork" asp-route-requestId="@Model.Id">
+                    <div class="request_buttom">
+                        В работу
+                    </div>
+                </a>
+            }
+        }
     }
 </div>
 

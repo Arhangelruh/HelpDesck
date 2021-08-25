@@ -216,7 +216,7 @@ namespace HelpDesk.BLL.Services
         {
             var requestDtoModel = new RequestDto();
 
-            var firstUserProblem = await _repositoryUserProblem.GetEntityWithoutTrackingAsync(problem => problem.ProblemId == problem.Id);
+            var firstUserProblem = await _repositoryUserProblem.GetEntityWithoutTrackingAsync(userproblem => userproblem.ProblemId == problem.Id);
 
             if (firstUserProblem != null)
             {
@@ -230,7 +230,7 @@ namespace HelpDesk.BLL.Services
                         if (checkRole)
                         {
                             var doubleUserProblem = await _repositoryUserProblem
-                                .GetEntityWithoutTrackingAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                                .GetEntityWithoutTrackingAsync(userproblem => userproblem.ProblemId == problem.Id && userproblem.ProfileId != firstUserProblem.ProfileId);
                             if (doubleUserProblem != null)
                             {
                                 requestDtoModel.ProfileAdminId = getProfile.Id;
@@ -244,7 +244,7 @@ namespace HelpDesk.BLL.Services
                         else
                         {
                             var doubleUserProblem = await _repositoryUserProblem
-                                .GetEntityWithoutTrackingAsync(problem => problem.ProblemId == problem.Id && problem.ProfileId != firstUserProblem.ProfileId);
+                                .GetEntityWithoutTrackingAsync(userproblem => userproblem.ProblemId == problem.Id && userproblem.ProfileId != firstUserProblem.ProfileId);
                             if (doubleUserProblem != null)
                             {
                                 requestDtoModel.ProfileCreatorId = getProfile.Id;
@@ -279,6 +279,26 @@ namespace HelpDesk.BLL.Services
             requestSearch.Ip = request.Ip;
             _repositoryProblem.Update(requestSearch);
             await _repositoryProblem.SaveChangesAsync();
+        }
+
+        public async Task AddToWorkAsync(RequestDto request, ProfileDto profile) {
+           if(request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+           if(profile is null)
+            {
+                throw new ArgumentNullException(nameof(profile));
+            }
+
+            var newConnectionUserProblem = new UserProblem
+            {
+                ProblemId = request.Id,
+                ProfileId = profile.Id
+            };
+
+            await _repositoryUserProblem.AddAsync(newConnectionUserProblem);
+            await _repositoryUserProblem.SaveChangesAsync();
         }
     }
 }

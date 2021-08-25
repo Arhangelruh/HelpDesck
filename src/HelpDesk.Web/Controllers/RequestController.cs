@@ -379,5 +379,26 @@ namespace HelpDesk.Web.Controllers
 
             return RedirectToAction("GetRequest", "Request", new { requestId });
         }
+
+        /// <summary>
+        /// Take problem to work
+        /// </summary>
+        /// <param name="requestId"></param>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<IActionResult> InWork(int requestId)
+        {
+            var username = User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(username);
+            var profile = await _profileService.GetProfileByUserId(user.Id);
+
+            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
+            var status = await _statusService.SearchStatusAsync(3);
+
+            await _requestsService.AddToWorkAsync(getRequestModel, profile);
+            await _requestsService.ChangeStatusAsync(getRequestModel, status.Id);
+
+            return RedirectToAction("GetRequest", "Request", new { requestId });
+        }
     }
 }

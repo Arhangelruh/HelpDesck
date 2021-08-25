@@ -61,5 +61,12 @@ namespace HelpDesk.BLL.Interfaces
         /// </summary>
         /// <param name="request">Dto model</param>
         Task EditRequestAsync(RequestDto request);
+
+        /// <summary>
+        /// Add request to work
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="profile"></param>
+        Task AddToWorkAsync(RequestDto request, ProfileDto profile);
     }
 }
