@@ -33,6 +33,7 @@ namespace HelpDesk.BLL.Services
                 Id = statusDbo.Id,
                 StatusName = statusDbo.StatusName,
                 Queue = statusDbo.Queue,
+                StatusNameFromButton = statusDbo.StatusNameFromButton,
                 Access = statusDbo.Access
             };
 
@@ -53,6 +54,7 @@ namespace HelpDesk.BLL.Services
                     Id = status.Id,
                     StatusName = status.StatusName,
                     Queue = status.Queue,
+                    StatusNameFromButton = status.StatusNameFromButton,
                     Access = status.Access
                 });
             }
@@ -70,6 +72,7 @@ namespace HelpDesk.BLL.Services
             var editStatus = await _repositoryStatus.GetEntityAsync(q => q.Id.Equals(status.Id));
             editStatus.StatusName = status.StatusName;
             editStatus.Queue = status.Queue;
+            editStatus.StatusNameFromButton = status.StatusNameFromButton;
             editStatus.Access = status.Access;
            
             _repositoryStatus.Update(editStatus);
@@ -111,6 +114,7 @@ namespace HelpDesk.BLL.Services
                 Id = status.Id,
                 StatusName = status.StatusName,
                 Queue = status.Queue,
+                StatusNameFromButton = status.StatusNameFromButton,
                 Access = status.Access
             };
 
@@ -131,6 +135,7 @@ namespace HelpDesk.BLL.Services
                 Id = status.Id,
                 StatusName = status.StatusName,
                 Queue = status.Queue,
+                StatusNameFromButton = status.StatusNameFromButton,
                 Access = status.Access
             };
 

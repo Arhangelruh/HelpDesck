@@ -45,17 +45,17 @@ namespace HelpDesk.BLL.Services
 
             if(await statusService.SearchStatusAsync(1) == null)
             {
-                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.FirstStatus, Queue = 1, Access = true });
+                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.FirstStatus, Queue = 1, Access = true, StatusNameFromButton = StatusConstant.FirstStatus });
             }
 
             if (await statusService.SearchStatusAsync(2) == null)
             {
-                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.SecondStatus, Queue = 2, Access = true });
+                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.SecondStatus, Queue = 2, Access = true, StatusNameFromButton = StatusConstant.SecondStatus });
             }
 
             if (await statusService.SearchStatusAsync(3) == null)
             {
-                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.ThirdStatus, Queue = 3, Access = true });
+                await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.ThirdStatus, Queue = 3, Access = false, StatusNameFromButton = StatusConstant.ThirdStatus });
             }
         }
     }

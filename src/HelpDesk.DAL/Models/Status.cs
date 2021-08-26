@@ -22,6 +22,11 @@ namespace HelpDesk.DAL.Models
         public int Queue { get; set; }
 
         /// <summary>
+        /// Name buttom.
+        /// </summary>
+        public string StatusNameFromButton { get; set; }
+
+        /// <summary>
         /// Access status from user.
         /// </summary>
         public bool Access { get; set; }

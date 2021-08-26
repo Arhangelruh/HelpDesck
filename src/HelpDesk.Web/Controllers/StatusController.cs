@@ -51,6 +51,7 @@ namespace HelpDesk.Web.Controllers
                         Id = status.Id,
                         StatusName = status.StatusName,
                         Queue = status.Queue,
+                        StatusNameFromButton = status.StatusNameFromButton,
                         Access = status.Access
                     });
                 }
@@ -103,6 +104,7 @@ namespace HelpDesk.Web.Controllers
                     {
                         StatusName = model.StatusName,
                         Queue = model.Queue,
+                        StatusNameFromButton = model.StatusNameFromButton,
                         Access = model.Access
 
                     };
@@ -138,6 +140,7 @@ namespace HelpDesk.Web.Controllers
                 Id = getStatusDto.Id,
                 StatusName = getStatusDto.StatusName,
                 Queue = getStatusDto.Queue,
+                StatusNameFromButton = getStatusDto.StatusNameFromButton,
                 Access = getStatusDto.Access
             };
 
@@ -176,6 +179,7 @@ namespace HelpDesk.Web.Controllers
                                 Id = model.Id,
                                 StatusName = model.StatusName,
                                 Queue = model.Queue,
+                                StatusNameFromButton = model.StatusNameFromButton,
                                 Access = model.Access
                             };
 
@@ -206,6 +210,7 @@ namespace HelpDesk.Web.Controllers
                             Id = model.Id,
                             StatusName = model.StatusName,
                             Queue = model.Queue,
+                            StatusNameFromButton = model.StatusNameFromButton,
                             Access = model.Access
                         };
 

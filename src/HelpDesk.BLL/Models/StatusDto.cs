@@ -18,6 +18,11 @@
         public int Queue { get; set; }
 
         /// <summary>
+        /// Name from buttons.
+        /// </summary>
+        public string StatusNameFromButton { get; set; }
+
+        /// <summary>
         /// Access status from user.
         /// </summary>
         public bool Access { get; set; }

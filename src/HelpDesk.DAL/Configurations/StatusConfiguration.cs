@@ -26,6 +26,10 @@ namespace HelpDesk.DAL.Configurations
             builder.Property(status => status.Queue)
                 .IsRequired();
 
+            builder.Property(status => status.StatusNameFromButton)
+                .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium)
+                .IsRequired();
+
             builder.Property(status => status.Access)
                 .IsRequired();
         }

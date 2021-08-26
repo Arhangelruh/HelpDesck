@@ -225,6 +225,9 @@ namespace HelpDesk.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRequest(int requestId)
         {
+            var username = User.Identity.Name;
+            var loginUser = await _userManager.FindByNameAsync(username);
+
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             string userName, adminName;
 
@@ -269,6 +272,35 @@ namespace HelpDesk.Web.Controllers
             var requestCreate = getRequestModel.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
             var comments = await _commentService.GetCommentsByRequestAsync(requestId);
 
+            var statuses = new List<StatusDto>();
+            var checkRole = await _userManager.IsInRoleAsync(loginUser, UserConstants.AdminRole);
+            if (checkRole)
+            {
+                var getStatuses = await _statusService.GetStatusesAsync();
+                foreach (var getstatus in getStatuses)
+                {
+                    if (getstatus.Queue > 3)
+                    {
+                        statuses.Add(getstatus);
+                    }
+                }
+            }
+            else {
+                if(status.Access == true && status.Queue > 3)
+                {
+                    var getStatuses = await _statusService.GetStatusesAsync();
+                    
+                    foreach(var getstatus in getStatuses.OrderBy(sort=>sort.Queue))
+                    {
+                        if(getstatus.Access == true && getstatus.Queue > status.Queue)
+                        {
+                            statuses.Add(getstatus);
+                            break;
+                        }
+                    }
+                }
+            }
+
             var requestViewModel = new FullRequestViewModel
             {
                 Id = getRequestModel.Id,
@@ -280,7 +312,8 @@ namespace HelpDesk.Web.Controllers
                 StatusQueue = status.Queue,
                 IncomingDate = requestCreate,
                 Admin = adminName,
-                Comments = comments
+                Comments = comments,
+                Statuses = statuses
             };
 
             return View(requestViewModel);

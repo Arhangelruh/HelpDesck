@@ -19,6 +19,12 @@ namespace HelpDesk.Web.ViewModels
         public string StatusName { get; set; }
 
         /// <summary>
+        /// Name buttons.
+        /// </summary>
+        [Required(ErrorMessage = "Поле может быть пустым")]
+        public string StatusNameFromButton { get; set; }
+
+        /// <summary>
         /// Order number.
         /// </summary>
         [Required(ErrorMessage = "Номер в очереди не может быть пустым")]

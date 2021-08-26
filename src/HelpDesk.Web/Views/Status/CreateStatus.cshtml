@@ -17,6 +17,11 @@
         <span asp-validation-for="Queue" class="text_error"></span>
     </div>
     <div class="formslabel">
+        <label asp-for="StatusNameFromButton">Наименование кнопок</label><br />
+        <input asp-for="StatusNameFromButton" />
+        <span asp-validation-for="StatusNameFromButton" class="text_error"></span>
+    </div>
+    <div class="formslabel">
         <label asp-for="Access">Доступен ли статус пользователю</label><br />
         <select id="priority" class="input" asp-for="Access" asp-items="ViewBag.acces"></select>
         <span asp-validation-for="Access" class="text_error"></span>
