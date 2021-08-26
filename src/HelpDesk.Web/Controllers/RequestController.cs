@@ -433,5 +433,30 @@ namespace HelpDesk.Web.Controllers
 
             return RedirectToAction("GetRequest", "Request", new { requestId });
         }
+
+        /// <summary>
+        /// Change status
+        /// </summary>
+        /// <param name="requestId"></param>
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> ChangeStatus(int requestId, int statusId)
+        {
+            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);            
+            if(getRequestModel is null)
+            {
+                return Content("Заявка не найдена.");
+            }
+
+            var status = await _statusService.GetStatusByIdAsync(statusId);
+            if(status is null)
+            {
+                return Content("Статус не найден.");
+            }
+            
+            await _requestsService.ChangeStatusAsync(getRequestModel, status.Id);
+
+            return RedirectToAction("GetRequest", "Request", new { requestId });
+        }
     }
 }

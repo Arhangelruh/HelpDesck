@@ -60,6 +60,11 @@ namespace HelpDesk.Web.ViewModels
         public string IncomingDate { get; set; }
 
         /// <summary>
+        /// Statuses.
+        /// </summary>
+        public IEnumerable<StatusDto> Statuses { get; set; }
+
+        /// <summary>
         /// Comments.
         /// </summary>
         public IEnumerable<CommentDto> Comments { get; set; }
