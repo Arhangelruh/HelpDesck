@@ -27,6 +27,11 @@ namespace HelpDesk.DAL.Configurations
                 .WithMany(problem => problem.Comments)
                 .HasForeignKey(comment => comment.ProblemId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(Comments => Comments.Profile)
+             .WithMany(profile => profile.Comments)
+             .HasForeignKey(comment => comment.ProfileId)
+             .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

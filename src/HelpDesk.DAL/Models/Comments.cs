@@ -19,6 +19,14 @@ namespace HelpDesk.DAL.Models
         /// </summary>
         public Problem Problem { get; set; }
 
+        /// <inheritdoc/>
+        public int ProfileId { get; set; }
+
+        /// <summary>
+        /// Navigation to Profile.
+        /// </summary>
+        public Profile Profile { get; set; }
+
         /// <summary>
         /// Data and time create comment.
         /// </summary>

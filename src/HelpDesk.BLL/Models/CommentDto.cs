@@ -9,8 +9,15 @@ namespace HelpDesk.BLL.Models
         /// </summary>
         public int Id { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Problem id.
+        /// </summary>
         public int ProblemId { get; set; }
+
+        /// <summary>
+        /// Profile id.
+        /// </summary>
+        public int ProfileId { get; set; }
 
         /// <summary>
         /// Data and time create comment.

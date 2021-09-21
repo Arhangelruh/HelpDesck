@@ -3,15 +3,17 @@ using System;
 using HelpDesk.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HelpDesk.DAL.Migrations
 {
     [DbContext(typeof(HelpDeskContext))]
-    partial class HelpDeskContextModelSnapshot : ModelSnapshot
+    [Migration("20210921110444_AddfieldProfileIdInComments")]
+    partial class AddfieldProfileIdInComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,8 +43,6 @@ namespace HelpDesk.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProblemId");
-
-                    b.HasIndex("ProfileId");
 
                     b.ToTable("Comments");
                 });
@@ -369,15 +369,7 @@ namespace HelpDesk.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HelpDesk.DAL.Models.Profile", "Profile")
-                        .WithMany("Comments")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Problem");
-
-                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>
@@ -481,8 +473,6 @@ namespace HelpDesk.DAL.Migrations
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Profile", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("UsersProblem");
                 });
 
