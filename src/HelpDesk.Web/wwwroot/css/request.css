@@ -7,7 +7,6 @@
 }
 
 .container_properties{
-    position: absolute;
     padding: 2%;
     left: 100px;
     right: 100px;   
@@ -99,6 +98,10 @@
  .panel-heading-text{
   margin: 10px;
   padding: 6px 16px;
+ }
+
+ .name_request{
+     display: flex;
  }
  
  table{
@@ -202,8 +205,7 @@ background-color: #b7c4e7;
 .a_buttom{
     text-decoration: none;
     font-size: small;
-    color: black;
-    height: 30px;
+    color: black;    
     line-height: 30px;
 }
 
@@ -212,3 +214,88 @@ background-color: #b7c4e7;
 }
 
 /*-------------------------------------------------------*/
+
+ /*Comments*/
+.request_comments{
+    min-width: 640px;
+    padding: 20px;
+    width: 70%;
+}
+
+ .added_comment{
+     width: 100%;
+     margin-top: 20px;
+ }
+
+ .comment_form{
+     display: inline;
+ }
+
+ .comment_form_field{
+     width: 100%;
+ }
+
+ .comment_area{
+     width: 100%;
+     min-height: 100px;
+ }
+
+ .comment_button{
+    font-size: small;
+    width: 124.8px;
+    height: 34.8px;
+ }
+
+ .commentform_buttons{
+    justify-content: flex-end;
+    display: flex;
+ }
+
+ .commentform_button{
+    width: 120px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 7%;
+    background-color: darkslateblue;
+    cursor: pointer; 
+ }
+
+ .commentform_button:hover{
+     background-color: teal;
+ }
+
+ .comment_button_img{
+     display: flex;
+     justify-content: center;
+ }
+
+ .comment_text_img{
+    color: white;
+    text-align: center;
+    justify-content: center;
+    font-size: small;
+    height: 30px;
+    line-height: 30px;         
+ }
+
+ .block_comment_name{
+    border-bottom: outset;
+    font-weight: 600;
+ }
+
+ .comment_information{
+     display: flex;
+     margin: 5px;
+ }
+
+ .padding_five{
+     padding: 5px;
+ }
+
+ .comment{
+    border-bottom: ridge;
+ }
+
+ .allcomments{
+     margin-bottom: 20px;
+ }

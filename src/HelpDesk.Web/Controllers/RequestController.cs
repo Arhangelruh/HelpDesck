@@ -270,7 +270,7 @@ namespace HelpDesk.Web.Controllers
             var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
 
             var requestCreate = getRequestModel.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
-            var comments = await _commentService.GetCommentsByRequestAsync(requestId);
+            var commentsDto = await _commentService.GetCommentsByRequestAsync(requestId);
 
             var statuses = new List<StatusDto>();
             var checkRole = await _userManager.IsInRoleAsync(loginUser, UserConstants.AdminRole);
@@ -299,6 +299,38 @@ namespace HelpDesk.Web.Controllers
                         }
                     }
                 }
+            }
+
+            var comments = new List<CommentViewModel>();
+
+            foreach(var commentDto in commentsDto)
+            {
+                string commentCreator;
+                var commentCreatorProfile = await _profileService.GetProfileByIdAsync(commentDto.ProfileId);
+                if (commentCreatorProfile is null)
+                {
+                    commentCreator = "не найден";
+                }
+                else
+                {
+                    if (commentCreatorProfile.LastName != null || commentCreatorProfile.FirstName != null)
+                    {
+                        commentCreator = commentCreatorProfile.LastName + " " + commentCreatorProfile.FirstName;
+                    }
+                    else
+                    {
+                        var user = await _userManager.FindByIdAsync(commentCreatorProfile.UserId);
+                        commentCreator = user.UserName;
+                    }
+                }
+
+                comments.Add(new CommentViewModel { 
+                    Id = commentDto.Id,
+                Profile = commentCreator,
+                CreateComment = commentDto.CreateComment.ToString("dd.MM.yyyy H:mm:ss"),
+                 Comment=commentDto.Comment
+                });;
+
             }
 
             var requestViewModel = new FullRequestViewModel
@@ -457,6 +489,34 @@ namespace HelpDesk.Web.Controllers
             await _requestsService.ChangeStatusAsync(getRequestModel, status.Id);
 
             return RedirectToAction("GetRequest", "Request", new { requestId });
+        }
+
+        /// <summary>
+        /// Create comment.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>Requests view</returns>
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddComment(string comment, int Id)                                        
+        {
+            var username = User.Identity.Name;
+            var user = await _userManager.FindByNameAsync(username);
+            var profile = await _profileService.GetProfileByUserId(user.Id);
+
+            if (comment != null)
+            {
+                var newComment = new CommentDto
+                {
+                    ProblemId = Id,
+                    ProfileId = profile.Id,
+                    Comment = comment
+                };
+                await _commentService.AddCommentAsync(newComment);
+                var requestId = Id;
+                return RedirectToAction("GetRequest", "Request", new { requestId });
+            }
+            return Content("Ошибка, не найден текст комментария");
         }
     }
 }

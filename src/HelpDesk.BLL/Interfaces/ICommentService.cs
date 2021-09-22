@@ -21,5 +21,11 @@ namespace HelpDesk.BLL.Interfaces
         /// <param name="problemid"></param>
         /// <returns>list comments</returns>
         Task<List<CommentDto>> GetCommentsByRequestAsync(int problemid);
+
+        /// <summary>
+        /// Add comments.
+        /// </summary>
+        /// <param name="commentDto">Dto model</param>
+        Task AddCommentAsync(CommentDto commentDto);
     }
 }

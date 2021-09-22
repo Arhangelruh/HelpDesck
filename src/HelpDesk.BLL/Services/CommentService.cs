@@ -54,12 +54,35 @@ namespace HelpDesk.BLL.Services
                     comments.Add(new CommentDto{
                         Id = comment.Id,
                         ProblemId = comment.ProblemId,
+                        ProfileId = comment.ProfileId,
                         CreateComment = comment.CreateComment,
                         Comment =comment.Comment
                         });
                 }
 
                 return comments;
+        }
+
+        public async Task AddCommentAsync(CommentDto commentDto)
+        {
+            if (commentDto is null)
+            {
+                throw new ArgumentNullException(nameof(commentDto));
+            }
+
+            var date = DateTime.Now;
+
+            var newComment = new Comments
+            {    
+                ProblemId = commentDto.ProblemId,
+                ProfileId = commentDto.ProfileId,
+                Comment = commentDto.Comment,
+                CreateComment = date
+            };
+
+            await _repositoryComments.AddAsync(newComment);
+            await _repositoryComments.SaveChangesAsync();
+
         }
     }
 }

@@ -67,7 +67,7 @@ namespace HelpDesk.Web.ViewModels
         /// <summary>
         /// Comments.
         /// </summary>
-        public IEnumerable<CommentDto> Comments { get; set; }
+        public IEnumerable<CommentViewModel> Comments { get; set; }
 
     }
 }

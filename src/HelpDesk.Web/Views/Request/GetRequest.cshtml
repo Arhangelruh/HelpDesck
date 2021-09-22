@@ -4,7 +4,7 @@
 
 <div class="container_head">
     <div class="requestinfo">
-        <div>Заявка №@Model.Id</div>
+        <div class="name_request">Заявка №<div class="number_request" name ="@Model.Id">@Model.Id</div></div>
         <div>Тема: @Model.Theme</div>
     </div>
     <div class="requeststatus">
@@ -57,11 +57,9 @@
             </a>
         }
     }
-    <a class="a_buttom" asp-controller="Request" asp-action="AddComment" asp-route-requestId="@Model.Id">
-        <div class="request_buttom">
-           Комментарий
-        </div>
-    </a>
+
+<button class="comment_button request_buttom">Комментарий</button>
+
 </div>
 
 <div class="container_request">
@@ -81,18 +79,59 @@
         </div>
     </div>
 </div>
-@if (Model.Comments.Any())
-{
-    <div class="request_comments">
-        Комментарии
+<div class="request_comments">
+    @if (Model.Comments.Any())
+    {
+        <div class="block_comment_name">Комментарии:</div>
+        <div class="allcomments">
+            @foreach(var comment in Model.Comments)
+                {
+            <div class="comment">
+                <div class="comment_information">
+                    <div class="comment_creator padding_five">@comment.Profile</div>
+                    <div class="comment_time padding_five">@comment.CreateComment</div>
+                </div>
+                <div class="comment_text">@comment.Comment</div>
+            </div>                  
+                }
+        </div>
+    }
+    <button class="comment_button request_buttom">Комментарий</button>
+ <div class="added_comment" style="display:none;">
+     <form class="comment_form" action="AddComment" method="post">
+         <div class="comment_form_field">
+             <label for="comment">Комментарий:</label>
+         </div>
+         <div class="comment_form_field">
+             <input type="hidden" asp-for="Id" />             
+         </div>
+         <div class="comment_form_field">
+             <textarea class="comment_area" required placeholder="Введите коментарий и нажмите добавить." name="comment" id="comment"></textarea>
+         </div>
+         <div class="comment_form_field">
+             <div class="commentform_buttons">
+                 <button class="commentform_button revert_comment_button" type="reset" title="Отменить">
+                     <div class="comment_button_img">
+                         <img src="~/images/Delete_Comment.svg">
+                         <div class="comment_text_img">Отменить</div>
+                     </div>
+                 </button>
+                 <button class="commentform_button" type="submit" title="Добавить">
+                     <div class="comment_button_img">
+                         <img src="~/images/Add_comment.svg">
+                         <div class="comment_text_img">Добавить</div>
+                     </div>
+                 </button>
+             </div>
+         </div>
+     </form>
+ </div>
     </div>
-}
+   
+    @section css {
+        <link href="~/css/request.css" rel="stylesheet" asp-append-version="true" />
+    }
 
-
-
-
-
-
-@section css {
-    <link href="~/css/request.css" rel="stylesheet" asp-append-version="true" />
-}
+    @section js {
+        <script src="~/js/comments.js" asp-append-version="true"></script>
+    }
