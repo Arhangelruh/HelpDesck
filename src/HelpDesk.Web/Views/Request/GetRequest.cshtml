@@ -100,10 +100,22 @@
                 <div class="danloaded_file_name">
                     <a class="danloaded_file_body" asp-controller="File" asp-action="GetFile" asp-route-fileId="@file.Id">
                         @file.Name
-                    </a>  
-                    <div class="danloaded_file_delete">Удалить</div>
+                    </a>                      
                 </div>
-                <div class="danloaded_file_control"></div>
+                <div class="danloaded_file_control">
+                    <a class="danloaded_file_body_button" asp-controller="File" asp-action="GetFile" asp-route-fileId="@file.Id">
+                        <div class="file_button">
+                            <img src="~/images/DownloadFile.svg" />
+                            <div class="danload_file_textImg">Загрузить</div>
+                        </div>
+                    </a>
+                    @if (User.IsInRole(UserConstants.AdminRole))
+                    {
+                    <a class="danloaded_file_body_button" asp-controller="File" asp-action="DeleteFile" asp-route-fileId="@file.Id" asp-route-requestId="@Model.Id">
+                        <div class="file_button">Удалить</div>
+                    </a>
+                    }
+                </div>
             </li>
         }
     </ol>

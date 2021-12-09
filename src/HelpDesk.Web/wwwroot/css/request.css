@@ -401,3 +401,48 @@ background-color: #b7c4e7;
     height: 34.8px;
     min-width: 124.8px;
  }
+
+ .container_files{
+     margin-left: 20px;
+     padding: 20px;
+     width: 70%;
+ }
+
+ .file_list{
+    list-style-type: none;
+ }
+
+
+ .danloadded_file{
+     display: flex;
+     justify-content: space-between;
+     margin: 5px;
+ }
+
+ .danloadded_file:hover{
+     background-color: #e8ecf7;
+ }
+
+ .danloaded_file_body{
+     text-decoration: none;
+ }
+
+ .danloaded_file_body_button{
+     text-decoration: none;
+     color: black;
+     font-size: small;
+ }
+
+ .danloaded_file_control{
+     display: flex;
+ }
+
+ .file_button{
+     display: flex;    
+     border-style: groove;   
+     width: 120px;
+     height: 20px;
+     border-radius: 8px;
+     justify-content: center;
+     border-color: whitesmoke;
+ }

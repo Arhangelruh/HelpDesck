@@ -1,5 +1,6 @@
 ﻿using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Models;
+using HelpDesk.Common.Constants;
 using HelpDesk.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,11 +53,25 @@ namespace HelpDesk.Web.Controllers
         /// <param name="fileId"></param>
         /// <returns></returns>
         [Authorize]
+        [HttpGet]
         public async Task<FileResult> GetFile(int fileId)
         {
             var file =await _fileService.GetFileAsync(fileId);
                     
             return File(file.FileBody, file.ContentType,file.Name);        
+        }
+
+        /// <summary>
+        /// Get file.
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public async Task<ActionResult> DeleteFile(int fileId, int requestId )
+        {
+            await _fileService.DeleteFileAsync(fileId);
+            return RedirectToAction("GetRequest", "Request", new { requestId });
         }
     }
 }
