@@ -3,15 +3,17 @@ using System;
 using HelpDesk.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HelpDesk.DAL.Migrations
 {
     [DbContext(typeof(HelpDeskContext))]
-    partial class HelpDeskContextModelSnapshot : ModelSnapshot
+    [Migration("20210923074610_AddTableFromFiles")]
+    partial class AddTableFromFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,9 +29,7 @@ namespace HelpDesk.DAL.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreateComment")
                         .HasColumnType("timestamp without time zone");
@@ -126,19 +126,11 @@ namespace HelpDesk.DAL.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(63)
-                        .HasColumnType("character varying(63)");
-
                     b.Property<byte[]>("FileBody")
-                        .IsRequired()
                         .HasColumnType("bytea");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(63)
-                        .HasColumnType("character varying(63)");
+                        .HasColumnType("text");
 
                     b.Property<int>("ProblemId")
                         .HasColumnType("integer");
@@ -399,13 +391,13 @@ namespace HelpDesk.DAL.Migrations
                     b.HasOne("HelpDesk.DAL.Models.Problem", "Problem")
                         .WithMany("Comments")
                         .HasForeignKey("ProblemId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HelpDesk.DAL.Models.Profile", "Profile")
                         .WithMany("Comments")
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Problem");
@@ -440,7 +432,7 @@ namespace HelpDesk.DAL.Migrations
                     b.HasOne("HelpDesk.DAL.Models.Problem", "Problem")
                         .WithMany("SavedFiles")
                         .HasForeignKey("ProblemId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Problem");

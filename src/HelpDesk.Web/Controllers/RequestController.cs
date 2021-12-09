@@ -20,19 +20,23 @@ namespace HelpDesk.Web.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IProfileService _profileService;
         private readonly ICommentService _commentService;
+        private readonly IFileService _fileService;
+
 
         public RequestController(
             UserManager<User> userManager,
             IStatusService statusService,
             IRequestsService requestsService,
             IProfileService profileService,
-            ICommentService commentService)
+            ICommentService commentService,
+            IFileService fileService)
         {
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _statusService = statusService ?? throw new ArgumentNullException(nameof(statusService));
             _requestsService = requestsService ?? throw new ArgumentNullException(nameof(requestsService));
             _profileService = profileService ?? throw new ArgumentNullException(nameof(profileService));
             _commentService = commentService ?? throw new ArgumentNullException(nameof(commentService));
+            _fileService = fileService ?? throw new ArgumentNullException(nameof(fileService));
         }
 
         /// <summary>
@@ -285,14 +289,15 @@ namespace HelpDesk.Web.Controllers
                     }
                 }
             }
-            else {
-                if(status.Access == true && status.Queue > 3)
+            else
+            {
+                if (status.Access == true && status.Queue > 3)
                 {
                     var getStatuses = await _statusService.GetStatusesAsync();
-                    
-                    foreach(var getstatus in getStatuses.OrderBy(sort=>sort.Queue))
+
+                    foreach (var getstatus in getStatuses.OrderBy(sort => sort.Queue))
                     {
-                        if(getstatus.Access == true && getstatus.Queue > status.Queue)
+                        if (getstatus.Access == true && getstatus.Queue > status.Queue)
                         {
                             statuses.Add(getstatus);
                             break;
@@ -303,7 +308,7 @@ namespace HelpDesk.Web.Controllers
 
             var comments = new List<CommentViewModel>();
 
-            foreach(var commentDto in commentsDto)
+            foreach (var commentDto in commentsDto)
             {
                 string commentCreator;
                 var commentCreatorProfile = await _profileService.GetProfileByIdAsync(commentDto.ProfileId);
@@ -324,14 +329,16 @@ namespace HelpDesk.Web.Controllers
                     }
                 }
 
-                comments.Add(new CommentViewModel { 
+                comments.Add(new CommentViewModel
+                {
                     Id = commentDto.Id,
-                Profile = commentCreator,
-                CreateComment = commentDto.CreateComment.ToString("dd.MM.yyyy H:mm:ss"),
-                 Comment=commentDto.Comment
-                });;
-
+                    Profile = commentCreator,
+                    CreateComment = commentDto.CreateComment.ToString("dd.MM.yyyy H:mm:ss"),
+                    Comment = commentDto.Comment
+                }); ;
             }
+
+            var files = await _fileService.GetFilesNamesAsync(requestId);
 
             var requestViewModel = new FullRequestViewModel
             {
@@ -345,7 +352,8 @@ namespace HelpDesk.Web.Controllers
                 IncomingDate = requestCreate,
                 Admin = adminName,
                 Comments = comments,
-                Statuses = statuses
+                Statuses = statuses,
+                Files = files
             };
 
             return View(requestViewModel);
@@ -385,13 +393,14 @@ namespace HelpDesk.Web.Controllers
         {
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
-            if(status.Queue == 1) {
+            if (status.Queue == 1)
+            {
                 var requestViewModel = new RequestViewModel
                 {
                     Id = getRequestModel.Id,
                     Theme = getRequestModel.Theme,
                     Description = getRequestModel.Description,
-                    Ip = getRequestModel.Ip                                                                                                
+                    Ip = getRequestModel.Ip
                 };
                 return View(requestViewModel);
             }
@@ -414,14 +423,14 @@ namespace HelpDesk.Web.Controllers
             {
                 var problem = new RequestDto
                 {
-                    Id = editRequest.Id,                   
+                    Id = editRequest.Id,
                     Theme = editRequest.Theme,
                     Description = editRequest.Description,
                     Ip = editRequest.Ip
                 };
 
                 await _requestsService.EditRequestAsync(problem);
-                return RedirectToAction("GetRequest", "Request", new { requestId = editRequest.Id});
+                return RedirectToAction("GetRequest", "Request", new { requestId = editRequest.Id });
             }
             else
             {
@@ -434,7 +443,7 @@ namespace HelpDesk.Web.Controllers
         /// </summary>
         /// <param name="requestId"></param>
         [Authorize]
-        [HttpGet]     
+        [HttpGet]
         public async Task<IActionResult> SendRequest(int requestId)
         {
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
@@ -474,18 +483,18 @@ namespace HelpDesk.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangeStatus(int requestId, int statusId)
         {
-            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);            
-            if(getRequestModel is null)
+            var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
+            if (getRequestModel is null)
             {
                 return Content("Заявка не найдена.");
             }
 
             var status = await _statusService.GetStatusByIdAsync(statusId);
-            if(status is null)
+            if (status is null)
             {
                 return Content("Статус не найден.");
             }
-            
+
             await _requestsService.ChangeStatusAsync(getRequestModel, status.Id);
 
             return RedirectToAction("GetRequest", "Request", new { requestId });
@@ -494,11 +503,12 @@ namespace HelpDesk.Web.Controllers
         /// <summary>
         /// Create comment.
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="comment">comment text</param>
+        /// <param name="id">id request</param>
         /// <returns>Requests view</returns>
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddComment(string comment, int Id)                                        
+        public async Task<IActionResult> AddComment(string comment, int Id)
         {
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
