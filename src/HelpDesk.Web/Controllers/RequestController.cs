@@ -229,6 +229,11 @@ namespace HelpDesk.Web.Controllers
             var loginUser = await _userManager.FindByNameAsync(username);
 
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
+            if (getRequestModel is null)
+            {
+                return Content("Заявка не найдена");
+            }
+
             string userName, adminName;
 
             var userProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileCreatorId);
