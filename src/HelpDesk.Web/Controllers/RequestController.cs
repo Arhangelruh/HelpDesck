@@ -237,6 +237,7 @@ namespace HelpDesk.Web.Controllers
             {
                 return Content("Заявка не найдена!");
             }
+            
             string userName, adminName;
 
             var userProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileCreatorId);
