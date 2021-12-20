@@ -34,5 +34,10 @@
         /// Requests comments.
         /// </summary>
         public const string Comments = nameof(Comments);
+
+        /// <summary>
+        /// Requests files.
+        /// </summary>
+        public const string SavedFile = nameof(SavedFile);
     }
 }

@@ -58,10 +58,72 @@
         }
     }
 
-<button class="comment_button request_buttom">Комментарий</button>
-
+    <button class="comment_button request_buttom">Комментарий</button>
+    <button class="addfile_button request_buttom">Добавить файл</button>
 </div>
 
+<div class="added_file" style="display:none;">
+    <div class="file_size_message">
+        Размер файла не должен превышать 10Mb
+    </div>
+    <form class="added_file_form" asp-controller="File" asp-action="AddFile" method="post" enctype="multipart/form-data">
+        <div class="file_form_field">
+            <input type="hidden" asp-for="Id" />
+        </div>
+        <div class="file_form_field danloadfile_field">
+            <label for="myfile" class="file_lable">
+                <span class="input_file_icon"></span>
+                <span class="input_file_button_text">Выберите файл</span>
+            </label>
+            <label class="file_name_field">Файл не выбран</label>
+            <input type="file" class="myfile" id="myfile" name="FileBody" />
+            <div class="addfileform_buttons">
+                <button class="addfileform_button revert_addfile_button" type="reset" title="Отменить">
+                    <div class="addfile_button_img">
+                        <img src="~/images/Delete_Comment.svg">
+                        <div class="addfile_text_img">Отменить</div>
+                    </div>
+                </button>
+                <button class="addfileform_button" id="addmyfile" type="submit" title="Добавить">
+                    <div class="addfile_button_img">
+                        <img src="~/images/Add_comment.svg">
+                        <div class="addfile_text_img">Добавить</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+@if(Model.Files.Any()){
+<div class="container_files">
+    <ol class="file_list">
+        @foreach (var file in Model.Files)
+        {
+            <li class="danloadded_file">
+                <div class="danloaded_file_name">
+                    <a class="danloaded_file_body" asp-controller="File" asp-action="GetFile" asp-route-fileId="@file.Id">
+                        @file.Name
+                    </a>                      
+                </div>
+                <div class="danloaded_file_control">
+                    <a class="danloaded_file_body_button" asp-controller="File" asp-action="GetFile" asp-route-fileId="@file.Id">
+                        <div class="file_button">
+                            <img src="~/images/DownloadFile.svg" />
+                            <div class="danload_file_textImg">Загрузить</div>
+                        </div>
+                    </a>
+                    @if (User.IsInRole(UserConstants.AdminRole))
+                    {
+                    <a class="danloaded_file_body_button" asp-controller="File" asp-action="DeleteFile" asp-route-fileId="@file.Id" asp-route-requestId="@Model.Id">
+                        <div class="file_button">Удалить</div>
+                    </a>
+                    }
+                </div>
+            </li>
+        }
+    </ol>
+</div>
+}
 <div class="container_request">
     <div class="description_request">
         <div class="requestadress">IP адрес: @Model.Ip</div>
@@ -78,6 +140,9 @@
             @Model.Admin
         </div>
     </div>
+</div>
+<div class="request_files">
+
 </div>
 <div class="request_comments">
     @if (Model.Comments.Any())
@@ -134,4 +199,5 @@
 
     @section js {
         <script src="~/js/comments.js" asp-append-version="true"></script>
+        <script src="~/js/addfile.js" asp-append-version="true"></script>
     }
