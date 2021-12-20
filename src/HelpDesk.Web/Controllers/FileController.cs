@@ -25,19 +25,39 @@ namespace HelpDesk.Web.Controllers
         /// <returns>Requests view</returns>
         [Authorize]
         [HttpPost]
+        [DisableRequestSizeLimit,
+    RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue,
+        ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> AddFile(SaveFileViewModel saveFile, int Id)
         {
-          //  var name = saveFile.FileBody.FileName;
+            if (!ModelState.IsValid)
+            {
+                if (Id == 0)
+                {
+                    return Content("Ошибка загрузки, проверьте что файл соответствует размерам");
+                }
+                else
+                {
+                    var requestId = Id;
+                    return RedirectToAction("GetRequest", "Request", new { requestId });
+                }
+            }
+            if (saveFile.FileBody.FileName.Length > ConfigurationContants.SqlMaxLengthMedium)
+            {
+                return Content($"Имя файла не должно превышать {ConfigurationContants.SqlMaxLengthMedium} символов.");
+            }
+
             if (saveFile.FileBody != null)
             {
                 var binaryReader = new BinaryReader(saveFile.FileBody.OpenReadStream());
                 byte[] fileData = binaryReader.ReadBytes((int)saveFile.FileBody.Length);
 
-                var fileDto = new FileDto {
-                  Name = saveFile.FileBody.FileName,
-                  ContentType = saveFile.FileBody.ContentType,
-                  ProblemId = Id,
-                  FileBody = fileData
+                var fileDto = new FileDto
+                {
+                    Name = saveFile.FileBody.FileName,
+                    ContentType = saveFile.FileBody.ContentType,
+                    ProblemId = Id,
+                    FileBody = fileData
                 };
 
                 await _fileService.AddFileAsync(fileDto);
@@ -56,9 +76,9 @@ namespace HelpDesk.Web.Controllers
         [HttpGet]
         public async Task<FileResult> GetFile(int fileId)
         {
-            var file =await _fileService.GetFileAsync(fileId);
-                    
-            return File(file.FileBody, file.ContentType,file.Name);        
+            var file = await _fileService.GetFileAsync(fileId);
+
+            return File(file.FileBody, file.ContentType, file.Name);
         }
 
         /// <summary>
@@ -68,7 +88,7 @@ namespace HelpDesk.Web.Controllers
         /// <returns></returns>
         [Authorize(Roles = UserConstants.AdminRole)]
         [HttpGet]
-        public async Task<ActionResult> DeleteFile(int fileId, int requestId )
+        public async Task<ActionResult> DeleteFile(int fileId, int requestId)
         {
             await _fileService.DeleteFileAsync(fileId);
             return RedirectToAction("GetRequest", "Request", new { requestId });

@@ -17,7 +17,7 @@ namespace HelpDesk.DAL.Configurations
                 .HasKey(savedFile => savedFile.Id);
 
             builder.Property(savedFile => savedFile.Name)
-                .HasMaxLength(ConfigurationContants.SqlMaxLengthShort)
+                .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium)
                 .IsRequired();
             
             builder.Property(savedFile => savedFile.ContentType)
