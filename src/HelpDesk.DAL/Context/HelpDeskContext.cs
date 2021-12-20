@@ -40,6 +40,16 @@ namespace HelpDesk.DAL.Context
         /// </summary>
         public DbSet<UserProblem> UserProblems { get; set; }
 
+        /// <summary>
+        /// Comments.
+        /// </summary>
+        public DbSet<Comments> Comments { get; set; }
+
+        /// <summary>
+        /// SavedFiles.
+        /// </summary>
+        public DbSet<SavedFile> SavedFile { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder));
@@ -47,7 +57,9 @@ namespace HelpDesk.DAL.Context
             modelBuilder.ApplyConfiguration(new ProfileConfiguration());
             modelBuilder.ApplyConfiguration(new StatusConfiguration());
             modelBuilder.ApplyConfiguration(new ProblemConfiguration());
-            modelBuilder.ApplyConfiguration(new UserProblemConfiguration());            
+            modelBuilder.ApplyConfiguration(new UserProblemConfiguration());
+            modelBuilder.ApplyConfiguration(new CommentsConfiguration());
+            modelBuilder.ApplyConfiguration(new SavedFileConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
