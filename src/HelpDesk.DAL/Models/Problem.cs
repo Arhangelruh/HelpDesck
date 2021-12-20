@@ -55,10 +55,5 @@ namespace HelpDesk.DAL.Models
         /// </summary>
         public ICollection<Comments> Comments { get; set; }
 
-        /// <summary>
-        /// Navigation to Files.
-        /// </summary>
-        public ICollection<SavedFile> SavedFiles { get; set; }
-
     }
 }

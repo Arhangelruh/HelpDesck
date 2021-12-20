@@ -69,10 +69,5 @@ namespace HelpDesk.Web.ViewModels
         /// </summary>
         public IEnumerable<CommentViewModel> Comments { get; set; }
 
-        /// <summary>
-        /// Files.
-        /// </summary>
-        public IEnumerable<FileDto> Files { get; set; }
-
     }
 }
