@@ -23,6 +23,6 @@
         /// <summary>
         /// Max lenght for string field.
         /// </summary>
-        public const int SqlMaxLengthLong = 255;
+        public const int SqlMaxLengthLong = 2000;
     }
 }

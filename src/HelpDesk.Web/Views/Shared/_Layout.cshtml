@@ -36,7 +36,17 @@
                                     <button class="nav-item noClick" type="submit" title="Задачи">Задачи</button>
                                 </form>
                             </li>
+                            <li class="nav-item">
+                                <form method="get" asp-controller="Request" asp-action="Properties">
+                                    <button class="nav-item noClick" type="submit" title="Настройки">Настройки</button>
+                                </form>
+                            </li>
                         }
+                        <li class="nav-item">
+                            <form method="get" asp-controller="Request" asp-action="Requests">
+                                <button class="nav-item noClick" type="submit" title="Заявки">Заявки</button>
+                            </form>
+                        </li>
                         <li class="nav-item">
                             <form method="get" asp-controller="Profile" asp-action="Profile">
                                 <button class="nav-item noClick" type="submit" title="Профиль">Профиль</button>
@@ -57,7 +67,9 @@
                         </li>
                     }
                 </ul>
-                <div class="header-image"></div>
+                <div class="header-image-block">
+                    <div class="header-image"></div>
+                </div>
             </div>
         </div>
     </header>
@@ -65,5 +77,6 @@
     <div class="container">
         @RenderBody()
     </div>
+    @RenderSection("js", false)
 </body>
 </html>

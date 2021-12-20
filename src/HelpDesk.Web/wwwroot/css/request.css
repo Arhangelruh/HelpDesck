@@ -1,0 +1,452 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif;
+}
+
+.container_properties{
+    padding: 2%;
+    left: 100px;
+    right: 100px;   
+    justify-content: center;
+    text-align: center;
+}
+
+.properties{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 2em;
+    justify-content: center;
+}
+
+.properties_item{
+    width: 240px;
+    height: 260px;
+    background-color: rgb(17 36 69);
+    border-radius: 10%;
+    text-align: center;
+}
+
+.button_img{
+ position: relative;
+}
+
+.text_img{
+    margin-top: -20px;
+    color:white;
+}
+
+.message {
+    text-align: center;
+    margin-top: 2em;
+}
+
+/*Request form*/
+.requestform{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5em;
+    width: 40em;
+    min-width: 40em;
+}
+
+.requestformlabel{
+    margin: 0.5em;
+}
+
+.requestinput{
+    margin-top: 10px;
+    width: 100%;
+    height: 20px;
+}
+
+.requestinputIp{
+    margin-top: 10px;
+}
+
+.probleminput{
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    
+}
+
+.button_right{
+    margin-left: auto;
+    margin-right: 0px;
+    width: 110px;
+}
+
+/*-------------------------------------------------------*/
+
+/* Table*/
+
+.users-table{
+    min-width: 700px;
+    margin: 10px;
+    border: 1px black;
+ }
+ 
+ .panel-heading{
+ display: flex;
+ justify-content: space-evenly;
+ }
+ 
+ .panel-heading-text{
+  margin: 10px;
+  padding: 6px 16px;
+ }
+
+ .name_request{
+     display: flex;
+ }
+ 
+ table{
+     border: 1px solid black;
+     border-collapse: collapse;
+     margin: auto;
+     width: 100%;
+ }
+ 
+ th{
+     border: 1px solid black;
+     background-color: #b9ced7; 
+ }
+ 
+  td{
+     border: 1px solid black; 
+     text-align: center;
+     cursor: pointer;
+     max-width: 1000px;
+     overflow: hidden;
+ }
+ 
+ /*-------------------------------------------------------*/
+ 
+ /*Request*/
+ .container {
+    width: 100%;
+    margin: 0 auto;
+    min-width: 830px;        
+}
+
+.container_head{
+    height: 70px;
+    padding: 20px 20px 10px 30px;
+    background-color:rgb(236, 231, 255);
+    display: flex;
+    justify-content: space-between;
+}
+
+.requeststatus{
+    width: auto;
+    margin-right: 20px;
+}
+
+.container_buttoms{
+    padding: 0px 20px 5px 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.request_buttom{
+    width: 120px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 7%;
+    background-color: inherit;
+    cursor: pointer;
+    border-style: outset;
+    border-color: darkslateblue;
+    text-align: center; 
+}
+
+.request_buttom:hover{
+background-color: #b7c4e7;
+}
+
+.container_request{
+    display: flex;
+    width: 100%;
+}
+
+.description_request{
+    padding: 20px;
+    width: 80%;
+}
+
+.description{
+  padding-top: 10px;
+  border-top: outset;
+  border-bottom: ridge;
+}
+
+.requestadress{
+    padding: 10px 10px 20px 10px;
+}
+
+.users_request{
+    display: inline;
+    width: 20%;
+    padding: 20px;
+}
+
+.autor_request{
+    margin: 5px;
+}
+
+.admin_request{
+    margin: 20px 5px 5px 5px;
+}
+
+.a_buttom{
+    text-decoration: none;
+    font-size: small;
+    color: black;    
+    line-height: 30px;
+}
+
+.name_field{
+    font-weight: 600;
+}
+
+/*-------------------------------------------------------*/
+
+ /*Comments*/
+.request_comments{
+    min-width: 640px;
+    padding: 20px;
+    width: 70%;
+}
+
+ .added_comment{
+     width: 100%;
+     margin-top: 20px;
+ }
+
+ .comment_form{
+     display: inline;
+ }
+
+ .comment_form_field{
+     width: 100%;
+ }
+
+ .comment_area{
+     width: 100%;
+     min-height: 100px;
+ }
+
+ .comment_button{
+    font-size: small;
+    width: 124.8px;
+    height: 34.8px;
+ }
+
+ .commentform_buttons{
+    justify-content: flex-end;
+    display: flex;
+ }
+
+ .commentform_button{
+    width: 120px;
+    height: 30px;
+    margin: 10px;
+    border-radius: 7%;
+    background-color: darkslateblue;
+    cursor: pointer; 
+ }
+
+ .commentform_button:hover{
+     background-color: teal;
+ }
+
+ .comment_button_img{
+     display: flex;
+     justify-content: center;
+ }
+
+ .comment_text_img{
+    color: white;
+    text-align: center;
+    justify-content: center;
+    font-size: small;
+    height: 30px;
+    line-height: 30px;         
+ }
+
+ .block_comment_name{
+    border-bottom: outset;
+    font-weight: 600;
+ }
+
+ .comment_information{
+     display: flex;
+     margin: 5px;
+ }
+
+ .padding_five{
+     padding: 5px;
+ }
+
+ .comment{
+    border-bottom: ridge;
+ }
+
+ .allcomments{
+     margin-bottom: 20px;
+ }
+
+ /*-------------------------------------------------------*/
+
+ /*Files*/
+
+ .added_file{
+    min-width: 670px;
+    padding: 20px;
+    width: 70%;
+ }
+
+ .danloadfile_field{
+     min-width: 640px;
+     width: 100%;
+ }
+
+.file_form_field{
+    display: flex;
+    border-style: groove;
+    border-inline: inherit;
+    border-color: lavender;
+}
+
+ .added_file_form{
+     display: flex;
+ }
+
+ .file_lable{
+    margin: 5px 5px 5px 20px;
+    width: 150px;
+    height: 30px;
+    border-radius: 7%;
+    background-color: inherit;
+    cursor: pointer;
+    border-style: outset;
+    border-color: darkslateblue;
+    text-align: center;
+    line-height: 30px; 
+    min-width: 150px;
+    font-size: small;
+ }
+
+ .file_lable:hover{
+    background-color: #b7c4e7;
+    }
+
+  .myfile{        
+     opacity: 0;
+     visibility: hidden;
+     position: absolute;
+ }
+
+ .file_name_field{
+     margin: 5px;
+    line-height: 30px;
+    min-width: 200px;
+    overflow: auto;
+ }
+
+ .input_file_button_text{
+     height: 50px;
+ }
+
+ .addfileform_buttons {
+    justify-content: flex-end;
+    display: flex;
+    margin-right: 10px;
+    margin-left: auto;
+}
+
+.addfileform_button{
+    width: 120px;
+    background-color: darkgray;
+    cursor: pointer;
+    font-size: small;
+    line-height: 30px;
+ }
+
+ .addfileform_button:hover{
+    background-color: teal;
+}
+
+.addfile_button_img{
+    display: flex;
+    justify-content: center;
+}
+
+.addfile_text_img{
+    color: white;
+    text-align: center;
+    justify-content: center;
+    font-size: small;
+    height: 30px;
+    line-height: 30px;         
+ }
+
+ .addfile_button{
+    font-size: small;
+    width: 124.8px;
+    height: 34.8px;
+    min-width: 124.8px;
+ }
+
+ .container_files{
+     margin-left: 20px;
+     padding: 20px;
+     width: 70%;
+ }
+
+ .file_list{
+    list-style-type: none;
+ }
+
+
+ .danloadded_file{
+     display: flex;
+     justify-content: space-between;
+     margin: 5px;
+ }
+
+ .danloadded_file:hover{
+     background-color: #e8ecf7;
+ }
+
+ .danloaded_file_body{
+     text-decoration: none;
+ }
+
+ .danloaded_file_body_button{
+     text-decoration: none;
+     color: black;
+     font-size: small;
+ }
+
+ .danloaded_file_control{
+     display: flex;
+ }
+
+ .file_button{
+     display: flex;    
+     border-style: groove;   
+     width: 120px;
+     height: 20px;
+     border-radius: 8px;
+     justify-content: center;
+     border-color: whitesmoke;
+ }
+
+ .file_button:hover{
+     background-color: cadetblue;
+ }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Users constants
     /// </summary>
-    public class UserConstants
+    public static class UserConstants
     {
         /// <summary>
         /// First admin.

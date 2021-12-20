@@ -23,7 +23,7 @@ namespace HelpDesk.DAL.Configurations
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium);
 
             builder.Property(problem => problem.Description)
-                .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium);
+                .HasMaxLength(ConfigurationContants.SqlMaxLengthLong);
 
             builder.Property(problem => problem.Ip)
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium);

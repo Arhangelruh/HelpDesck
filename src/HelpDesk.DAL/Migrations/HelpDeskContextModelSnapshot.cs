@@ -16,22 +16,37 @@ namespace HelpDesk.DAL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("HelpDesk.DAL.Models.EventTime", b =>
+            modelBuilder.Entity("HelpDesk.DAL.Models.Comments", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("Time")
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime>("CreateComment")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ProblemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventTime", "event");
+                    b.HasIndex("ProblemId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>
@@ -45,8 +60,8 @@ namespace HelpDesk.DAL.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(127)
-                        .HasColumnType("character varying(127)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<DateTime>("IncomingDate")
                         .HasColumnType("timestamp without time zone");
@@ -54,12 +69,6 @@ namespace HelpDesk.DAL.Migrations
                     b.Property<string>("Ip")
                         .HasMaxLength(127)
                         .HasColumnType("character varying(127)");
-
-                    b.Property<int>("ProfileCreatorId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ProfileId")
-                        .HasColumnType("integer");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("integer");
@@ -69,8 +78,6 @@ namespace HelpDesk.DAL.Migrations
                         .HasColumnType("character varying(127)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProfileId");
 
                     b.HasIndex("StatusId");
 
@@ -112,6 +119,37 @@ namespace HelpDesk.DAL.Migrations
                     b.ToTable("Profiles");
                 });
 
+            modelBuilder.Entity("HelpDesk.DAL.Models.SavedFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(63)
+                        .HasColumnType("character varying(63)");
+
+                    b.Property<byte[]>("FileBody")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(127)
+                        .HasColumnType("character varying(127)");
+
+                    b.Property<int>("ProblemId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProblemId");
+
+                    b.ToTable("SavedFile");
+                });
+
             modelBuilder.Entity("HelpDesk.DAL.Models.Status", b =>
                 {
                     b.Property<int>("Id")
@@ -119,7 +157,19 @@ namespace HelpDesk.DAL.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<bool>("Access")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Queue")
+                        .HasColumnType("integer");
+
                     b.Property<string>("StatusName")
+                        .IsRequired()
+                        .HasMaxLength(127)
+                        .HasColumnType("character varying(127)");
+
+                    b.Property<string>("StatusNameFromButton")
+                        .IsRequired()
                         .HasMaxLength(127)
                         .HasColumnType("character varying(127)");
 
@@ -344,19 +394,32 @@ namespace HelpDesk.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("HelpDesk.DAL.Models.Comments", b =>
+                {
+                    b.HasOne("HelpDesk.DAL.Models.Problem", "Problem")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProblemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HelpDesk.DAL.Models.Profile", "Profile")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Problem");
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>
                 {
-                    b.HasOne("HelpDesk.DAL.Models.Profile", "Profile")
-                        .WithMany("Problems")
-                        .HasForeignKey("ProfileId");
-
                     b.HasOne("HelpDesk.DAL.Models.Status", "Status")
                         .WithMany("Problems")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Profile");
 
                     b.Navigation("Status");
                 });
@@ -370,6 +433,17 @@ namespace HelpDesk.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HelpDesk.DAL.Models.SavedFile", b =>
+                {
+                    b.HasOne("HelpDesk.DAL.Models.Problem", "Problem")
+                        .WithMany("SavedFiles")
+                        .HasForeignKey("ProblemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Problem");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.UserProblem", b =>
@@ -444,12 +518,16 @@ namespace HelpDesk.DAL.Migrations
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>
                 {
+                    b.Navigation("Comments");
+
+                    b.Navigation("SavedFiles");
+
                     b.Navigation("UsersProblem");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Profile", b =>
                 {
-                    b.Navigation("Problems");
+                    b.Navigation("Comments");
 
                     b.Navigation("UsersProblem");
                 });

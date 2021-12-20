@@ -1,0 +1,32 @@
+﻿@model StatusViewModel
+
+<div class="text_error message">
+    @Html.ValidationMessage("Error")
+</div>
+
+
+<form class="forms" method="post" asp-controller="Status" asp-action="CreateStatus">
+    <div class="formslabel">
+        <label asp-for="StatusName">Наименование</label><br />
+        <input asp-for="StatusName" />
+        <span asp-validation-for="StatusName" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="Queue">Очередность</label><br />
+        <input asp-for="Queue" />
+        <span asp-validation-for="Queue" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="StatusNameFromButton">Наименование кнопок</label><br />
+        <input asp-for="StatusNameFromButton" />
+        <span asp-validation-for="StatusNameFromButton" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="Access">Доступен ли статус пользователю</label><br />
+        <select id="priority" class="input" asp-for="Access" asp-items="ViewBag.acces"></select>
+        <span asp-validation-for="Access" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <input class="button_classic" type="submit" value="Создать" />
+    </div>
+</form>

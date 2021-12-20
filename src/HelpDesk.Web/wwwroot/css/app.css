@@ -41,12 +41,16 @@ button{
     display: flex;
 }
 
+.header-image-block{
+    width: 400px;
+    margin-right: 0px;
+}
+
 .header-image{
-    background: url(../images/shutterstock_791606392-750x375.jpg) no-repeat;    
+    background: url(../images/shutterstock_791606392-750x375.jpg) no-repeat;
     height: 100%;
     width: 400px;
     background-size: 400px 100%;
-    margin-right: 0px;
 }
 
 h1 {
@@ -55,7 +59,8 @@ h1 {
 
 .container {
     width: 100%;
-    margin: 0 auto;    
+    margin: 0 auto;
+    min-width: 830px;    
 }
 
 .logo {
@@ -77,6 +82,7 @@ h1 {
  margin-left: auto;
  margin-bottom: 0px;
  margin-top: auto;
+ flex-wrap: wrap;
 }
 
 .nav-item{
@@ -87,6 +93,7 @@ h1 {
     text-align: center;  
     list-style: none;
     line-height: 30px;
+    cursor: pointer;
 }
 
 .forms{
@@ -167,6 +174,8 @@ th{
     text-align: center;
 }
 
+/*-------------------------------------------------------*/
+
 .message {
     text-align: center;
     margin-top: 2em;
@@ -177,4 +186,51 @@ pre {
     font-family: monospace;
     white-space: pre;
     margin: 1em 0px;
+}
+
+.Delete_Status{
+    cursor: pointer;
+    position: relative;
+}
+
+.Delete_Status .tooltiptext{
+    display: none;
+    position: absolute;
+    left: -300px;  
+    padding: 5px;
+    z-index: 2;
+    background-color: #000000a6;
+    color: #fff;
+}
+
+@media (max-width:925px) {
+
+    .header-image-block{
+        width: 300px;
+        margin-right: 0px;
+    }
+    
+    .header-image{
+        background: url(../images/shutterstock_791606392-750x375.jpg) no-repeat;
+        height: 100%;
+        width: 300px;
+        background-size: 300px 100%;
+    }
+
+}
+
+@media (max-width:300px) {
+
+    .header-image-block{
+        width: 250px;
+        margin-right: 0px;
+    }
+    
+    .header-image{
+        background: url(../images/shutterstock_791606392-750x375.jpg) no-repeat;
+        height: 100%;
+        width: 250px;
+        background-size: 200px 100%;
+    }
+
 }

@@ -1,3 +1,4 @@
+using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Services;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
@@ -25,7 +26,8 @@ namespace HelpDesk.Web
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var profileManager = services.GetRequiredService<IRepository<Profile>>();
-                    await RoleInitializer.InitializeAsync(userManager, rolesManager, profileManager);
+                    var statusService = services.GetRequiredService<IStatusService>();
+                    await Initializer.InitializeAsync(userManager, rolesManager, profileManager, statusService);
                 }
                 catch (Exception ex)
                 {

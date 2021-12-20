@@ -1,0 +1,47 @@
+﻿@model IEnumerable<StatusViewModel>
+
+<div class="users-table">
+    <div class="panel-heading">
+        <div class="panel-heading-text">Статусы</div>
+        <form method="get" asp-controller="Status" asp-action="CreateStatus">
+            <button class="button_classic button_whith_border" type="submit" title="Создать">Создать</button>
+        </form>
+    </div>    
+    <table class="table">
+        <tr>
+            <th>Наименование</th>
+            <th>Очередность</th>
+            <th>Наименование кнопок</th>
+            <th>Доступность пользователю</th>
+        </tr>
+        @foreach (var status in Model)
+        {
+    <tr>
+        <td>@status.StatusName</td>
+        <td>@status.Queue</td>
+        <td>@status.StatusNameFromButton</td>
+        <td>@status.Access</td>
+        <td>
+            <a asp-controller="Status" asp-action="EditStatus" asp-route-id="@status.Id">
+                <img title="Изменить" src="/images/Edit.svg" />
+            </a>
+        </td>
+        <td>
+            @if (status.Queue != 1 && status.Queue != 2 && status.Queue != 3)
+            {
+                <a class="Delete_Status" name="@status.Id">
+                    <img title="Удалить" src="/images/Delete.svg" />
+                </a>
+            }
+        </td>
+    </tr>
+        }
+    </table>
+</div>
+<div class="message">Предполагается что первые 3 статуса статичны "черновик", "отправлена", "взят в работу", далее статусы можно добавлять
+    и в зависимости будет он доступен пользователю или нет пользователь получит доступ его изменения, в ту или иную сторону
+    на один пункт очередности.  
+    </div>
+@section js {
+    <script src="~/js/deletestatus.js" asp-append-version="true"></script>
+}
