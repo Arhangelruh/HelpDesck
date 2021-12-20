@@ -27,9 +27,7 @@ namespace HelpDesk.DAL.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreateComment")
                         .HasColumnType("timestamp without time zone");
@@ -117,37 +115,6 @@ namespace HelpDesk.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Profiles");
-                });
-
-            modelBuilder.Entity("HelpDesk.DAL.Models.SavedFile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(63)
-                        .HasColumnType("character varying(63)");
-
-                    b.Property<byte[]>("FileBody")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(127)
-                        .HasColumnType("character varying(127)");
-
-                    b.Property<int>("ProblemId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProblemId");
-
-                    b.ToTable("SavedFile");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Status", b =>
@@ -399,13 +366,13 @@ namespace HelpDesk.DAL.Migrations
                     b.HasOne("HelpDesk.DAL.Models.Problem", "Problem")
                         .WithMany("Comments")
                         .HasForeignKey("ProblemId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HelpDesk.DAL.Models.Profile", "Profile")
                         .WithMany("Comments")
                         .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Problem");
@@ -433,17 +400,6 @@ namespace HelpDesk.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("HelpDesk.DAL.Models.SavedFile", b =>
-                {
-                    b.HasOne("HelpDesk.DAL.Models.Problem", "Problem")
-                        .WithMany("SavedFiles")
-                        .HasForeignKey("ProblemId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Problem");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.UserProblem", b =>
@@ -519,8 +475,6 @@ namespace HelpDesk.DAL.Migrations
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("SavedFiles");
 
                     b.Navigation("UsersProblem");
                 });
