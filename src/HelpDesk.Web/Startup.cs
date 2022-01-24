@@ -37,8 +37,12 @@ namespace HelpDesk.Web
             services.AddScoped<IRequestsService, RequestsService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddHangfireServer(
+                
+                );
 
             services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+
             services.AddDbContext<HelpDeskContext>(options =>
                 
             options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
@@ -62,6 +66,7 @@ namespace HelpDesk.Web
             if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
             else
             {
@@ -77,14 +82,10 @@ namespace HelpDesk.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            try
-            {
-                app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
                 {
                     Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
                 });
-                app.UseHangfireServer();
-            }catch { }
 
             app.UseEndpoints(endpoints =>
             {
