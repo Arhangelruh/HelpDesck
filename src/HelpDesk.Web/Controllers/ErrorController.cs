@@ -45,16 +45,5 @@ namespace HelpDesk.Web.Controllers
 
                 return View("NotFound");
             }
-
-        public IActionResult ErrorMessage(string message)
-        {
-            //var exceptionHandlerPathFeature =
-            //    HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-
-            //logger.LogError($"The path {exceptionHandlerPathFeature.Path} " +
-            //    $"threw an exception {exceptionHandlerPathFeature.Error}");
-            ViewBag.ErrorMessage = message;
-            return View("Error");
-        }
     }
 }
