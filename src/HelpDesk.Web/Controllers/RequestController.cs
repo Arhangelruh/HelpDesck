@@ -235,7 +235,9 @@ namespace HelpDesk.Web.Controllers
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             if (getRequestModel is null)
             {
-                return Content("Заявка не найдена!");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Заявка не найдена!";
+                return View("~/Views/Error/Error.cshtml");
             }
             string userName, adminName;
 
@@ -383,7 +385,9 @@ namespace HelpDesk.Web.Controllers
             }
             else
             {
-                return Content("Нельзя удалить заявки отправленные в работу");
+                ViewBag.ErrorMessage = "Нельзя удалить заявки отправленные в работу";
+                ViewBag.ErrorTitle = "Ошибка";
+                return View("~/Views/Error/Error.cshtml");
             }
         }
 
@@ -410,7 +414,9 @@ namespace HelpDesk.Web.Controllers
             }
             else
             {
-                return Content("Редактировать заявки отправленные в работу запрещено.");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Редактировать заявки отправленные в работу запрещено.";
+                return View("~/Views/Error/Error.cshtml");
             }
         }
 
@@ -489,14 +495,18 @@ namespace HelpDesk.Web.Controllers
         {
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             if (getRequestModel is null)
-            {
-                return Content("Заявка не найдена.");
+            {                
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Заявка не найдена.";
+                return View("~/Views/Error/Error.cshtml");
             }
 
             var status = await _statusService.GetStatusByIdAsync(statusId);
             if (status is null)
-            {
-                return Content("Статус не найден.");
+            {               
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Статус не найден.";
+                return View("~/Views/Error/Error.cshtml");
             }
 
             await _requestsService.ChangeStatusAsync(getRequestModel, status.Id);
@@ -530,7 +540,9 @@ namespace HelpDesk.Web.Controllers
                 var requestId = Id;
                 return RedirectToAction("GetRequest", "Request", new { requestId });
             }
-            return Content("Ошибка, не найден текст комментария");
+            ViewBag.ErrorTitle = "Ошибка";
+            ViewBag.ErrorMessage = "Не найден текст комментария.";
+            return View("~/Views/Error/Error.cshtml");
         }
     }
 }

@@ -60,7 +60,9 @@ namespace HelpDesk.Web.Controllers
             }
             else
             {
-                return Content("Статусы не найдены");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Статусы не найдены.";
+                return View("~/Views/Error/Error.cshtml");
             }
         }
 

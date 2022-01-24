@@ -34,7 +34,9 @@ namespace HelpDesk.Web.Controllers
             {
                 if (Id == 0)
                 {
-                    return Content("Ошибка загрузки, проверьте что файл соответствует размерам");
+                    ViewBag.ErrorTitle = "Ошибка";
+                    ViewBag.ErrorMessage = "Ошибка загрузки, проверьте что файл соответствует размерам";
+                    return View("~/Views/Error/Error.cshtml");                    
                 }
                 else
                 {
@@ -44,7 +46,9 @@ namespace HelpDesk.Web.Controllers
             }
             if (saveFile.FileBody.FileName.Length > ConfigurationContants.SqlMaxLengthMedium)
             {
-                return Content($"Имя файла не должно превышать {ConfigurationContants.SqlMaxLengthMedium} символов.");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = $"Имя файла не должно превышать {ConfigurationContants.SqlMaxLengthMedium} символов.";
+                return View("~/Views/Error/Error.cshtml");
             }
 
             if (saveFile.FileBody != null)
@@ -64,7 +68,9 @@ namespace HelpDesk.Web.Controllers
                 var requestId = Id;
                 return RedirectToAction("GetRequest", "Request", new { requestId });
             }
-            return Content("Ошибка, файл не найден");
+            ViewBag.ErrorTitle = "Ошибка";
+            ViewBag.ErrorMessage = "Ошибка, файл не найден";
+            return View("~/Views/Error/Error.cshtml");            
         }
 
         /// <summary>

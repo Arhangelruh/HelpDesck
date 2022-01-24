@@ -8,6 +8,7 @@ using HelpDesk.DAL.Context;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,9 +57,17 @@ namespace HelpDesk.Web
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseDeveloperExceptionPage();
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {            
+            if (env.EnvironmentName == "Development")
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -68,11 +77,14 @@ namespace HelpDesk.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            try
             {
-                Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
-            });
-            app.UseHangfireServer();
+                app.UseHangfireDashboard("/hangfire", new DashboardOptions
+                {
+                    Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
+                });
+                app.UseHangfireServer();
+            }catch { }
 
             app.UseEndpoints(endpoints =>
             {
