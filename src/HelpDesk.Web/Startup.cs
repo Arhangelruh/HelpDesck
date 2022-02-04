@@ -8,6 +8,7 @@ using HelpDesk.DAL.Context;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +38,9 @@ namespace HelpDesk.Web
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IFileService, FileService>();
 
-            services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+            services.AddHangfire(config => config.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));           
+            services.AddHangfireServer();           
+           
             services.AddDbContext<HelpDeskContext>(options =>
                 
             options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
@@ -56,9 +59,18 @@ namespace HelpDesk.Web
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseDeveloperExceptionPage();
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {            
+            if (env.EnvironmentName == "Development")
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -72,7 +84,6 @@ namespace HelpDesk.Web
             {
                 Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
             });
-            app.UseHangfireServer();
 
             app.UseEndpoints(endpoints =>
             {

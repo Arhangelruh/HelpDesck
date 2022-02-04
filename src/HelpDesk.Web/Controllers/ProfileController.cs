@@ -292,7 +292,9 @@ namespace HelpDesk.Web.Controllers
                 }
                 else
                 {
-                    return Content("Пользователь с таким логином уже существует");
+                    ViewBag.ErrorTitle = "Ошибка";
+                    ViewBag.ErrorMessage = "Пользователь с таким логином уже существует";
+                    return View("~/Views/Error/Error.cshtml");                   
                 }
             }
             return View(model);
@@ -386,7 +388,9 @@ namespace HelpDesk.Web.Controllers
 
                 if (searchUser != null && searchUser.Id !=model.UserId)
                 {
-                    return Content("Пользователь с таким логином уже существует");                   
+                    ViewBag.ErrorTitle = "Ошибка";
+                    ViewBag.ErrorMessage = "Пользователь с таким логином уже существует";
+                    return View("~/Views/Error/Error.cshtml");                   
                 }
                 else
                 {
