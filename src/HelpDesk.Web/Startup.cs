@@ -37,12 +37,10 @@ namespace HelpDesk.Web
             services.AddScoped<IRequestsService, RequestsService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IFileService, FileService>();
-            services.AddHangfireServer(
-                
-                );
 
-            services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
-
+            services.AddHangfire(config => config.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));           
+            services.AddHangfireServer();           
+           
             services.AddDbContext<HelpDeskContext>(options =>
                 
             options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
@@ -83,9 +81,9 @@ namespace HelpDesk.Web
             app.UseAuthorization();
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
-                {
-                    Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
-                });
+            {
+                Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
+            });
 
             app.UseEndpoints(endpoints =>
             {
