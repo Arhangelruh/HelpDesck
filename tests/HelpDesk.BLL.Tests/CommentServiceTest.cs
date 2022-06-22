@@ -1,13 +1,12 @@
-﻿using HelpDesk.BLL.Repository;
+﻿using HelpDesk.BLL.Models;
 using HelpDesk.BLL.Services;
 using HelpDesk.BLL.Tests.Context;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Models;
 using Moq;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,66 +14,8 @@ namespace HelpDesk.BLL.Tests
 {
     public class CommentServiceTest
     {
-
-        [Fact]
-        public async Task GetCommentsByRequestAsyncReturnWithListComments()
-        {
-            // Arrange
-            int problemid = 2;
-            //var mock = new Mock<IRepository<Comments>>();
-            //mock.Setup(_repositoryComments => _repositoryComments.GetAll()).Returns(CommList);
-            //var _commentService = new CommentService(mock.Object);
-            
-            var mockSet = new Mock<Comments>();
-            mockSet.As<IDbAsyncEnumerable<Comments>>()
-                .Setup(m => m.GetAsyncEnumerator())
-                .Returns(new TestDbAsyncEnumerator<Comments>(CommList().GetEnumerator()));
-
-            mockSet.As<IQueryable<Comments>>()
-                .Setup(m => m.Provider)
-                .Returns(new TestDbAsyncQueryProvider<Comments>(CommList().Provider));
-
-            mockSet.As<IQueryable<Comments>>().Setup(m => m.Expression).Returns(CommList().Expression);
-            mockSet.As<IQueryable<Comments>>().Setup(m => m.ElementType).Returns(CommList().ElementType);
-            mockSet.As<IQueryable<Comments>>().Setup(m => m.GetEnumerator()).Returns(CommList().GetEnumerator());
-
-            var mockContext = new Mock<Comments>();
-            mockContext.Setup(_r => _r).Returns(mockSet.Object);
-            IRepository<Comments> _repo =  new Repository<Comments>(mockContext);
-      
-            var _commentService = new CommentService(mockContext.Object);
-
-            //Act
-            //var result = mock.Object.GetAll().Where(id => id.ProblemId == problemid);
-            var result = await _commentService.GetCommentsByRequestAsync(problemid);
-
-            //Assert
-            Assert.NotEmpty(result);
-        }
         private IQueryable<Comments> CommList()
-        {                       
-            //var r = new List<Comments>();
-            //r.Add(new Comments()
-            //{
-            //    Id = 1,
-            //    ProblemId = 2,
-            //    ProfileId = 1,
-            //    Comment = "some text"
-            //});
-            //r.Add(new Comments()
-            //{
-            //    Id = 1,
-            //    ProblemId = 1,
-            //    ProfileId = 1,
-            //    Comment = "some text two"
-            //});
-            //r.Add(new Comments()
-            //{
-            //    Id = 1,
-            //    ProblemId = 2,
-            //    ProfileId = 2,
-            //    Comment = "some text three"
-            //});
+        {
             var data = new List<Comments>
             {
                 new Comments {
@@ -84,13 +25,13 @@ namespace HelpDesk.BLL.Tests
                 Comment = "some text"
                 },
                 new Comments {
-                                Id = 1,
+                Id = 1,
                 ProblemId = 1,
                 ProfileId = 1,
                 Comment = "some text two"
                 },
                 new Comments {
-                                Id = 1,
+                Id = 1,
                 ProblemId = 2,
                 ProfileId = 2,
                 Comment = "some text three"
@@ -98,5 +39,90 @@ namespace HelpDesk.BLL.Tests
             }.AsQueryable();
             return data;
         }
-    }   
+
+        [Fact]
+        public async Task GetCommentsByRequestAsyncReturnWithListComments()
+        {
+            // Arrange
+            int problemid = 1;
+            var allCommentsInDb = CommList();
+
+            var repositoryMock = new Mock<IRepository<Comments>>();
+            repositoryMock.Setup(x => x.GetAll()).Returns(new TestAsyncEnumerable<Comments>(allCommentsInDb));
+
+            var commentService = new CommentService(repositoryMock.Object);
+
+            //Act
+            var result = await commentService.GetCommentsByRequestAsync(problemid);
+
+            //Assert
+            Assert.NotEmpty(result);
+            Assert.Single(result);
+            Assert.Equal(problemid, result.First().ProblemId);
+        }
+
+        [Fact]
+        public async Task DeleteCommentsAsyncNonReturns()
+        {
+            // Arrange
+            int problemid = 2;
+            var commentsDb = CommList();
+
+            var repositoryMock = new Mock<IRepository<Comments>>();
+            repositoryMock.Setup(x => x.GetAll()).Returns(new TestAsyncEnumerable<Comments>(commentsDb));
+
+            var commentService = new CommentService(repositoryMock.Object);
+
+            var comments = repositoryMock.Object
+                .GetAll()
+                .Where(comments => comments.ProblemId == problemid);
+
+            //Act
+            await commentService.DeleteCommentsAsync(problemid);
+
+            ////Assert
+            foreach (var comment in comments)
+            repositoryMock.Verify(x => x.Delete(comment));
+            repositoryMock.Verify(x => x.SaveChangesAsync());
+        }
+
+        [Fact]
+        public async Task AddCommentsAsyncNonReturns()
+        {
+            // Arrange
+            var commentDto = new CommentDto {
+                ProblemId = 3,
+                ProfileId = 1,
+                Comment = "new comment text",                
+            };
+
+            var date = DateTime.Now;
+
+            var newComment = new Comments
+            {
+                ProblemId = commentDto.ProblemId,
+                ProfileId = commentDto.ProfileId,
+                Comment = commentDto.Comment,
+                CreateComment = date
+            };
+
+            var commentsDb = CommList();
+
+            var repositoryMock = new Mock<IRepository<Comments>>();
+            repositoryMock.Setup(x => x.GetAll()).Returns(new TestAsyncEnumerable<Comments>(commentsDb));
+
+            var commentService = new CommentService(repositoryMock.Object);
+
+            //Act
+            await commentService.AddCommentAsync(commentDto);
+
+            ////Assert
+            repositoryMock.Verify(x => x.AddAsync(It.Is<Comments>(
+            c =>
+                c.ProblemId == 3 &&
+                c.ProfileId == 1
+             )));
+            repositoryMock.Verify(x => x.SaveChangesAsync());
+        }
+    }
 }
