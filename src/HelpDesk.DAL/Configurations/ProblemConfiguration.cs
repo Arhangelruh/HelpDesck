@@ -28,6 +28,12 @@ namespace HelpDesk.DAL.Configurations
             builder.Property(problem => problem.Ip)
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium);
 
+            builder.Property(problem => problem.IncomingDate)
+                .HasColumnType("Timestamp");
+
+            builder.Property(problem => problem.CloseDate)
+                .HasColumnType("Timestamp");
+
             builder.HasOne(problem => problem.Status)
                 .WithMany(status => status.Problems)
                 .HasForeignKey(problem => problem.StatusId)
