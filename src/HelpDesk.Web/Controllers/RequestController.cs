@@ -54,8 +54,15 @@ namespace HelpDesk.Web.Controllers
         /// <returns>List requests</returns>
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Requests()
+        public async Task<IActionResult> Requests(string sortOrder)
         {
+            //TODO: sorting
+            ViewData["NumberSortParm"] = String.IsNullOrEmpty(sortOrder) ? "number_ask" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
+            ViewData["StatusSortParm"] = sortOrder == "Status" ? "Status_desc" : "Status";
+            ViewData["CreatorSortParm"] = sortOrder == "Creator" ? "Creator_desc" : "Creator";
+            ViewData["ExecuterSortParm"] = sortOrder == "Executer" ? "Executer_desc" : "Executer";
+
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
             var ifAdmin = await _userManager.IsInRoleAsync(user, UserConstants.AdminRole);
@@ -77,8 +84,6 @@ namespace HelpDesk.Web.Controllers
                             var profile = profiles.FirstOrDefault(profile => profile.Id == request.ProfileCreatorId);
                             var profileAdmin = profiles.FirstOrDefault(profile => profile.Id == request.ProfileAdminId);
                             string profileName, administratorName;
-
-                            var requestCreate = request.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
 
                             if (profile is null)
                             {
@@ -116,13 +121,13 @@ namespace HelpDesk.Web.Controllers
                                 Ip = request.Ip,
                                 Creator = profileName,
                                 Status = status.StatusName,
-                                IncomingDate = requestCreate,
+                                IncomingDate = request.IncomingDate,
                                 Admin = administratorName
                             });
                         }
                     }
                 }
-                return View(modelsRequests);
+
             }
             else
             {
@@ -169,13 +174,47 @@ namespace HelpDesk.Web.Controllers
                             Ip = request.Ip,
                             Creator = profileName,
                             Status = status.StatusName,
-                            IncomingDate = requestCreate,
+                            IncomingDate = request.IncomingDate,
                             Admin = administratorName
                         });
                     }
-                }
-                return View(modelsRequests);
+                }               
             }
+
+            switch (sortOrder)
+            {
+                case "number_ask":
+                    modelsRequests = modelsRequests.OrderBy(n => n.Id).ToList();
+                    break;
+                case "Date":
+                    modelsRequests = modelsRequests.OrderBy(d => d.IncomingDate).ToList();
+                    break;
+                case "Date_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(d => d.IncomingDate).ToList();
+                    break;
+                case "Status":
+                    modelsRequests = modelsRequests.OrderBy(s => s.Status).ToList();
+                    break;
+                case "Status_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(s => s.Status).ToList();
+                    break;
+                case "Creator":
+                    modelsRequests = modelsRequests.OrderBy(c => c.Creator).ToList();
+                    break;
+                case "Creator_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(c => c.Creator).ToList();
+                    break;
+                case "Executer":
+                    modelsRequests = modelsRequests.OrderBy(e => e.Admin).ToList();
+                    break;
+                case "Executer_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(e => e.Admin).ToList();
+                    break;
+                default:
+                    modelsRequests = modelsRequests.OrderByDescending(n => n.Id).ToList();
+                    break;
+            }
+            return View(modelsRequests);
         }
 
         /// <summary>
@@ -279,7 +318,6 @@ namespace HelpDesk.Web.Controllers
 
             var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
 
-            var requestCreate = getRequestModel.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
             var commentsDto = await _commentService.GetCommentsByRequestAsync(requestId);
 
             var statuses = new List<StatusDto>();
@@ -355,7 +393,7 @@ namespace HelpDesk.Web.Controllers
                 Creator = userName,
                 Status = status.StatusName,
                 StatusQueue = status.Queue,
-                IncomingDate = requestCreate,
+                IncomingDate = getRequestModel.IncomingDate,
                 Admin = adminName,
                 Comments = comments,
                 Statuses = statuses,

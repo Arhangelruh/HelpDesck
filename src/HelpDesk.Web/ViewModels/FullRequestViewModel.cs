@@ -57,7 +57,7 @@ namespace HelpDesk.Web.ViewModels
         /// <summary>
         /// Incoming date.
         /// </summary>
-        public string IncomingDate { get; set; }
+        public DateTime IncomingDate { get; set; }
 
         /// <summary>
         /// Statuses.

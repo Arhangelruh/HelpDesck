@@ -22,15 +22,15 @@
     {
         <table class="table">
             <tr>
-                <th>Номер</th>
+                <th>@Html.ActionLink("Номер","Requests", "Request", new { sortOrder = ViewBag.NumberSortParm })</th>
                 <th>Тема</th>
-                <th>Дата</th>
-                <th>Статус</th>
+                <th>@Html.ActionLink("Дата","Requests", "Request", new { sortOrder = ViewBag.DateSortParm })</th>
+                <th>@Html.ActionLink("Статус","Requests", "Request", new { sortOrder = ViewBag.StatusSortParm })</th>
                 @if (User.IsInRole(UserConstants.AdminRole))
                 {
-                    <th>Автор</th>
+                    <th>@Html.ActionLink("Автор","Requests", "Request", new { sortOrder = ViewBag.CreatorSortParm })</th>
                 }
-                <th>Исполнитель</th>
+                <th>@Html.ActionLink("Исполнитель","Requests", "Request", new { sortOrder = ViewBag.ExecuterSortParm })</th>
             </tr>
             @foreach (var request in Model)
             {
