@@ -2,6 +2,7 @@
 using HelpDesk.BLL.Models;
 using HelpDesk.Common.Constants;
 using HelpDesk.DAL.Models;
+using HelpDesk.Web.Services;
 using HelpDesk.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -54,14 +55,17 @@ namespace HelpDesk.Web.Controllers
         /// <returns>List requests</returns>
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Requests(string sortOrder)
+        public async Task<IActionResult> Requests(string sortOrder, int? page, int? pagesize)
         {
-            //TODO: sorting
+            ViewData["CurrentSort"] = sortOrder;
             ViewData["NumberSortParm"] = String.IsNullOrEmpty(sortOrder) ? "number_ask" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
             ViewData["StatusSortParm"] = sortOrder == "Status" ? "Status_desc" : "Status";
             ViewData["CreatorSortParm"] = sortOrder == "Creator" ? "Creator_desc" : "Creator";
             ViewData["ExecuterSortParm"] = sortOrder == "Executer" ? "Executer_desc" : "Executer";
+           
+            int pageSize = (int)(pagesize == null ? 2 : pagesize);
+            ViewData["PageSize"] = pageSize;
 
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
@@ -213,8 +217,8 @@ namespace HelpDesk.Web.Controllers
                 default:
                     modelsRequests = modelsRequests.OrderByDescending(n => n.Id).ToList();
                     break;
-            }
-            return View(modelsRequests);
+            }             
+              return View(PaginatedList<RequestViewModel>.Create(modelsRequests, page ?? 1, pageSize));
         }
 
         /// <summary>
