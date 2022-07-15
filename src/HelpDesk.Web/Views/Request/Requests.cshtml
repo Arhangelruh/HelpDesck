@@ -1,5 +1,6 @@
-﻿@model IEnumerable<RequestViewModel>
-@using HelpDesk.Common.Constants;
+﻿@using HelpDesk.Common.Constants;
+@using HelpDesk.Web.Services
+@model PaginatedList<RequestViewModel>
 
 <div class="users-table">
     <div class="panel-heading">
@@ -22,33 +23,77 @@
     {
         <table class="table">
             <tr>
-                <th>Номер</th>
+                <th>@Html.ActionLink("Номер","Requests", "Request", new { sortOrder = ViewBag.NumberSortParm , page = Model.PageIndex, pageSize = ViewData["PageSize"] })</th>
                 <th>Тема</th>
-                <th>Дата</th>
-                <th>Статус</th>
+                <th>@Html.ActionLink("Дата","Requests", "Request", new { sortOrder = ViewBag.DateSortParm, page = Model.PageIndex, pageSize = ViewData["PageSize"] })</th>
+                <th>@Html.ActionLink("Статус","Requests", "Request", new { sortOrder = ViewBag.StatusSortParm, page = Model.PageIndex, pageSize = ViewData["PageSize"] })</th>
+                
                 @if (User.IsInRole(UserConstants.AdminRole))
                 {
-                    <th>Автор</th>
+                    <th>@Html.ActionLink("Автор","Requests", "Request", new { sortOrder = ViewBag.CreatorSortParm, page = Model.PageIndex, pageSize = ViewData["PageSize"] })</th>
                 }
-                <th>Исполнитель</th>
+
+                <th>@Html.ActionLink("Исполнитель","Requests", "Request", new { sortOrder = ViewBag.ExecuterSortParm, page = Model.PageIndex, pageSize = ViewData["PageSize"] })</th>
             </tr>
             @foreach (var request in Model)
             {
 
-        <tr onclick="location.href = '@Url.Action("GetRequest", "Request", new { requestId = request.Id })'">
+          <tr onclick="location.href = '@Url.Action("GetRequest", "Request", new { requestId = request.Id })'">
             <td>@request.Id</td>
             <td>@request.Theme</td>
             <td>@request.IncomingDate</td>
             <td>@request.Status</td>
-            @if (User.IsInRole(UserConstants.AdminRole))
-            {
-                <td>@request.Creator</td>
-            }
+               @if (User.IsInRole(UserConstants.AdminRole))
+                 {
+                    <td>@request.Creator</td>
+                 }
             <td>@request.Admin</td>
-        </tr>
-
-            }
+          </tr>
+            }          
         </table>
+        <div class="table-settings">
+        <div class="table-list-pagesize">          
+          <select size="1">
+            <option onclick="location.href = 
+                  '@Url.Action(
+                      "Requests",
+                      "Request", 
+                      new { sortOrder = ViewData["CurrentSort"],  pageSize = 20 })'" 
+                      value = "20">20                      
+                </option>
+            <option onclick="location.href = 
+                  '@Url.Action(
+                      "Requests",
+                      "Request", 
+                      new { sortOrder = ViewData["CurrentSort"],   pageSize = 50 })'" 
+                value = "50">50</option>
+            <option onclick="location.href = 
+                  '@Url.Action(
+                      "Requests",
+                      "Request", 
+                      new { sortOrder = ViewData["CurrentSort"],   pageSize = 100 })'"
+                value = "100">100</option>
+          </select>        
+        </div>
+        @if (Model.HasPreviousPage)
+        {
+            <a asp-action="Requests"
+            asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-page="@(Model.PageIndex - 1)"
+            asp-route-pageSize = "@ViewData["PageSize"]">
+            <img title="Previous" src="/images/Left.svg" />
+            </a>
+        }
+        @if (Model.HasNextPage)
+        {
+            <a asp-action="Requests"
+            asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-page="@(Model.PageIndex + 1)"
+            asp-route-pageSize = "@ViewData["PageSize"]">           
+            <img title="Next" src="/images/Right.svg" />
+            </a>
+        }
+        </div>
     }
 </div>
 

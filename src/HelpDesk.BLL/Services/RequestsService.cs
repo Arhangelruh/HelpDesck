@@ -112,9 +112,7 @@ namespace HelpDesk.BLL.Services
         public async Task<List<RequestDto>> GetAllRequestsAsync()
         {
             var requestDtos = new List<RequestDto>();
-            var requests = await _repositoryProblem.GetAll().AsNoTracking().ToListAsync();
-
-            
+            var requests = await _repositoryProblem.GetAll().AsNoTracking().ToListAsync();           
 
             foreach (var request in requests)
             {
