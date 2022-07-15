@@ -64,7 +64,7 @@ namespace HelpDesk.Web.Controllers
             ViewData["CreatorSortParm"] = sortOrder == "Creator" ? "Creator_desc" : "Creator";
             ViewData["ExecuterSortParm"] = sortOrder == "Executer" ? "Executer_desc" : "Executer";
            
-            int pageSize = (int)(pagesize == null ? 2 : pagesize);
+            int pageSize = (int)(pagesize == null ? 20 : pagesize);
             ViewData["PageSize"] = pageSize;
 
             var username = User.Identity.Name;
