@@ -96,6 +96,17 @@ h1 {
     cursor: pointer;
 }
 
+.nav-item:hover {
+    background: url(../images/Bg2.svg) no-repeat;
+    background-size: contain;
+    width: 130px;
+    height: 30px;
+    text-align: center;  
+    list-style: none;
+    line-height: 30px;
+    cursor: pointer;
+}
+
 .forms{
     margin-left: auto;
     margin-right: auto;
