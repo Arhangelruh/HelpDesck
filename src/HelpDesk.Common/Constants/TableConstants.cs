@@ -39,5 +39,10 @@
         /// Requests files.
         /// </summary>
         public const string SavedFile = nameof(SavedFile);
+
+        /// <summary>
+        /// FAQs.
+        /// </summary>
+        public const string FAQ = nameof(FAQ);
     }
 }

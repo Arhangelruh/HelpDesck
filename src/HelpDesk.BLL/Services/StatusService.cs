@@ -41,7 +41,7 @@ namespace HelpDesk.BLL.Services
             await _repositoryStatus.SaveChangesAsync();
         }
 
-        public async Task <List<StatusDto>> GetStatusesAsync()
+        public async Task<List<StatusDto>> GetStatusesAsync()
         {
             var statusDtos = new List<StatusDto>();
             var statuses = await _repositoryStatus.GetAll().AsNoTracking().ToListAsync();
@@ -74,7 +74,7 @@ namespace HelpDesk.BLL.Services
             editStatus.Queue = status.Queue;
             editStatus.StatusNameFromButton = status.StatusNameFromButton;
             editStatus.Access = status.Access;
-           
+
             _repositoryStatus.Update(editStatus);
             await _repositoryStatus.SaveChangesAsync();
         }

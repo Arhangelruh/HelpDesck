@@ -21,7 +21,7 @@ namespace HelpDesk.Web.ViewModels
         /// Body file.
         /// </summary>
         [Required]
-        [MaxFileSize(10485760,ErrorMessage ="Это уж слишком")]
+        [MaxFileSize(10485760, ErrorMessage = "Это уж слишком")]
         public IFormFile FileBody { get; set; }
     }
 }

@@ -41,11 +41,11 @@ namespace HelpDesk.BLL.Services
                 {
                     Email = CheckFromNull(userAD.EMail).GetAwaiter().GetResult(),
                     PhoneNumber = CheckFromNull(userAD.MobileNumber).GetAwaiter().GetResult(),
-                    UserName = CheckFromNull(userAD.Login).GetAwaiter().GetResult(),                    
+                    UserName = CheckFromNull(userAD.Login).GetAwaiter().GetResult(),
                 };
 
                 var searchUser = _userManager.FindByNameAsync(userAD.Login).GetAwaiter().GetResult();
-                
+
                 if (searchUser == null)
                 {
                     if (userAD.UserSID != null)
@@ -64,27 +64,27 @@ namespace HelpDesk.BLL.Services
                                     var checkRole = _roleManager.FindByNameAsync(UserConstants.AdminRole).GetAwaiter().GetResult();
                                     if (checkRole != null)
                                     {
-                                         _userManager.AddToRoleAsync(user, UserConstants.AdminRole).GetAwaiter().GetResult();
+                                        _userManager.AddToRoleAsync(user, UserConstants.AdminRole).GetAwaiter().GetResult();
                                     }
                                     else
                                     {
-                                         _roleManager.CreateAsync(new IdentityRole(UserConstants.AdminRole)).GetAwaiter().GetResult();
-                                         _userManager.AddToRoleAsync(user, UserConstants.AdminRole).GetAwaiter().GetResult();
+                                        _roleManager.CreateAsync(new IdentityRole(UserConstants.AdminRole)).GetAwaiter().GetResult();
+                                        _userManager.AddToRoleAsync(user, UserConstants.AdminRole).GetAwaiter().GetResult();
                                     }
-                                    
+
                                 }
                                 else
                                 {
                                     var checkRole = _roleManager.FindByNameAsync(UserConstants.UserRole).GetAwaiter().GetResult();
                                     if (checkRole != null)
                                     {
-                                         _userManager.AddToRoleAsync(user, UserConstants.UserRole).GetAwaiter().GetResult();
+                                        _userManager.AddToRoleAsync(user, UserConstants.UserRole).GetAwaiter().GetResult();
                                     }
                                     else
                                     {
-                                         _roleManager.CreateAsync(new IdentityRole(UserConstants.UserRole)).GetAwaiter().GetResult();
+                                        _roleManager.CreateAsync(new IdentityRole(UserConstants.UserRole)).GetAwaiter().GetResult();
                                         _userManager.AddToRoleAsync(user, UserConstants.UserRole).GetAwaiter().GetResult();
-                                    }                                   
+                                    }
                                 }
 
                                 var userProfile = new Profile
@@ -105,11 +105,11 @@ namespace HelpDesk.BLL.Services
                 }
                 else
                 {
-                    var searchProfile =  _repository.GetEntityAsync(profile => profile.UserId.Equals(searchUser.Id)).GetAwaiter().GetResult();
+                    var searchProfile = _repository.GetEntityAsync(profile => profile.UserId.Equals(searchUser.Id)).GetAwaiter().GetResult();
 
                     if (searchProfile.UserSid != userAD.UserSID)
                     {
-                        
+
                         var usersProblem = await _repositoryUserProblem
                         .GetAll()
                         .AsNoTracking()
@@ -131,13 +131,13 @@ namespace HelpDesk.BLL.Services
                             LastName = CheckFromNull(userAD.LastName).GetAwaiter().GetResult(),
                             UserSid = CheckFromNull(userAD.UserSID).GetAwaiter().GetResult()
                         };
-                        searchProfile.FirstName = CheckFromNull(userAD.FirstName).GetAwaiter().GetResult();                        
-                        searchProfile.LastName = CheckFromNull(userAD.LastName).GetAwaiter().GetResult(); 
+                        searchProfile.FirstName = CheckFromNull(userAD.FirstName).GetAwaiter().GetResult();
+                        searchProfile.LastName = CheckFromNull(userAD.LastName).GetAwaiter().GetResult();
                         searchProfile.MiddleName = null;
                         _repository.Update(searchProfile);
-                        await _repository.SaveChangesAsync();                       
+                        await _repository.SaveChangesAsync();
                     }
-                   
+
                 }
             }
         }
@@ -175,12 +175,14 @@ namespace HelpDesk.BLL.Services
             searchProfile.LastName = user.LastName;
             _repository.Update(searchProfile);
             await _repository.SaveChangesAsync();
-           
-            if (user.Role != null) {
+
+            if (user.Role != null)
+            {
                 var checkRole = await _userManager.IsInRoleAsync(searchUser, user.Role);
-                if (!checkRole) {
+                if (!checkRole)
+                {
                     var userRoles = await _userManager.GetRolesAsync(searchUser);
-                    foreach( var roles in userRoles)
+                    foreach (var roles in userRoles)
                     {
                         await _userManager.RemoveFromRoleAsync(searchUser, roles);
                     }
@@ -190,7 +192,7 @@ namespace HelpDesk.BLL.Services
             searchUser.UserName = user.Login;
             searchUser.Email = user.EMail;
             searchUser.PhoneNumber = user.MobileNumber;
-            
+
             await _userManager.UpdateAsync(searchUser);
         }
 
@@ -204,7 +206,7 @@ namespace HelpDesk.BLL.Services
             }
 
             var userDataModel = await _userManager.FindByIdAsync(profileDataModel.UserId);
-            
+
             return userDataModel;
         }
 
@@ -261,7 +263,7 @@ namespace HelpDesk.BLL.Services
         }
 
         public async Task Locking(int profileId)
-        {               
+        {
             var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(profileId));
             var getUser = await _userManager.FindByIdAsync(getProfile.UserId);
             getUser.LockoutEnd = DateTime.UtcNow.AddYears(200);
@@ -291,24 +293,25 @@ namespace HelpDesk.BLL.Services
             {
                 var profile = profiles.FirstOrDefault(c => c.UserId.Equals(user.Id));
 
-                profileDtos.Add(new ProfileDto { 
-                 Id = profile.Id,
-                 UserId = profile.UserId,
-                 FirstName = profile.FirstName,
-                 LastName = profile.LastName,
-                 MiddleName = profile.MiddleName,
-                 Email = user.Email,
-                 MobileNumber = user.PhoneNumber,
-                });                
+                profileDtos.Add(new ProfileDto
+                {
+                    Id = profile.Id,
+                    UserId = profile.UserId,
+                    FirstName = profile.FirstName,
+                    LastName = profile.LastName,
+                    MiddleName = profile.MiddleName,
+                    Email = user.Email,
+                    MobileNumber = user.PhoneNumber,
+                });
             }
-           
+
             return profileDtos;
         }
 
         public async Task<ProfileDto> GetProfileByIdAsync(int id)
-        {            
+        {
             var getProfile = await _repository.GetEntityAsync(q => q.Id.Equals(id));
-            if(getProfile is null)
+            if (getProfile is null)
             {
                 return null;
             }
@@ -347,30 +350,32 @@ namespace HelpDesk.BLL.Services
                 _repository.Delete(profile);
                 await _repository.SaveChangesAsync();
 
-                if(user != null)
+                if (user != null)
                 {
                     await _userManager.DeleteAsync(user);
                 }
-            }            
+            }
         }
 
-        public async Task <string> CheckFromNull (string value) {
+        public async Task<string> CheckFromNull(string value)
+        {
 
-            if (value is null) {
+            if (value is null)
+            {
                 return null;
             }
 
-             var result =  await Task.Run(() =>
-            {
-                if (value == "NoN" || value == "null")
-                {
-                    return null;
-                }
-                else
-                {
-                    return value;
-                }
-            });
+            var result = await Task.Run(() =>
+           {
+               if (value == "NoN" || value == "null")
+               {
+                   return null;
+               }
+               else
+               {
+                   return value;
+               }
+           });
 
             return result;
         }

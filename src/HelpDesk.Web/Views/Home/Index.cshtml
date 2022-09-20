@@ -8,13 +8,31 @@
         @if (User.Identity.IsAuthenticated)
         {
             <div class="greeting">
-                <h1>Добро пожаловать</h1>
+                <h1>Добро пожаловать </h1>
             </div>
         }
         else
         {
             <div class="greeting">
-                <h1 class="text_greeting">Добро пожаловать на страницу приложения</h1>
+                <h4 class="text_greeting">Добро пожаловать на страницу технической поддержки.</h4>
+                  <div class="blocks-greeting">
+                        <form method="get" asp-controller="FAQ" asp-action="FAQ">
+                          <button class="greeting_item" type="submit" title="FAQ">
+                              <div class="button_img">
+                                   <img src="../images/FAQ.svg" alt="FAQ">
+                                 <div class="greeting_text_img">Вы можете посмотреть наиболее часто встречающиеся вопросы в разделе FAQ</div>
+                              </div>
+                          </button>
+                        </form>
+                <form method="get" asp-controller="Account" asp-action="Login">
+                          <button class="greeting_item" type="submit" title="Вход">
+                              <div class="button_img">
+                                   <img src="../images/Login.svg" alt="Вход">
+                                 <div class="greeting_text_img">Либо оставить заявку на техническую поддержку, для этого вам нужно зайти под своим учетными данными.</div>
+                              </div>
+                          </button>
+                        </form>          
+                 </div>
             </div>
         }
 </body>

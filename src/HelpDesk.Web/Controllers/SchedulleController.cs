@@ -81,13 +81,13 @@ namespace HelpDesk.Web.Controllers
         /// <returns>Job model</returns>
         [Authorize(Roles = UserConstants.AdminRole)]
         public IActionResult EditJob(string id)
-        {            
-            var job =_eventService.GetJobScheduller(id).GetAwaiter().GetResult();
+        {
+            var job = _eventService.GetJobScheduller(id).GetAwaiter().GetResult();
             var model = new ReccuringJobViewModel
             {
-            Id = job.Id,
-            Cron = job.Cron,
-            Job = job.Job
+                Id = job.Id,
+                Cron = job.Cron,
+                Job = job.Job
             };
 
             return View(model);

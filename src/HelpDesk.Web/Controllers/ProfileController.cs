@@ -294,7 +294,7 @@ namespace HelpDesk.Web.Controllers
                 {
                     ViewBag.ErrorTitle = "Ошибка";
                     ViewBag.ErrorMessage = "Пользователь с таким логином уже существует";
-                    return View("~/Views/Error/Error.cshtml");                   
+                    return View("~/Views/Error/Error.cshtml");
                 }
             }
             return View(model);
@@ -310,7 +310,7 @@ namespace HelpDesk.Web.Controllers
         public async Task<IActionResult> Lock(int Id)
         {
             await _profileService.Locking(Id);
-            
+
             return RedirectToAction("UserProfiles");
         }
 
@@ -386,11 +386,11 @@ namespace HelpDesk.Web.Controllers
             {
                 var searchUser = await _userManager.FindByNameAsync(model.Login);
 
-                if (searchUser != null && searchUser.Id !=model.UserId)
+                if (searchUser != null && searchUser.Id != model.UserId)
                 {
                     ViewBag.ErrorTitle = "Ошибка";
                     ViewBag.ErrorMessage = "Пользователь с таким логином уже существует";
-                    return View("~/Views/Error/Error.cshtml");                   
+                    return View("~/Views/Error/Error.cshtml");
                 }
                 else
                 {
@@ -436,7 +436,7 @@ namespace HelpDesk.Web.Controllers
         [HttpGet]
         public async Task<ActionResult> DeleteUser(int id)
         {
-           await _profileService.DeleteUserAsync(id);
+            await _profileService.DeleteUserAsync(id);
             return RedirectToAction("UserProfiles");
         }
     }

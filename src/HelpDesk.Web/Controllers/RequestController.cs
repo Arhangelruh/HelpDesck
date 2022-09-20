@@ -63,7 +63,7 @@ namespace HelpDesk.Web.Controllers
             ViewData["StatusSortParm"] = sortOrder == "Status" ? "Status_desc" : "Status";
             ViewData["CreatorSortParm"] = sortOrder == "Creator" ? "Creator_desc" : "Creator";
             ViewData["ExecuterSortParm"] = sortOrder == "Executer" ? "Executer_desc" : "Executer";
-           
+
             int pageSize = (int)(pagesize == null ? 20 : pagesize);
             ViewData["PageSize"] = pageSize;
 
@@ -182,7 +182,7 @@ namespace HelpDesk.Web.Controllers
                             Admin = administratorName
                         });
                     }
-                }               
+                }
             }
 
             switch (sortOrder)
@@ -217,8 +217,8 @@ namespace HelpDesk.Web.Controllers
                 default:
                     modelsRequests = modelsRequests.OrderByDescending(n => n.Id).ToList();
                     break;
-            }             
-              return View(PaginatedList<RequestViewModel>.Create(modelsRequests, page ?? 1, pageSize));
+            }
+            return View(PaginatedList<RequestViewModel>.Create(modelsRequests, page ?? 1, pageSize));
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace HelpDesk.Web.Controllers
         {
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             if (getRequestModel is null)
-            {                
+            {
                 ViewBag.ErrorTitle = "Ошибка";
                 ViewBag.ErrorMessage = "Заявка не найдена.";
                 return View("~/Views/Error/Error.cshtml");
@@ -545,7 +545,7 @@ namespace HelpDesk.Web.Controllers
 
             var status = await _statusService.GetStatusByIdAsync(statusId);
             if (status is null)
-            {               
+            {
                 ViewBag.ErrorTitle = "Ошибка";
                 ViewBag.ErrorMessage = "Статус не найден.";
                 return View("~/Views/Error/Error.cshtml");

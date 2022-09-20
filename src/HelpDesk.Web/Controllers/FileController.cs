@@ -36,7 +36,7 @@ namespace HelpDesk.Web.Controllers
                 {
                     ViewBag.ErrorTitle = "Ошибка";
                     ViewBag.ErrorMessage = "Ошибка загрузки, проверьте что файл соответствует размерам";
-                    return View("~/Views/Error/Error.cshtml");                    
+                    return View("~/Views/Error/Error.cshtml");
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace HelpDesk.Web.Controllers
             }
             ViewBag.ErrorTitle = "Ошибка";
             ViewBag.ErrorMessage = "Ошибка, файл не найден";
-            return View("~/Views/Error/Error.cshtml");            
+            return View("~/Views/Error/Error.cshtml");
         }
 
         /// <summary>
