@@ -131,6 +131,28 @@ h1 {
     justify-content: end;
    }
 
+   .login_button{
+    display: flex;
+    justify-content: center;
+   }
+
+.login_button_width{
+    width: 100%;
+}
+
+.forms_rememberme{
+ display: flex;
+ justify-content: center;    
+}
+
+.forms_checkbox_center{
+    width: 25px;
+height: 25px;
+margin-left: auto;
+margin-right: auto;
+display: flex;
+}
+
 /*Greeting*/
 .greeting{
     margin-left: auto;
