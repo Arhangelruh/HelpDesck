@@ -1,6 +1,5 @@
 ﻿using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Models;
-using HelpDesk.BLL.Services;
 using HelpDesk.Common.Constants;
 using HelpDesk.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -80,7 +79,6 @@ namespace HelpDesk.Web.Controllers
             }
             return View(model);
         }
-
 
         /// <summary>
         /// Model for edit FAQ.

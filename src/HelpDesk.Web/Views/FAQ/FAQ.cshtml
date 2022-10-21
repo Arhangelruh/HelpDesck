@@ -1,5 +1,6 @@
 ﻿@using HelpDesk.Common.Constants;
 @model List<FAQViewModel>
+@using HelpDesk.Web.Services;
 
    <div class="faq-container">
         <h1 class="heading-primary">На этой странице вы сможете найдти ответы на наиболее частые вопросы.</h1>
@@ -36,8 +37,8 @@
                     </dt>                    
                     <dd class="accordion-content accordionItem is-collapsed" id="accordion+@faq.Id" aria-hidden="true">
                         <p class="accordionAnswer">
-                            @faq.FAQAnswer
-                        </p>                           
+                        <instruction tagtext="@faq.FAQAnswer"></instruction>
+                        </p>
                     </dd>
                  }
         }
