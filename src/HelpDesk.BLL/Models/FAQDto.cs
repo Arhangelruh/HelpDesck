@@ -16,5 +16,10 @@
         /// Text.
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Connection to FAQ Topics.
+        /// </summary>
+        public int FAQTopicId { get; set; }
     }
 }

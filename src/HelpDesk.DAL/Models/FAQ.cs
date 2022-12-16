@@ -19,5 +19,13 @@ namespace HelpDesk.DAL.Models
         /// Description.
         /// </summary>
         public string Description { get; set; }
+
+        /// <inheritdoc/>
+        public int FAQTopicId { get; set; }
+
+        /// <summary>
+        /// Navigation to FAQTopic.
+        /// </summary>
+        public FAQTopic FAQTopic { get; set; }
     }
 }

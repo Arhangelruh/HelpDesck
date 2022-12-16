@@ -5,6 +5,7 @@
 </div>
 
 <form class="forms" method="post" asp-controller="FAQ" asp-action="AddFAQ">
+    <input type="hidden" asp-for="FAQTopic" />
     <div class="formslabel">
         <label asp-for="FAQTheme">Тема</label><br />
         <input class="formsfield" asp-for="FAQTheme" />

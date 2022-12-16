@@ -44,5 +44,10 @@
         /// FAQs.
         /// </summary>
         public const string FAQ = nameof(FAQ);
+
+        /// <summary>
+        /// FAQs.
+        /// </summary>
+        public const string FAQTopic = nameof(FAQTopic);
     }
 }

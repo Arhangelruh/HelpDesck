@@ -15,14 +15,19 @@ namespace HelpDesk.Web.ViewModels
         /// FAQ theme.
         /// </summary>
         [Required(ErrorMessage = "Поле не может быть пустым")]
-        [StringLength(ConfigurationContants.SqlMaxLengthMedium, MinimumLength = 3, ErrorMessage = "Это поле должно содержать от {1} до {0} символов")]
+        [StringLength(ConfigurationContants.SqlMaxLengthMedium, MinimumLength = 3, ErrorMessage = "Это поле должно содержать от {2} до {1} символов")]
         public string FAQTheme { get; set; }
 
         /// <summary>
         /// FAQ answer.
         /// </summary>
         [Required(ErrorMessage = "Поле не может быть пустым")]
-        [StringLength(ConfigurationContants.SqlMaxLengthLongForDescription, MinimumLength = 3, ErrorMessage = "Это поле должно содержать от {1} до {0} символов")]
+        [StringLength(ConfigurationContants.SqlMaxLengthLongForDescription, MinimumLength = 3, ErrorMessage = "Это поле должно содержать от {2} до {1} символов")]
         public string FAQAnswer { get; set; }
+
+        /// <summary>
+        /// FAQ Topic Id.
+        /// </summary>
+        public int FAQTopic { get; set; }
     }
 }

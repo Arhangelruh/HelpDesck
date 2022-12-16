@@ -22,6 +22,11 @@ namespace HelpDesk.DAL.Configurations
             builder.Property(FAQ => FAQ.Description)
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthLongForDescription)
                 .IsRequired();
+
+            builder.HasOne(faq => faq.FAQTopic)
+                .WithMany(faqtopic => faqtopic.FAQs)
+                .HasForeignKey(faq => faq.FAQTopicId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -10,6 +10,47 @@ namespace HelpDesk.BLL.Interfaces
     public interface IFAQService
     {
         /// <summary>
+        /// Add FAQ Topic.
+        /// </summary>
+        /// <param name="fAQTopicDto"></param>
+        /// <returns></returns>
+        Task AddFaqTopicAsync(FAQTopicDto fAQTopicDto);
+
+        /// <summary>
+        /// Edit FAQ Topic.
+        /// </summary>
+        /// <param name="fAQTopicDto"></param>
+        /// <returns></returns>
+        Task EditFAQTopicAsync(FAQTopicDto fAQTopicDto);
+
+        /// <summary>
+        /// Get FAQ Topic by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>FAQTopicDto</returns>
+        Task<FAQTopicDto> GetFAQTopicByIdAsync(int id);
+
+        /// <summary>
+        /// Get all FAQ Topics.
+        /// </summary>
+        /// <returns>list FAQTopicDto</returns>
+        Task<List<FAQTopicDto>> GetAllFAQTopicAsync();
+
+        /// <summary>
+        /// Delete FAQ Topic.
+        /// </summary>
+        /// <param name="fAQTopicDto"></param>
+        /// <returns>result</returns>
+        Task<bool> DeleteFAQTopicAsync(FAQTopicDto fAQTopicDto);
+
+        /// <summary>
+        /// Get FAQs by Topic.
+        /// </summary>
+        /// <param name="fAQTopicId"></param>
+        /// <returns></returns>
+        Task<List<FAQDto>> GetFAQByTopicAsync(int fAQTopicId);
+
+        /// <summary>
         /// Add FAQ.
         /// </summary>
         /// <param name="fAQDto">Dto model</param>

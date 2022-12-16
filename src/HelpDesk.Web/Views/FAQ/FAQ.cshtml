@@ -3,18 +3,18 @@
 @using HelpDesk.Web.Services;
 
    <div class="faq-container">
-        <h1 class="heading-primary">На этой странице вы сможете найдти ответы на наиболее частые вопросы.</h1>
+    <h1 class="heading-primary">На этой странице вы сможете найдти ответы на наиболее частые вопросы по теме @ViewBag.NameTopic</h1>
         <div class="accordion">
         <dl>
             @if (User.IsInRole(UserConstants.AdminRole))
             {
               <dt>
-                    <a class="accordionTitle accordionOtherGreen" asp-controller="FAQ" asp-action="AddFAQ">Создать новую запись</a>
+                    <a class="accordionTitle accordionOtherGreen" asp-controller="FAQ" asp-action="AddFAQ" asp-route-topicId="@ViewBag.IdTopic">Создать новую запись</a>
               </dt>
             }
     @if(!Model.Any()){
                 <dt class="accordionOther" style="">
-                    Заявки не найдены
+                    Записи не найдены
                 </dt>
     }
     else{

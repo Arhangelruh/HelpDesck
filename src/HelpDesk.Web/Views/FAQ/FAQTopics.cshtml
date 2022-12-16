@@ -1,0 +1,55 @@
+﻿@model List<FAQTopicViewModel>
+@using HelpDesk.Common.Constants;
+
+
+	<div class="faq-container">
+		<h1 class="heading-primary">
+			Выберите прогрумму по которой у вас есть вопрос
+		</h1>
+		<div class="accordion">
+        <dl>
+            @if (User.IsInRole(UserConstants.AdminRole))
+            {
+                <dt>
+                    <a class="accordionTitle accordionOtherGreen" asp-controller="FAQ" asp-action="AddFAQTopic">Создать новую запись</a>
+                </dt>
+            }
+            @if (!Model.Any())
+            {
+                <dt class="accordionOther" style="">
+                    Нет ни одной записи, у вас есть шанс быть первым.
+                </dt>
+            }
+            else
+            {
+                @foreach (var faq in Model)
+                {
+                    if (User.IsInRole(UserConstants.AdminRole))
+                    {
+                        <dt class="accordion_edit">
+                            <a class="extrafunction green" asp-controller="FAQ" asp-action="EditFAQTopic" asp-route-faqId="@faq.Id">
+                                <img title="Изменить" src="/images/Edit.svg" />
+                            </a>
+                            <a class="extrafunction red Delete_Topic" name="@faq.Id">                                
+                                <img title="Удалить" src="/images/Delete.svg" />
+                            </a>
+                        </dt>
+                    }
+                    <dt class="accordionTheme">
+                        <a class="accordion-title accordionTitle" asp-controller="FAQ" asp-action="FAQ" asp-route-topicId="@faq.Id">
+                            @faq.Topic
+                        </a>
+                    </dt>
+                }
+            }
+        </dl>
+		</div>
+	</div>
+
+@section css {
+    <link href="~/css/FAQ.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section js {
+    <script src="~/js/deleteFAQTopic.js" asp-append-version="true"></script>
+}
