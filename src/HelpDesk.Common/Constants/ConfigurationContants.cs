@@ -24,5 +24,10 @@
         /// Max lenght for string field.
         /// </summary>
         public const int SqlMaxLengthLong = 2000;
+
+        /// <summary>
+        /// Max lenght for string field.
+        /// </summary>
+        public const int SqlMaxLengthLongForDescription = 5000;
     }
 }

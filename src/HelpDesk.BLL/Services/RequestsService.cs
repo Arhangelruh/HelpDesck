@@ -17,7 +17,7 @@ namespace HelpDesk.BLL.Services
     {
         private readonly IRepository<Problem> _repositoryProblem;
         private readonly IRepository<UserProblem> _repositoryUserProblem;
-        private readonly IRepository<Profile> _repositoryProfile;        
+        private readonly IRepository<Profile> _repositoryProfile;
         private readonly UserManager<User> _userManager;
         private readonly IRepository<Status> _repositoryStatus;
 
@@ -25,10 +25,11 @@ namespace HelpDesk.BLL.Services
             IRepository<UserProblem> repositoryUserProblem,
             IRepository<Profile> repositoryProfile,
             UserManager<User> userManager,
-            IRepository<Status> repositoryStatus) {
+            IRepository<Status> repositoryStatus)
+        {
             _repositoryProblem = repositoryProblem ?? throw new ArgumentNullException(nameof(repositoryProblem));
             _repositoryUserProblem = repositoryUserProblem ?? throw new ArgumentNullException(nameof(repositoryUserProblem));
-            _repositoryProfile = repositoryProfile ?? throw new ArgumentNullException(nameof(repositoryProfile));            
+            _repositoryProfile = repositoryProfile ?? throw new ArgumentNullException(nameof(repositoryProfile));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _repositoryStatus = repositoryStatus ?? throw new ArgumentNullException(nameof(repositoryStatus));
         }
@@ -43,12 +44,12 @@ namespace HelpDesk.BLL.Services
             var dateRequest = DateTime.Now;
 
             var newRequest = new Problem
-            {                
+            {
                 Theme = request.Theme,
                 Description = request.Description,
                 Ip = request.Ip,
-                IncomingDate = dateRequest,                
-                StatusId = status.Id,                
+                IncomingDate = dateRequest,
+                StatusId = status.Id,
             };
 
             await _repositoryProblem.AddAsync(newRequest);
@@ -96,11 +97,12 @@ namespace HelpDesk.BLL.Services
                 .AsNoTracking()
                 .Where(userproblem => userproblem.ProblemId == request.Id)
                 .ToListAsync();
-           
+
             if (userconnections.Any())
             {
-                foreach (var userconnection in userconnections) {
-                          _repositoryUserProblem.Delete(userconnection);
+                foreach (var userconnection in userconnections)
+                {
+                    _repositoryUserProblem.Delete(userconnection);
                     await _repositoryUserProblem.SaveChangesAsync();
                 }
             }
@@ -112,11 +114,11 @@ namespace HelpDesk.BLL.Services
         public async Task<List<RequestDto>> GetAllRequestsAsync()
         {
             var requestDtos = new List<RequestDto>();
-            var requests = await _repositoryProblem.GetAll().AsNoTracking().ToListAsync();           
+            var requests = await _repositoryProblem.GetAll().AsNoTracking().ToListAsync();
 
             foreach (var request in requests)
             {
-                             
+
                 var dtoModel = new RequestDto
                 {
                     Id = request.Id,
@@ -152,7 +154,7 @@ namespace HelpDesk.BLL.Services
                 Description = request.Description,
                 Ip = request.Ip,
                 IncomingDate = request.IncomingDate,
-                StatusId = request.StatusId,                
+                StatusId = request.StatusId,
             };
 
             var userAndAdmin = await GetUserAndAdminProblemAsync(request);
@@ -210,7 +212,7 @@ namespace HelpDesk.BLL.Services
             return requestDtos;
         }
 
-        public async Task <RequestDto> GetUserAndAdminProblemAsync(Problem problem)
+        public async Task<RequestDto> GetUserAndAdminProblemAsync(Problem problem)
         {
             var requestDtoModel = new RequestDto();
 
@@ -279,12 +281,13 @@ namespace HelpDesk.BLL.Services
             await _repositoryProblem.SaveChangesAsync();
         }
 
-        public async Task AddToWorkAsync(RequestDto request, ProfileDto profile) {
-           if(request is null)
+        public async Task AddToWorkAsync(RequestDto request, ProfileDto profile)
+        {
+            if (request is null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
-           if(profile is null)
+            if (profile is null)
             {
                 throw new ArgumentNullException(nameof(profile));
             }

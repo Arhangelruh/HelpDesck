@@ -31,11 +31,11 @@ namespace HelpDesk.BLL.Services
 
             if (comments.Any())
             {
-                foreach(var comment in comments)
+                foreach (var comment in comments)
                 {
                     _repositoryComments.Delete(comment);
                     await _repositoryComments.SaveChangesAsync();
-                }               
+                }
             }
         }
 
@@ -48,19 +48,20 @@ namespace HelpDesk.BLL.Services
                 .AsNoTracking()
                 .Where(comments => comments.ProblemId == problemid)
                 .ToListAsync();
-            
-                foreach (var comment in getcomments)
-                {
-                    comments.Add(new CommentDto{
-                        Id = comment.Id,
-                        ProblemId = comment.ProblemId,
-                        ProfileId = comment.ProfileId,
-                        CreateComment = comment.CreateComment,
-                        Comment =comment.Comment
-                        });
-                }
 
-                return comments;
+            foreach (var comment in getcomments)
+            {
+                comments.Add(new CommentDto
+                {
+                    Id = comment.Id,
+                    ProblemId = comment.ProblemId,
+                    ProfileId = comment.ProfileId,
+                    CreateComment = comment.CreateComment,
+                    Comment = comment.Comment
+                });
+            }
+
+            return comments;
         }
 
         public async Task AddCommentAsync(CommentDto commentDto)
@@ -73,7 +74,7 @@ namespace HelpDesk.BLL.Services
             var date = DateTime.Now;
 
             var newComment = new Comments
-            {    
+            {
                 ProblemId = commentDto.ProblemId,
                 ProfileId = commentDto.ProfileId,
                 Comment = commentDto.Comment,

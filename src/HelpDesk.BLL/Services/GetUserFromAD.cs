@@ -11,7 +11,7 @@ namespace HelpDesk.BLL.Services
     /// <inheritdoc cref="IGetUserFromAD<T>"/>
     public class GetUserFromAD : IGetUserFromAD
     {
-        public async Task <List<UserDto>> ADGetUsers()
+        public async Task<List<UserDto>> ADGetUsers()
         {
             List<UserDto> users = new List<UserDto>();
 
@@ -79,7 +79,7 @@ namespace HelpDesk.BLL.Services
             }
         }
 
-        public async Task <string> BuildOctetString(SecurityIdentifier sid)
+        public async Task<string> BuildOctetString(SecurityIdentifier sid)
         {
             byte[] items = new byte[sid.BinaryLength];
             sid.GetBinaryForm(items, 0);

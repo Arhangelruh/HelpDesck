@@ -3,12 +3,14 @@ using Hangfire.PostgreSql;
 using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Repository;
 using HelpDesk.BLL.Services;
+using HelpDesk.Common.Constants;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Context;
 using HelpDesk.DAL.Models;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,13 +39,19 @@ namespace HelpDesk.Web
             services.AddScoped<IRequestsService, RequestsService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IFAQService, FAQService>();
 
-            services.AddHangfire(config => config.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));           
-            services.AddHangfireServer();           
-           
+            services.AddHangfire(config => config.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+            services.AddHangfireServer();
+
             services.AddDbContext<HelpDeskContext>(options =>
-                
+
             options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = UploadFileConstant.UploadMaxValue;
+            });
 
             services.AddIdentity<User, IdentityRole>(opt =>
             {
@@ -60,7 +68,7 @@ namespace HelpDesk.Web
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {            
+        {
             if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();

@@ -69,5 +69,5 @@ namespace HelpDesk.Web.ViewModels
         [Display(Name = "Подтвердить пароль")]
         public string PasswordConfirm { get; set; }
     }
-    
+
 }

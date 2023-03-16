@@ -44,7 +44,7 @@ namespace HelpDesk.BLL.Services
             });
         }
 
-        public async Task <RecurringJobDto> GetJobScheduller(string id)
+        public async Task<RecurringJobDto> GetJobScheduller(string id)
         {
             if (id is null)
             {
@@ -69,7 +69,7 @@ namespace HelpDesk.BLL.Services
                 throw new ArgumentNullException(nameof(id));
             }
 
-            await Task.Run(() => RecurringJob.RemoveIfExists(id));        
+            await Task.Run(() => RecurringJob.RemoveIfExists(id));
         }
 
         public async Task JobAddUserToBase()

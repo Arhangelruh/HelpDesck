@@ -17,7 +17,7 @@ namespace HelpDesk.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("ProductVersion", "6.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -51,6 +51,50 @@ namespace HelpDesk.DAL.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Comments", (string)null);
+                });
+
+            modelBuilder.Entity("HelpDesk.DAL.Models.FAQ", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
+
+                    b.Property<int>("FAQTopicId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasMaxLength(127)
+                        .HasColumnType("character varying(127)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FAQTopicId");
+
+                    b.ToTable("FAQ", (string)null);
+                });
+
+            modelBuilder.Entity("HelpDesk.DAL.Models.FAQTopic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Theme")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FAQTopic");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>
@@ -424,6 +468,17 @@ namespace HelpDesk.DAL.Migrations
                     b.Navigation("Profile");
                 });
 
+            modelBuilder.Entity("HelpDesk.DAL.Models.FAQ", b =>
+                {
+                    b.HasOne("HelpDesk.DAL.Models.FAQTopic", "FAQTopic")
+                        .WithMany("FAQs")
+                        .HasForeignKey("FAQTopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FAQTopic");
+                });
+
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>
                 {
                     b.HasOne("HelpDesk.DAL.Models.Status", "Status")
@@ -525,6 +580,11 @@ namespace HelpDesk.DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HelpDesk.DAL.Models.FAQTopic", b =>
+                {
+                    b.Navigation("FAQs");
                 });
 
             modelBuilder.Entity("HelpDesk.DAL.Models.Problem", b =>

@@ -20,7 +20,7 @@ namespace HelpDesk.BLL.Services
         /// <returns>result</returns>
         public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IRepository<Profile> repository, IStatusService statusService)
         {
-            string userName = UserConstants.FirstAdmin;            
+            string userName = UserConstants.FirstAdmin;
 
             if (await roleManager.FindByNameAsync(UserConstants.AdminRole) == null)
             {
@@ -43,7 +43,7 @@ namespace HelpDesk.BLL.Services
                 }
             }
 
-            if(await statusService.SearchStatusAsync(1) == null)
+            if (await statusService.SearchStatusAsync(1) == null)
             {
                 await statusService.AddStatusAsync(new StatusDto { StatusName = StatusConstant.FirstStatus, Queue = 1, Access = true, StatusNameFromButton = StatusConstant.FirstStatus });
             }

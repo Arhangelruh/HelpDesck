@@ -7,7 +7,7 @@ namespace HelpDesk.BLL.Services
     /// Check user adin role from Hangfire Dashbord. 
     /// </summary>
     public class MyHangfireDashbordAutorizationFilter : IDashboardAuthorizationFilter
-    {       
+    {
         /// <summary>
         /// Check autorise user.
         /// </summary>

@@ -31,7 +31,7 @@ namespace HelpDesk.Web.ViewModels
         /// Ip adress.
         /// </summary>
         public string Ip { get; set; }
-        
+
         /// <summary>
         /// Creator.
         /// </summary>

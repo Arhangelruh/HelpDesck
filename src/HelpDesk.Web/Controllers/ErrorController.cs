@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace HelpDesk.Web.Controllers
 {
@@ -34,16 +33,19 @@ namespace HelpDesk.Web.Controllers
         /// <param name="statusCode"></param>
         /// <returns>NotFound view</returns>
         [Route("Error/{statusCode}")]
-            public IActionResult HttpStatusCodeHandler(int statusCode)
+        public IActionResult HttpStatusCodeHandler(int statusCode)
+        {
+            switch (statusCode)
             {
-                switch (statusCode)
-                {
-                    case 404:
-                        ViewBag.ErrorMessage = "Запрашиваемая страница не найдена";
-                        break;
-                }
-
-                return View("NotFound");
+                case 404:
+                    ViewBag.ErrorMessage = "Запрашиваемая страница не найдена";                
+                    break;
+                case 0:
+                    ViewBag.ErrorMessage = "Упс что-то пошло не так.";
+                    break;
             }
+
+            return View("NotFound");
+        }
     }
 }

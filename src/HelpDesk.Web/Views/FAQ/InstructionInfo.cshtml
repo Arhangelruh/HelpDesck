@@ -1,0 +1,28 @@
+﻿
+<div class="instructioninfo_container">
+	<div class="instructioninfo_schema">
+		<h2>
+		[Href|текст1||текст2]
+		</h2>
+	</div>
+	<div class="instructioninfo_schema_comments">
+		<div class="block_instr_scheme">
+		    <p class="instr_scheme_comm_text">Для того что бы добавить ссылку на инструкцию необходимо в текст вставить форму указанную выше, </p>
+			<p class="instr_scheme_comm_text">где "[Href|" - указывает на то, что это будет ссылка,</p>
+			<p class="instr_scheme_comm_text">"текст1" - слово в тексте которое будет являться ссылкой,</p>
+			<p class="instr_scheme_comm_text">"||" - разделитель,</p>
+			<p class="instr_scheme_comm_text">"текст2" - наименование файла инструкции,</p>
+			<p class="instr_scheme_comm_text">"]" - закрытие блока.</p>
+		</div>
+	</div>
+	<div class="instructioninfo_reference">
+		Для добавления ссылки на инструкцию необходимо сначала
+		<a asp-controller="File" asp-action="Instructions">
+		добавить файл инструкции.
+		</a>
+	</div>
+</div>
+
+@section css {
+	<link href="~/css/FAQ.css" rel="stylesheet" asp-append-version="true" />
+}

@@ -1,6 +1,7 @@
 ﻿using HelpDesk.Web.Attributs;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+using HelpDesk.Common.Constants;
 
 namespace HelpDesk.Web.ViewModels
 {
@@ -21,7 +22,7 @@ namespace HelpDesk.Web.ViewModels
         /// Body file.
         /// </summary>
         [Required]
-        [MaxFileSize(10485760,ErrorMessage ="Это уж слишком")]
+        [MaxFileSize(UploadFileConstant.UploadMinValue, ErrorMessage = "Это уж слишком")]
         public IFormFile FileBody { get; set; }
     }
 }
