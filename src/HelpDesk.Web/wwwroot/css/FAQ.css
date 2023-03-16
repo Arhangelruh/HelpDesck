@@ -1,6 +1,6 @@
 .heading-primary {
   font-size:2em;
-  padding:2em;
+  padding:1em;
   text-align:center;
 }
 
@@ -215,4 +215,158 @@ white-space: pre-line;
           opacity:0;
            transform:scale(0.9) rotateX(-60deg);
        }
+}
+/*----------------------AddFaq----------------------------------------------*/
+
+.add_faq_container{
+  display: flex;
+  width: 90%;
+}
+
+.faq_info{
+width: 20%;
+margin: 5%;
+}
+
+.add_faq{
+  width: 80%;
+}
+
+.add_faq_form{
+  width: 80%;
+}
+
+.faq_help{
+  background-color: rgb(17 36 69);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 50px;
+}
+
+/*----------------------Instructions---------------------------------------*/
+
+.instructions_container {
+  max-width:90%;
+  margin:0 auto;
+  padding:2em 0 2em 0;
+}
+
+.instructions_table{
+min-width: 700px;
+   border: 1px black;
+}
+
+.img_icon{
+  width: 40px;
+  height: 35px;
+}
+
+.result{
+  min-width: 700px;
+   margin: 10px;
+   height: 25px;
+   display: none;
+   justify-content: center;
+   color: red;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.upload_form{
+  min-width: 700px;
+   margin: 10px;
+   height: 45px;
+   background-color: #b9ced7;
+}
+
+#upload-container{
+  width: 100%;
+  height: 100%;
+  display: flex;  
+}
+
+.choise_file {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  line-height: 45px;
+}
+
+.choise_file:hover {
+  cursor: pointer;
+}
+
+#upload-container input[type=file] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  position: absolute;
+  z-index: -10;
+}
+
+.upload_instruction_info{
+  display: none;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.addinstruction_button{
+  width: 120px;
+  min-width: 100px;
+  cursor: pointer;
+  font-size: small;
+  line-height: 30px;
+}
+
+.confirm_instruction_button:hover{
+  background-color: teal;
+}
+
+.revert_instruction_button:hover{
+  background-color: lightcoral;
+}
+
+.addfile_button_img{
+  display: flex;
+  justify-content: center;
+}
+
+.file_name{
+  line-height: 45px;
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
+}
+
+/*-------------------InstructionInfo----------------*/
+
+.instructioninfo_container{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+}
+
+.instructioninfo_schema{
+  text-align: center;
+  margin: 10px;
+}
+
+.instructioninfo_schema_comments{
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.instr_scheme_comm_text{
+  margin: 5px;
+}
+
+.instructioninfo_reference{
+  margin-top: 30px;
+  text-align: center;
 }

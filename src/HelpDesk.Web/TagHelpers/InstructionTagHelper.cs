@@ -47,8 +47,8 @@ namespace HelpDesk.Web.TagHelpers
                     {
                         var hrefText = block.Between(_hrefTagFlag, _hrefTagDivide);
                         var href = block.Between(_hrefTagDivide, _hrefEnd);
-                        stringBuilder.Append(@"<a href=""" + _instructionFolder + href + "\"" + ">" + hrefText + "</a>");
-                    }
+						stringBuilder.Append(@"<a href=""" + _instructionFolder + href + "\"" + ">" + hrefText + "</a>");
+					}
                     else
                     {
                         stringBuilder.Append(block.Replace("\r\n", "<br/>"));

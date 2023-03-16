@@ -14,12 +14,14 @@ namespace HelpDesk.Web.Services
     public class FileHelpers
     {
         private static readonly byte[] _allowedChars = Array.Empty<byte>();
+        private List<string> _errorList = new();
 
         private static readonly Dictionary<string, List<byte[]>> _fileSignature = new()
         {
             { ".gif", new List<byte[]> { new byte[] { 0x47, 0x49, 0x46, 0x38 } } },
             { ".png", new List<byte[]> { new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A } } },
-            { ".jpeg", new List<byte[]>
+			{ ".pdf", new List<byte[]> { new byte[] { 0x25, 0x50, 0x44, 0x46, 0x2D } } },
+			{ ".jpeg", new List<byte[]>
                 {
                     new byte[] { 0xFF, 0xD8, 0xFF, 0xE0 },
                     new byte[] { 0xFF, 0xD8, 0xFF, 0xE2 },
@@ -188,7 +190,7 @@ namespace HelpDesk.Web.Services
             }
         }
 
-        public static async Task<IFormFile> ChangeFormFile(IFormFile formFile,
+        public async Task<List<string>> ChangeFormFile(IFormFile formFile,
        ModelStateDictionary modelState, string[] permittedExtensions,
        long sizeLimit)
         {
@@ -208,25 +210,18 @@ namespace HelpDesk.Web.Services
                 }
             }
 
-            var trustedFileNameForDisplay = WebUtility.HtmlEncode(
-                formFile.FileName);
-
             if (formFile.Length == 0)
             {
-                modelState.AddModelError(formFile.Name,
-                    $"Ошибка загруки файла, в файле отсутствут данных.");
-
-                return formFile;
+                _errorList.Add(
+                    "Ошибка загруки файла, в файле отсутствут данных.");
             }
 
             if (formFile.Length > sizeLimit)
             {
                 var megabyteSizeLimit = sizeLimit / 1048576;
-                modelState.AddModelError(formFile.Name,
-                    $"Превышение допустимого размера файла. Файл не должен превышать " +
+                _errorList.Add(
+                    "Превышение допустимого размера файла. Файл не должен превышать " +
                     $"{megabyteSizeLimit:N1} MB.");
-
-                return formFile;
             }
 
             try
@@ -237,30 +232,28 @@ namespace HelpDesk.Web.Services
 
                     if (memoryStream.Length == 0)
                     {
-                        modelState.AddModelError(formFile.Name,
-                            $"Файл {fieldDisplayName} не содержит данных.");
+                        _errorList.Add($"Файл {fieldDisplayName} не содержит данных.");
                     }
 
                     if (!IsValidFileExtensionAndSignature(
                         formFile.FileName, memoryStream, permittedExtensions))
                     {
-                        modelState.AddModelError(formFile.Name,
-                            "Загрузка файлов с данным типом расширения запрещена или сигнатура файла не соответствует расширению.");
+                        _errorList.Add("Загрузка файлов с данным типом расширения запрещена или сигнатура файла не соответствует расширению.");
                     }
                     else
                     {
-                        return formFile;
+                        return _errorList;
                     }
                 }
             }
             catch (Exception ex)
             {
-                modelState.AddModelError(formFile.Name,
+                _errorList.Add(
                     $"Ошибка загрузки файла {fieldDisplayName}. " +
                     $"Пожалуйста обратитесь к администратору: {ex.HResult}");
             }
 
-            return formFile;
+            return _errorList;
         }
     }
 }

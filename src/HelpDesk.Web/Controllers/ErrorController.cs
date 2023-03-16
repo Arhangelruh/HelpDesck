@@ -38,7 +38,10 @@ namespace HelpDesk.Web.Controllers
             switch (statusCode)
             {
                 case 404:
-                    ViewBag.ErrorMessage = "Запрашиваемая страница не найдена";
+                    ViewBag.ErrorMessage = "Запрашиваемая страница не найдена";                
+                    break;
+                case 0:
+                    ViewBag.ErrorMessage = "Упс что-то пошло не так.";
                     break;
             }
 

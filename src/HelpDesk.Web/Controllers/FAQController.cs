@@ -326,5 +326,16 @@ namespace HelpDesk.Web.Controllers
                 return RedirectToAction("FAQ", new { topicId });
             }
         }
+
+        /// <summary>
+        /// Information about referens in topics.
+        /// </summary>
+        /// <returns>View</returns>
+        [Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+        public IActionResult InstructionInfo()
+        {
+            return View();
+        }
     }
 }

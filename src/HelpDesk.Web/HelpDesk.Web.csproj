@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\File\StreamedSingleFileUploadPhysical.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\File\StreamedSingleFileUploadPhysical.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Setting.ico" />
   </ItemGroup>
 

@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace HelpDesk.Web.Controllers
@@ -27,7 +27,7 @@ namespace HelpDesk.Web.Controllers
 
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-        private readonly string[] _permittedExtensions = { ".doc", ".docx", ".zip", ".jpg", ".jpeg", ".png" };
+        private readonly string[] _permittedExtensions = { ".doc", ".docx", ".zip", ".jpg", ".jpeg", ".png", ".pdf" };
         private readonly string _targetInstructionPath;
 
 
@@ -123,15 +123,14 @@ namespace HelpDesk.Web.Controllers
             return RedirectToAction("GetRequest", "Request", new { requestId });
         }
 
-
-        /// <summary>
-        /// Get files instructions from folder.
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult Instructions()
+		/// <summary>
+		/// Get files instructions from folder.
+		/// </summary>
+		/// <returns></returns>
+		[Authorize(Roles = UserConstants.AdminRole)]
+        [HttpGet]
+		public IActionResult Instructions()
         {
-            //var fileDirectory = Path.Combine(this._environment.WebRootPath,
-            //"instructions");
 
             List<InstructionViewModel> fileModels = new();
 
@@ -155,39 +154,69 @@ namespace HelpDesk.Web.Controllers
         }
 
         /// <summary>
-        /// Save  file.
+        /// Save file.
         /// </summary>
         /// <param name="model"></param>
         /// <returns>Requests view</returns>
-        // [Authorize]
+        [Authorize(Roles = UserConstants.AdminRole)]
         [HttpPost]
-      //  [ValidateAntiForgeryToken]
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = UploadFileConstant.UploadMiddleValue)]
         public async Task<IActionResult> AddFilePhysical(UploadInstructionViewModel instruction)
         {
+            List<string> fileErrors = new();
             if (ModelState.IsValid)
             {
-                var streamedFileContent = await FileHelpers.ChangeFormFile(instruction.FileBody,
+                FileHelpers fileHelper = new();
+                 fileErrors = await fileHelper.ChangeFormFile(instruction.FileBody,
                      ModelState, _permittedExtensions, UploadFileConstant.UploadMiddleValue);
+
+                var trustedFileNameForDisplay = WebUtility.HtmlEncode(
+                     instruction.FileBody.FileName);
+
+                var targetFile = _fileDirectory + "/" + trustedFileNameForDisplay;
+
+                if (System.IO.File.Exists(targetFile))
+                {
+                    fileErrors.Add("Файл с таким именем уже существует.");
+                }
+
+                if (fileErrors.Count == 0)
+                {
+                    using(var stream = System.IO.File.Create(targetFile)){
+						await instruction.FileBody.CopyToAsync(stream);
+					}                                      
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(fileErrors);
+                }
             }
-
-
-            if (!ModelState.IsValid)
-            {                
-                return BadRequest(ModelState);
-            }
-
-            if (instruction.FileBody.Length > 0)
+            else
             {
+                fileErrors.Add("Упс, что-то не так.");
+                return BadRequest(fileErrors);
+            }            
+        }
 
+		/// <summary>
+		/// Delete file.
+		/// </summary>
+		/// <returns>View instructions</returns>
+		[Authorize(Roles = UserConstants.AdminRole)]
+		[HttpGet]
+        public IActionResult DeleteInstruction(string instructionName)
+        {
+            if (ModelState.IsValid)
+            {
+				var targetFile = _fileDirectory + "/" + instructionName;
 
-                string fileName = Path.GetFileName(instruction.FileBody.FileName);
-
-                using var stream = System.IO.File.Create(_fileDirectory + "/" + fileName);
-                await instruction.FileBody.CopyToAsync(stream);
-            }
-
+				if (System.IO.File.Exists(targetFile))
+				{
+				   System.IO.File.Delete(targetFile);
+				}
+			}
             return RedirectToAction("Instructions");
         }
-    }
+	}
 }
