@@ -370,3 +370,7 @@ min-width: 700px;
   margin-top: 30px;
   text-align: center;
 }
+
+.empty_instruction_list{
+  text-align: center;
+}
