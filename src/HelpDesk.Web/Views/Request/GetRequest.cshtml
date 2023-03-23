@@ -124,26 +124,15 @@
     </ol>
 </div>
 }
+
+<div class="request_body">
 <div class="container_request">
     <div class="description_request">
         <div class="requestadress">IP адрес: @Model.Ip</div>
         <div class="name_field">Описание</div>
         <div class="description">@Model.Description</div>
     </div>
-    <div class="users_request">
-        <div class="autor_request">
-            Автор:
-            @Model.Creator
-        </div>
-        <div class="admin_request">
-            В работе:
-            @Model.Admin
-        </div>
-    </div>
-</div>
-<div class="request_files">
-
-</div>
+    
 <div class="request_comments">
     @if (Model.Comments.Any())
     {
@@ -192,6 +181,48 @@
      </form>
  </div>
     </div>
+</div>
+<div class="request_extra">
+		<div class="users_request">
+			<div class="autor_request">
+				Автор:
+				@Model.Creator
+			</div>
+			<div class="admin_request">
+				В работе:
+				@Model.Admin
+			</div>
+		</div>
+		<div class="request_chat">
+            <div class="container">
+                <div class="row p-1">
+                    <div class="col-1">User</div>
+                    <div class="col-5"><input type="text" id="userInput" /></div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-1">Message</div>
+                    <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-6 text-end">
+                        <input type="button" id="sendButton" value="Send Message" />
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-6">
+                        <hr />
+                    </div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-6">
+                        <ul id="messagesList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+</div>
    
     @section css {
         <link href="~/css/request.css" rel="stylesheet" asp-append-version="true" />
@@ -200,4 +231,6 @@
     @section js {
         <script src="~/js/comments.js" asp-append-version="true"></script>
         <script src="~/js/addfile.js" asp-append-version="true"></script>
+        <script src="~/js/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
+        <script src="~/js/chat.js" asp-append-version="true"></script>
     }

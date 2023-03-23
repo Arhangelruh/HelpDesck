@@ -44,7 +44,7 @@
     margin-top: 2em;
 }
 
-/*Request form*/
+/*----------------Request form----------------*/
 .requestform{
     margin-left: auto;
     margin-right: auto;
@@ -83,7 +83,7 @@
 
 /*-------------------------------------------------------*/
 
-/* Table*/
+/*----------------Table----------------------*/
 
 .users-table{
     min-width: 700px;
@@ -141,7 +141,7 @@
  }
  /*-------------------------------------------------------*/
  
- /*Request*/
+ /*-----------------------Request--------------------*/
  .container {
     width: 100%;
     margin: 0 auto;
@@ -183,14 +183,24 @@
 background-color: #b7c4e7;
 }
 
-.container_request{
-    display: flex;
+.request_body{
     width: 100%;
+    min-width: 830px;
+    display: flex;
+}
+
+.request_extra{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+}
+
+.container_request{
+    width: 70%;
 }
 
 .description_request{
     padding: 20px;
-    width: 80%;
 }
 
 .description{
@@ -205,8 +215,8 @@ background-color: #b7c4e7;
 
 .users_request{
     display: inline;
-    width: 20%;
     padding: 20px;
+    text-align: center;
 }
 
 .autor_request{
@@ -230,11 +240,11 @@ background-color: #b7c4e7;
 
 /*-------------------------------------------------------*/
 
- /*Comments*/
+ /*-----------------Comments-----------------------*/
 .request_comments{
-    min-width: 640px;
+    min-width: 520px;
     padding: 20px;
-    width: 70%;
+    width: 90%;
 }
 
  .added_comment{
