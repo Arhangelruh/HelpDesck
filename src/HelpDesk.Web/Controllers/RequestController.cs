@@ -274,6 +274,8 @@ namespace HelpDesk.Web.Controllers
         {
             var username = User.Identity.Name;
             var loginUser = await _userManager.FindByNameAsync(username);
+            var getUser = await _userManager.FindByNameAsync(username);
+            var ifAdmin = await _userManager.IsInRoleAsync(getUser, UserConstants.AdminRole);
 
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             if (getRequestModel is null)
@@ -286,6 +288,14 @@ namespace HelpDesk.Web.Controllers
 
             var userProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileCreatorId);
             var adminProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileAdminId);
+
+            if(!ifAdmin && getUser.Id != userProfile.UserId)
+            {
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "У вас нет доступа к данной заявке!";
+                return View("~/Views/Error/Error.cshtml");
+            }
+
             if (userProfile is null)
             {
                 userName = "Not Found";
