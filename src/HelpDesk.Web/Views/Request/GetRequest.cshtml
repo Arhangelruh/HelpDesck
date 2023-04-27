@@ -193,32 +193,17 @@
 				@Model.Admin
 			</div>
 		</div>
-		<div class="request_chat">
-            <div class="container">
-                <div class="row p-1">
-                    <div class="col-1">User</div>
-                    <div class="col-5"><input type="text" id="userInput" /></div>
+		<div class="request_chat"> 
+            <input type="hidden" id="userName" value="@User.Identity.Name" />
+            <input type="hidden" id="userGroup" value="@Model.Id" />
+                <div class="chat_message">
+                    <div class="chat_message_name">Чат:</div>
+                    <div class="chat_message_text"><input type="text" id="message"/></div>
                 </div>
-                <div class="row p-1">
-                    <div class="col-1">Message</div>
-                    <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
-                </div>
-                <div class="row p-1">
-                    <div class="col-6 text-end">
+                <div class="chat_button">
                         <input type="button" id="sendButton" value="Send Message" />
-                    </div>
                 </div>
-                <div class="row p-1">
-                    <div class="col-6">
-                        <hr />
-                    </div>
-                </div>
-                <div class="row p-1">
-                    <div class="col-6">
-                        <ul id="messagesList"></ul>
-                    </div>
-                </div>
-            </div>
+            <div class="chat_list" id="chatroom"></div>
         </div>
 </div>
 

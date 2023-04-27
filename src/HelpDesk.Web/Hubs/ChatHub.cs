@@ -5,10 +5,14 @@ namespace HelpDesk.Web.Hubs
 {
 	public class ChatHub : Hub
 	{
-		public async Task SendMessage(string user, string message)
-		{
-			await Clients.All.SendAsync("ReceiveMessage", user, message);
-		}
+        public async Task Enter(string username, string groupName)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+        }
+        public async Task Send(string message, string userName, string groupName)
+        {
+            await Clients.Group(groupName).SendAsync("Receive", message, userName);
+        }
 	}
 }
 

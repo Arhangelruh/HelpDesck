@@ -1,28 +1,47 @@
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+let userName = document.getElementById("userName").value;
+let userGroup = document.getElementById("userGroup").value;
 
-//Disable the send button until connection is established.
-document.getElementById("sendButton").disabled = true;
+const hubConnection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub")
+    .build();
 
-connection.on("ReceiveMessage", function (user, message) {
-    var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user} says ${message}`;
+// отправка сообщения в группу
+document.getElementById("sendButton").addEventListener("click", () => {
+
+    const message = document.getElementById("message").value;
+    hubConnection.invoke("Send", message, userName, userGroup)
+        .catch(error => console.error(error));
 });
 
-connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
-}).catch(function (err) {
-    return console.error(err.toString());
+// получение сообщения для определенной группы
+hubConnection.on("Receive", (message, user) => {
+
+    // создаем элемент <b> для имени пользователя
+    const userNameElem = document.createElement("b");
+    userNameElem.textContent = `${user}: `;
+
+    // создает элемент <p> для сообщения пользователя
+    const elem = document.createElement("p");
+    elem.appendChild(userNameElem);
+    elem.appendChild(document.createTextNode(message));
+
+    const firstElem = document.getElementById("chatroom").firstChild;
+    document.getElementById("chatroom").insertBefore(elem, firstElem);
 });
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
+// получение общего уведомления
+hubConnection.on("Notify", message => {
+
+    const elem = document.createElement("p");
+    elem.textContent = message;
+
+    const firstElem = document.getElementById("chatroom").firstChild;
+    document.getElementById("chatroom").insertBefore(elem, firstElem);
 });
+
+hubConnection.start()
+    .then(() => {
+        document.getElementById("sendButton").disabled = false;
+        hubConnection.invoke("Enter", userName, userGroup);
+    })
+    .catch ((err) => console.error(err));

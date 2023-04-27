@@ -227,6 +227,11 @@ background-color: #b7c4e7;
     margin: 20px 5px 5px 5px;
 }
 
+.request_chat{
+    padding: 20px;
+    text-align: center;
+}
+
 .a_buttom{
     text-decoration: none;
     font-size: small;
@@ -474,4 +479,13 @@ background-color: #b7c4e7;
 
  .file_button:hover{
      background-color: cadetblue;
+ }
+ /*-------------------------------------------------------*/
+
+ /*-----------------Chat-----------------------*/
+
+ .chat_list{
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;    
  }
