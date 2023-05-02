@@ -486,6 +486,12 @@ background-color: #b7c4e7;
 
  .chat_list{
     text-align: left;
-    overflow: hidden;
+    overflow: auto;
     text-overflow: ellipsis;    
+    margin-top: 10px;
+    max-height: 400px;
+ }
+
+ .chat_string{
+    margin-top: 5px;
  }

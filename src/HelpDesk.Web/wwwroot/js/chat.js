@@ -6,11 +6,13 @@ const hubConnection = new signalR.HubConnectionBuilder()
     .build();
 
 // отправка сообщения в группу
-document.getElementById("sendButton").addEventListener("click", () => {
-
+document.getElementById("message").addEventListener("keydown", event => {
+    if( event.code === 'Enter' ){
     const message = document.getElementById("message").value;
     hubConnection.invoke("Send", message, userName, userGroup)
         .catch(error => console.error(error));
+        document.getElementById("message").value = "";
+    }
 });
 
 // получение сообщения для определенной группы
@@ -24,6 +26,13 @@ hubConnection.on("Receive", (message, user) => {
     const elem = document.createElement("p");
     elem.appendChild(userNameElem);
     elem.appendChild(document.createTextNode(message));
+    userNameElem.setAttribute("class","chat_string")
+    if(user == userName){
+        userNameElem.setAttribute("style","color:blue;")
+    }
+    else{
+        userNameElem.setAttribute("style","color:red;")
+    }
 
     const firstElem = document.getElementById("chatroom").firstChild;
     document.getElementById("chatroom").insertBefore(elem, firstElem);
@@ -41,7 +50,6 @@ hubConnection.on("Notify", message => {
 
 hubConnection.start()
     .then(() => {
-        document.getElementById("sendButton").disabled = false;
         hubConnection.invoke("Enter", userName, userGroup);
     })
     .catch ((err) => console.error(err));
