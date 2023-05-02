@@ -40,7 +40,7 @@ namespace HelpDesk.Web.ViewModels
         public string Creator { get; set; }
 
         /// <summary>
-        /// Creator.
+        /// Administrator.
         /// </summary>
         public string Admin { get; set; }
 
