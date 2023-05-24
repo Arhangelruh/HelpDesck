@@ -1,9 +1,7 @@
 ﻿using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Models;
-using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
-using System.DirectoryServices.ActiveDirectory;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +15,8 @@ namespace HelpDesk.BLL.Services
         private string _userName;
         private string _password;
 
-        public GetUserFromAD(string domain, string user, string password) {
+        public GetUserFromAD(string domain, string user, string password)
+        {
             _domain = domain;
             _userName = user;
             _password = password;
@@ -26,7 +25,7 @@ namespace HelpDesk.BLL.Services
         public async Task<List<UserDto>> ADGetUsers()
         {
             List<UserDto> users = new List<UserDto>();
-            DirectoryEntry dir = new DirectoryEntry("LDAP://"+_domain, _userName, _password);            
+            DirectoryEntry dir = new DirectoryEntry("LDAP://" + _domain, _userName, _password);
             DirectorySearcher search = new DirectorySearcher(dir);
 
             try
@@ -37,7 +36,7 @@ namespace HelpDesk.BLL.Services
                 byte[] domainSIdArray = (byte[])dir.Properties["objectSid"].Value;
                 SecurityIdentifier domainSId = new SecurityIdentifier(domainSIdArray, 0);
                 SecurityIdentifier domainAdminsSId = new SecurityIdentifier(WellKnownSidType.AccountDomainAdminsSid, domainSId);
-                DirectoryEntry groupEntry = new DirectoryEntry(string.Format("LDAP://"+_domain+"/"+"<SID={0}>", BuildOctetString(domainAdminsSId).GetAwaiter().GetResult()));
+                DirectoryEntry groupEntry = new DirectoryEntry(string.Format("LDAP://" + _domain + "/" + "<SID={0}>", BuildOctetString(domainAdminsSId).GetAwaiter().GetResult()), _userName, _password);
                 string adminDn = groupEntry.Properties["distinguishedname"].Value as string;
 
                 await Task.Run(() =>
@@ -52,7 +51,7 @@ namespace HelpDesk.BLL.Services
 
                         var primaryGroupId = entry.Properties["primaryGroupID"].Value;
                         var primaryGroupSID = domainSId + "-" + primaryGroupId;
-                        var resultSearshPrimaryGrop = new DirectoryEntry(string.Format("LDAP://<SID={0}>", primaryGroupSID));
+                        var resultSearshPrimaryGrop = new DirectoryEntry(string.Format("LDAP://" + _domain + "/" + "<SID={0}>", primaryGroupSID), _userName, _password);
                         string namePrimaryGroup = resultSearshPrimaryGrop.Properties["distinguishedname"].Value as string;
                         group.Add(namePrimaryGroup);
 
