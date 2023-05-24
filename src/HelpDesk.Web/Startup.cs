@@ -35,7 +35,8 @@ namespace HelpDesk.Web
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddScoped<IGetUserFromAD, GetUserFromAD>();
+            services.AddScoped<IGetUserFromAD>(_=> new GetUserFromAD(Configuration.GetSection("DomainConnection:Domain").Value,
+                Configuration.GetSection("DomainConnection:DomainUser").Value, Configuration.GetSection("DomainConnection:DomainPassword").Value));
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IStatusService, StatusService>();
             services.AddScoped<IRequestsService, RequestsService>();
