@@ -17,7 +17,8 @@ namespace HelpDesk.DAL.Configurations
                 .HasKey(comment => comment.Id);
 
             builder.Property(comment => comment.CreateComment)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("Timestamp");
 
             builder.Property(comment => comment.Comment)
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthLong)

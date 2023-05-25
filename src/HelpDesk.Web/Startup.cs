@@ -3,11 +3,16 @@ using Hangfire.PostgreSql;
 using HelpDesk.BLL.Interfaces;
 using HelpDesk.BLL.Repository;
 using HelpDesk.BLL.Services;
+using HelpDesk.Common.Constants;
 using HelpDesk.Common.Interfaces;
 using HelpDesk.DAL.Context;
 using HelpDesk.DAL.Models;
+using HelpDesk.Web.Hubs;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,17 +35,26 @@ namespace HelpDesk.Web
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddScoped<IGetUserFromAD, GetUserFromAD>();
+            services.AddScoped<IGetUserFromAD>(_=> new GetUserFromAD(Configuration.GetSection("DomainConnection:Domain").Value,
+                Configuration.GetSection("DomainConnection:DomainUser").Value, Configuration.GetSection("DomainConnection:DomainPassword").Value));
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IStatusService, StatusService>();
             services.AddScoped<IRequestsService, RequestsService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IFAQService, FAQService>();
 
-            services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+            services.AddHangfire(config => config.UsePostgreSqlStorage(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+            services.AddHangfireServer();
+
             services.AddDbContext<HelpDeskContext>(options =>
-                
+
             options.UseNpgsql(Configuration.GetConnectionString("HelpDeskPostgreSQL")));
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = UploadFileConstant.UploadMaxValue;
+            });
 
             services.AddIdentity<User, IdentityRole>(opt =>
             {
@@ -54,11 +68,22 @@ namespace HelpDesk.Web
                .AddDefaultTokenProviders();
 
             services.AddControllersWithViews();
-        }
 
-        public void Configure(IApplicationBuilder app)
+            services.AddSignalR();
+		}
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
+            if (env.EnvironmentName == "Development")
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -72,14 +97,17 @@ namespace HelpDesk.Web
             {
                 Authorization = new[] { new MyHangfireDashbordAutorizationFilter() }
             });
-            app.UseHangfireServer();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chatHub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-        }
+				
+			});
+
+					
+		}
     }
 }

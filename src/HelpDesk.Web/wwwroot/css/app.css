@@ -20,6 +20,7 @@ button{
     line-height: 17px;
     color: rgb(2, 61, 61);
     margin: 10px;
+    border-color: rgba(17, 36, 69, 0.64);
 }
 
 .button_whith_border{
@@ -70,6 +71,7 @@ h1 {
     line-height: 27px;
     color: #83a2ce;
     padding: 2em;
+    min-width: 120px;
 }
 
 .logo_link {
@@ -96,6 +98,17 @@ h1 {
     cursor: pointer;
 }
 
+.nav-item:hover {
+    background: url(../images/Bg2.svg) no-repeat;
+    background-size: contain;
+    width: 130px;
+    height: 30px;
+    text-align: center;  
+    list-style: none;
+    line-height: 30px;
+    cursor: pointer;
+}
+
 .forms{
     margin-left: auto;
     margin-right: auto;
@@ -105,7 +118,72 @@ h1 {
 }
 
 .formslabel{
-    margin: 0.5em;
+    margin: 1em;
+}
+
+.formsfield{
+    width: 100%;
+    border: revert;
+    height: 30px;
+  }
+
+.forms_button{
+    display: flex;
+    justify-content: end;
+   }
+
+   .login_button{
+    display: flex;
+    justify-content: center;
+   }
+
+.login_button_width{
+    width: 100%;
+}
+
+.forms_rememberme{
+ display: flex;
+ justify-content: center;    
+}
+
+.forms_checkbox_center{
+    width: 25px;
+height: 25px;
+margin-left: auto;
+margin-right: auto;
+display: flex;
+}
+
+/*Greeting*/
+.greeting{
+    margin-left: auto;
+    width: 90%;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.text_greeting{
+    display: flex;
+    justify-content: center;
+}
+
+.blocks-greeting{
+    display: flex;
+    justify-content: center;
+}
+
+.greeting_item{
+    width: 240px;
+    height: 260px;
+    background-color: rgb(17 36 69);
+    border-radius: 10%;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.greeting_text_img{
+    color: white;
 }
 
 /* Profile Page*/
@@ -193,17 +271,19 @@ pre {
     position: relative;
 }
 
-.Delete_Status .tooltiptext{
+
+.tooltiptext{
     display: none;
     position: absolute;
-    left: -300px;  
+    left: -300px;
+    top: -60px;  
     padding: 5px;
     z-index: 2;
     background-color: #000000a6;
     color: #fff;
 }
 
-@media (max-width:925px) {
+@media (max-width:995px) {
 
     .header-image-block{
         width: 300px;
@@ -215,6 +295,12 @@ pre {
         height: 100%;
         width: 300px;
         background-size: 300px 100%;
+    }
+
+    .logo{
+        padding: 0;
+        margin-top: auto;
+        margin-bottom: auto;
     }
 
 }

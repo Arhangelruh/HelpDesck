@@ -20,7 +20,7 @@ namespace HelpDesk.BLL.Interfaces
         /// Get all request.
         /// </summary>
         /// <returns>List Requests</returns>       
-        Task  <List<RequestDto>> GetAllRequestsAsync();
+        Task<List<RequestDto>> GetAllRequestsAsync();
 
         /// <summary>
         /// Get all request by user.

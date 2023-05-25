@@ -19,12 +19,12 @@ namespace HelpDesk.DAL.Configurations
             builder.Property(savedFile => savedFile.Name)
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthMedium)
                 .IsRequired();
-            
+
             builder.Property(savedFile => savedFile.ContentType)
                 .HasMaxLength(ConfigurationContants.SqlMaxLengthShort)
                 .IsRequired();
 
-            builder.Property(savedFile => savedFile.FileBody)               
+            builder.Property(savedFile => savedFile.FileBody)
                 .IsRequired();
 
             builder.HasOne(savedFile => savedFile.Problem)

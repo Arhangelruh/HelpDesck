@@ -2,6 +2,7 @@
 using HelpDesk.BLL.Models;
 using HelpDesk.Common.Constants;
 using HelpDesk.DAL.Models;
+using HelpDesk.Web.Services;
 using HelpDesk.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -54,8 +55,18 @@ namespace HelpDesk.Web.Controllers
         /// <returns>List requests</returns>
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Requests()
+        public async Task<IActionResult> Requests(string sortOrder, int? page, int? pagesize)
         {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NumberSortParm"] = String.IsNullOrEmpty(sortOrder) ? "number_ask" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "Date_desc" : "Date";
+            ViewData["StatusSortParm"] = sortOrder == "Status" ? "Status_desc" : "Status";
+            ViewData["CreatorSortParm"] = sortOrder == "Creator" ? "Creator_desc" : "Creator";
+            ViewData["ExecuterSortParm"] = sortOrder == "Executer" ? "Executer_desc" : "Executer";
+
+            int pageSize = (int)(pagesize == null ? 20 : pagesize);
+            ViewData["PageSize"] = pageSize;
+
             var username = User.Identity.Name;
             var user = await _userManager.FindByNameAsync(username);
             var ifAdmin = await _userManager.IsInRoleAsync(user, UserConstants.AdminRole);
@@ -77,8 +88,6 @@ namespace HelpDesk.Web.Controllers
                             var profile = profiles.FirstOrDefault(profile => profile.Id == request.ProfileCreatorId);
                             var profileAdmin = profiles.FirstOrDefault(profile => profile.Id == request.ProfileAdminId);
                             string profileName, administratorName;
-
-                            var requestCreate = request.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
 
                             if (profile is null)
                             {
@@ -116,13 +125,13 @@ namespace HelpDesk.Web.Controllers
                                 Ip = request.Ip,
                                 Creator = profileName,
                                 Status = status.StatusName,
-                                IncomingDate = requestCreate,
+                                IncomingDate = request.IncomingDate,
                                 Admin = administratorName
                             });
                         }
                     }
                 }
-                return View(modelsRequests);
+
             }
             else
             {
@@ -169,13 +178,47 @@ namespace HelpDesk.Web.Controllers
                             Ip = request.Ip,
                             Creator = profileName,
                             Status = status.StatusName,
-                            IncomingDate = requestCreate,
+                            IncomingDate = request.IncomingDate,
                             Admin = administratorName
                         });
                     }
                 }
-                return View(modelsRequests);
             }
+
+            switch (sortOrder)
+            {
+                case "number_ask":
+                    modelsRequests = modelsRequests.OrderBy(n => n.Id).ToList();
+                    break;
+                case "Date":
+                    modelsRequests = modelsRequests.OrderBy(d => d.IncomingDate).ToList();
+                    break;
+                case "Date_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(d => d.IncomingDate).ToList();
+                    break;
+                case "Status":
+                    modelsRequests = modelsRequests.OrderBy(s => s.Status).ToList();
+                    break;
+                case "Status_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(s => s.Status).ToList();
+                    break;
+                case "Creator":
+                    modelsRequests = modelsRequests.OrderBy(c => c.Creator).ToList();
+                    break;
+                case "Creator_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(c => c.Creator).ToList();
+                    break;
+                case "Executer":
+                    modelsRequests = modelsRequests.OrderBy(e => e.Admin).ToList();
+                    break;
+                case "Executer_desc":
+                    modelsRequests = modelsRequests.OrderByDescending(e => e.Admin).ToList();
+                    break;
+                default:
+                    modelsRequests = modelsRequests.OrderByDescending(n => n.Id).ToList();
+                    break;
+            }
+            return View(PaginatedList<RequestViewModel>.Create(modelsRequests, page ?? 1, pageSize));
         }
 
         /// <summary>
@@ -231,16 +274,28 @@ namespace HelpDesk.Web.Controllers
         {
             var username = User.Identity.Name;
             var loginUser = await _userManager.FindByNameAsync(username);
+            var getUser = await _userManager.FindByNameAsync(username);
+            var ifAdmin = await _userManager.IsInRoleAsync(getUser, UserConstants.AdminRole);
 
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             if (getRequestModel is null)
             {
-                return Content("Заявка не найдена!");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Заявка не найдена!";
+                return View("~/Views/Error/Error.cshtml");
             }
             string userName, adminName;
 
             var userProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileCreatorId);
             var adminProfile = await _profileService.GetProfileByIdAsync(getRequestModel.ProfileAdminId);
+
+            if(!ifAdmin && getUser.Id != userProfile.UserId)
+            {
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "У вас нет доступа к данной заявке!";
+                return View("~/Views/Error/Error.cshtml");
+            }
+
             if (userProfile is null)
             {
                 userName = "Not Found";
@@ -277,7 +332,6 @@ namespace HelpDesk.Web.Controllers
 
             var status = await _statusService.GetStatusByIdAsync(getRequestModel.StatusId);
 
-            var requestCreate = getRequestModel.IncomingDate.ToString("dd.MM.yyyy H:mm:ss");
             var commentsDto = await _commentService.GetCommentsByRequestAsync(requestId);
 
             var statuses = new List<StatusDto>();
@@ -353,7 +407,7 @@ namespace HelpDesk.Web.Controllers
                 Creator = userName,
                 Status = status.StatusName,
                 StatusQueue = status.Queue,
-                IncomingDate = requestCreate,
+                IncomingDate = getRequestModel.IncomingDate,
                 Admin = adminName,
                 Comments = comments,
                 Statuses = statuses,
@@ -383,7 +437,9 @@ namespace HelpDesk.Web.Controllers
             }
             else
             {
-                return Content("Нельзя удалить заявки отправленные в работу");
+                ViewBag.ErrorMessage = "Нельзя удалить заявки отправленные в работу";
+                ViewBag.ErrorTitle = "Ошибка";
+                return View("~/Views/Error/Error.cshtml");
             }
         }
 
@@ -410,7 +466,9 @@ namespace HelpDesk.Web.Controllers
             }
             else
             {
-                return Content("Редактировать заявки отправленные в работу запрещено.");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Редактировать заявки отправленные в работу запрещено.";
+                return View("~/Views/Error/Error.cshtml");
             }
         }
 
@@ -490,13 +548,17 @@ namespace HelpDesk.Web.Controllers
             var getRequestModel = await _requestsService.GetRequestByIdAsync(requestId);
             if (getRequestModel is null)
             {
-                return Content("Заявка не найдена.");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Заявка не найдена.";
+                return View("~/Views/Error/Error.cshtml");
             }
 
             var status = await _statusService.GetStatusByIdAsync(statusId);
             if (status is null)
             {
-                return Content("Статус не найден.");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Статус не найден.";
+                return View("~/Views/Error/Error.cshtml");
             }
 
             await _requestsService.ChangeStatusAsync(getRequestModel, status.Id);
@@ -530,7 +592,9 @@ namespace HelpDesk.Web.Controllers
                 var requestId = Id;
                 return RedirectToAction("GetRequest", "Request", new { requestId });
             }
-            return Content("Ошибка, не найден текст комментария");
+            ViewBag.ErrorTitle = "Ошибка";
+            ViewBag.ErrorMessage = "Не найден текст комментария.";
+            return View("~/Views/Error/Error.cshtml");
         }
     }
 }

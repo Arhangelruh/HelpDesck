@@ -55,12 +55,14 @@ namespace HelpDesk.Web.Controllers
                         Access = status.Access
                     });
                 }
-                
-                return View(models.OrderBy(model=>model.Queue));
+
+                return View(models.OrderBy(model => model.Queue));
             }
             else
             {
-                return Content("Статусы не найдены");
+                ViewBag.ErrorTitle = "Ошибка";
+                ViewBag.ErrorMessage = "Статусы не найдены.";
+                return View("~/Views/Error/Error.cshtml");
             }
         }
 
@@ -223,7 +225,7 @@ namespace HelpDesk.Web.Controllers
                         ModelState.AddModelError("Error", "Менять очередность и доступность на статусах первой и второй очередности нельзя.");
                         return View(model);
                     }
-                }                
+                }
             }
             return View(model);
         }
@@ -253,7 +255,7 @@ namespace HelpDesk.Web.Controllers
             else
             {
                 return Json("error");
-            }          
+            }
         }
     }
 }

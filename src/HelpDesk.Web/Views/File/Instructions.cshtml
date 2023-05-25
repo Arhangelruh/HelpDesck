@@ -1,0 +1,70 @@
+﻿@model List<InstructionViewModel>
+
+	<div class="instructions_container">
+		
+		<div class = "upload_instruction"></div>
+	@if (!Model.Any())
+	{
+		<p class="empty_instruction_list">Нет загруженных инструкций.</p>
+	}
+	else{
+	<div class="instruction_list">
+		<table class="instructions_table">
+			<tr>
+				<th>Путь</th>
+				<th>Имя файла</th>
+				<th></th>
+				<th></th>
+			</tr>
+	          
+			@foreach (var item in Model){					
+			<tr>
+				<td>@item.FilePath</td>
+					<td>@item.FileName</td>
+					<td><a href="@item.FilePath"><img class="img_icon" title="Загрузить" src="/images/Paper Download.svg" /></a></td>
+					<td>
+						<a asp-controller="File" asp-action="DeleteInstruction" asp-route-instructionName="@item.FileName">
+							<img class="img_icon" title="Удалить" src="/images/Delete.svg" />
+						</a>
+				    </td>
+			</tr>
+	        }
+		</table>
+	    </div>
+		}
+	<output class="result" name="result"></output>
+	  
+	<div class="upload_form">
+		<form id="upload-container" class="added_file_form">
+		<input id="FileUpload_FormFile" type="file" />
+			<label class="choise_file" for="FileUpload_FormFile">Выберите файл</label>	
+	    </form>
+	
+		<div class="upload_instruction_info">
+			
+			<button class="addinstruction_button revert_instruction_button" type="reset" title="Отменить">
+				<div class="addfile_button_img">
+					<img src="~/images/Delete_file.svg">
+					<div class="addfile_text_img">Отменить</div>
+				</div>
+			</button>
+			
+			<label class="file_name">Файл не выбран</label>
+			
+			<button class="addinstruction_button confirm_instruction_button" id="addmyfile" type="submit" title="Добавить">		
+				<div class="addfile_button_img">
+				<img src="~/images/Add_file.svg">
+				<div class="addfile_text_img">Добавить</div>
+				</div>
+		    </button>
+	    </div>
+	</div>
+</div>
+
+@section css {
+	<link href="~/css/FAQ.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section js {
+    <script src="~/js/addinstruction.js" asp-append-version="true"></script>
+}

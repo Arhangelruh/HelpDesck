@@ -31,13 +31,13 @@ namespace HelpDesk.BLL.Interfaces
         /// Get file.
         /// </summary>
         /// <param name="id">id file</param>
-        Task <FileDto> GetFileAsync(int id);
+        Task<FileDto> GetFileAsync(int id);
 
         /// <summary>
         /// Get files.
         /// </summary>
         /// <param name="id">id file</param>
-        Task <List<FileDto>> GetFilesAsync(int problemId);
+        Task<List<FileDto>> GetFilesAsync(int problemId);
 
         /// <summary>
         /// Get files without body file.

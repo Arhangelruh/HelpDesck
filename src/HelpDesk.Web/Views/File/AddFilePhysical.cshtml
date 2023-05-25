@@ -1,0 +1,13 @@
+﻿@model UploadInstructionViewModel
+
+
+<form class="forms" method="post" asp-controller="Profile" asp-action="EditProfile">
+    <div class="formslabel">
+        <label asp-for="Name">name</label><br />
+        <span asp-validation-for="Name" class="text_error"></span>
+    </div>
+    <div class="formslabel">
+        <label asp-for="FileBody">Имя</label><br />        
+        <span asp-validation-for="FileBody" class="text_error"></span>
+    </div>
+</form>

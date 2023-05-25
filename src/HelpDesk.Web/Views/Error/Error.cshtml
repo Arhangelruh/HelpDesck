@@ -1,0 +1,19 @@
+﻿@if (ViewBag.ErrorTitle == null)
+{
+    <div class="error_mesage">
+    <h3>
+        Ошибка запроса, пожалуйста свяжитесь со службой технической поддержки.
+    </h3>
+    </div>
+}
+else
+{
+    <div class="error_mesage">
+    <h1 class="error_title">@ViewBag.ErrorTitle</h1>
+    <h3 class="error_text">@ViewBag.ErrorMessage</h3>
+    </div>
+}
+
+@section css {
+    <link href="~/css/error.css" rel="stylesheet" asp-append-version="true" />
+}

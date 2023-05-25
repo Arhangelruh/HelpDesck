@@ -350,3 +350,4 @@ MigrationBackup/
 .ionide/
 /src/HelpDeskTest
 src/HelpDesk.Common/Constants/EmailConstants.cs
+/src/HelpDesk.Web/wwwroot/instructions/

@@ -1,0 +1,22 @@
+﻿@model FAQTopicViewModel
+
+<div class="text_error message">
+    @Html.ValidationMessage("Error")
+</div>
+
+
+
+<form class="forms" method="post" asp-controller="FAQ" asp-action="AddFAQTopic">
+    <div class="formslabel">
+        <label asp-for="Topic">Тема</label><br />
+        <input class="formsfield" asp-for="Topic" />
+        <span asp-validation-for="Topic" class="text_error"></span>
+    </div>
+    <div class="formslabel forms_button">
+        <input class="button_classic" type="submit" value="Сохранить" />
+    </div>
+</form>
+
+@section css {
+    <link href="~/css/FAQ.css" rel="stylesheet" asp-append-version="true" />
+}

@@ -1,0 +1,55 @@
+﻿@using HelpDesk.Common.Constants;
+@model List<FAQViewModel>
+@using HelpDesk.Web.Services;
+
+   <div class="faq-container">
+    <h1 class="heading-primary">На этой странице вы сможете найдти ответы на наиболее частые вопросы по теме @ViewBag.NameTopic</h1>
+        <div class="accordion">
+        <dl>
+            @if (User.IsInRole(UserConstants.AdminRole))
+            {
+              <dt>
+                    <a class="accordionTitle accordionOtherGreen" asp-controller="FAQ" asp-action="AddFAQ" asp-route-topicId="@ViewBag.IdTopic">Создать новую запись</a>
+              </dt>
+            }
+    @if(!Model.Any()){
+                <dt class="accordionOther" style="">
+                    Записи не найдены
+                </dt>
+    }
+    else{
+        @foreach(var faq in Model){
+                    if (User.IsInRole(UserConstants.AdminRole))
+                    {
+                       <dt class="accordion_edit">
+                            <a class="extrafunction green" asp-controller="FAQ" asp-action="EditFAQ" asp-route-faqId="@faq.Id">
+                            <img title="Изменить" src="/images/Edit.svg" />
+                        </a>
+                        <a class="extrafunction red" asp-controller="FAQ" asp-action="DeleteFAQ" asp-route-faqId="@faq.Id">
+                            <img title="Удалить" src="/images/Delete.svg" />
+                        </a>                        
+                       </dt>
+                    }
+                    <dt class="accordionTheme">
+                        <a href="#accordion+@faq.Id" aria-expanded="false" aria-controls="accordion+@faq.Id" class="accordion-title accordionTitle js-accordionTrigger">
+                               @faq.FAQTheme                               
+                        </a>                                                
+                    </dt>                    
+                    <dd class="accordion-content accordionItem is-collapsed" id="accordion+@faq.Id" aria-hidden="true">
+                        <p class="accordionAnswer">
+                        <instruction tagtext="@faq.FAQAnswer"></instruction>
+                        </p>
+                    </dd>
+                 }
+        }
+        </dl>
+    </div>
+</div>
+
+@section css {
+    <link href="~/css/FAQ.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section js{
+    <script src="~/js/FAQtable.js"></script>
+}

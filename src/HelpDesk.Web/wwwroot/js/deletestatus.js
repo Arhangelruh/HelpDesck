@@ -18,19 +18,21 @@ async function deleteRequest(){
     .then(responce => responce.json())
         if (responce == "error"){              
       var checkdiv =  el.querySelector(".tooltiptext");
+      if(checkdiv == null){              
       let addblock = document.createElement('div')
-      addblock.innerHTML = "Удаление статуса не возможно пока есть заявки в этом статусе";
-      // addblock.innerHTML = "You can't delete Status. Becouse find request whith this status.";
+      addblock.innerHTML = "Удаление статуса не возможно пока есть заявки в этом статусе.";
+      // addblock.innerHTML = "You can't delete Status. Because find request whith this status.";
       addblock.className = "tooltiptext";
-      addblock.style.display="inline";
-
-    el.append(addblock);
-    document.onmouseout = function(e){
-        if(addblock){            
-            el.removeChild(addblock);
+      addblock.style.display="inline";          
+      el.append(addblock);
+      
+      document.onmouseout = function(e){
+        if(addblock){                      
+            el.removeChild(addblock);            
             addblock = null;
         }
-      } 
+      }   
+     }        
     }
     else{
        window.location.href='/Status/Statuses'

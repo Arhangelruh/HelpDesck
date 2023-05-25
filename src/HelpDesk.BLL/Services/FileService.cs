@@ -29,10 +29,10 @@ namespace HelpDesk.BLL.Services
 
             var newFile = new SavedFile
             {
-                ProblemId = fileDto.ProblemId,               
+                ProblemId = fileDto.ProblemId,
                 Name = fileDto.Name,
                 ContentType = fileDto.ContentType,
-                FileBody = fileDto.FileBody                
+                FileBody = fileDto.FileBody
             };
 
             await _repositoryFiles.AddAsync(newFile);
@@ -41,12 +41,12 @@ namespace HelpDesk.BLL.Services
 
         public async Task DeleteFileAsync(int id)
         {
-            var file = await _repositoryFiles.GetEntityWithoutTrackingAsync(file => file.Id == id);               
+            var file = await _repositoryFiles.GetEntityWithoutTrackingAsync(file => file.Id == id);
 
             if (file != null)
             {
-                    _repositoryFiles.Delete(file);
-                    await _repositoryFiles.SaveChangesAsync();                
+                _repositoryFiles.Delete(file);
+                await _repositoryFiles.SaveChangesAsync();
             }
         }
 
@@ -104,13 +104,14 @@ namespace HelpDesk.BLL.Services
             {
                 foreach (var file in files)
                 {
-                    filesDto.Add(new FileDto{
-                    Id = file.Id,
-                    Name = file.Name,
-                    ContentType = file.ContentType,
-                    FileBody = file.FileBody
+                    filesDto.Add(new FileDto
+                    {
+                        Id = file.Id,
+                        Name = file.Name,
+                        ContentType = file.ContentType,
+                        FileBody = file.FileBody
                     });
-                }               
+                }
             }
             return filesDto;
         }

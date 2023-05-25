@@ -50,6 +50,11 @@ namespace HelpDesk.DAL.Context
         /// </summary>
         public DbSet<SavedFile> SavedFile { get; set; }
 
+        /// <summary>
+        /// FAQs.
+        /// </summary>
+        public DbSet<FAQ> FAQ { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder = modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder));
@@ -60,6 +65,7 @@ namespace HelpDesk.DAL.Context
             modelBuilder.ApplyConfiguration(new UserProblemConfiguration());
             modelBuilder.ApplyConfiguration(new CommentsConfiguration());
             modelBuilder.ApplyConfiguration(new SavedFileConfiguration());
+            modelBuilder.ApplyConfiguration(new FAQConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

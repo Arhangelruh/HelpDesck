@@ -31,7 +31,7 @@ namespace HelpDesk.Web.ViewModels
         /// Ip adress.
         /// </summary>
         public string Ip { get; set; }
-        
+
         /// <summary>
         /// Creator.
         /// </summary>
@@ -55,7 +55,7 @@ namespace HelpDesk.Web.ViewModels
         /// <summary>
         /// Incoming date.
         /// </summary>
-        public string IncomingDate { get; set; }
+        public DateTime IncomingDate { get; set; }
 
     }
 }

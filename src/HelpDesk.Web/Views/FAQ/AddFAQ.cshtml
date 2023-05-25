@@ -1,0 +1,44 @@
+﻿@model FAQViewModel
+
+<div class="add_faq_container">
+    <div class="faq_info">
+        <img class="faq_help" src="~/images/circle-help.svg">
+        <div class="faq_info_text">            
+            Вы можете добавлять в текст ссылки на инструкции, подробнее об этом можно почитать
+            <a asp-controller="FAQ" asp-action="InstructionInfo">здесь</a>.
+        </div>
+        <div>
+            <a asp-controller="File" asp-action="Instructions">
+                Список
+            </a>
+            всех загруженных инструкций.
+        </div>
+    </div>
+
+    <div class="add_faq">
+<div class="text_error message">
+    @Html.ValidationMessage("Error")
+</div>
+
+<form class="add_faq_form forms" method="post" asp-controller="FAQ" asp-action="AddFAQ">
+    <input type="hidden" asp-for="FAQTopic" />
+    <div class="formslabel">
+        <label asp-for="FAQTheme">Тема</label><br />
+        <input class="formsfield" asp-for="FAQTheme" />
+        <span asp-validation-for="FAQTheme" class="text_error"></span>
+    </div>   
+    <div class="formslabel">
+        <label  asp-for="FAQAnswer">Описание</label><br />
+        <textarea class="formsfield"  rows="12" asp-for="FAQAnswer"></textarea>
+        <span asp-validation-for="FAQAnswer" class="text_error"></span>
+    </div>
+    <div class="formslabel forms_button">
+        <input class="button_classic" type="submit" value="Сохранить" />
+    </div>
+</form>
+</div>
+</div>
+
+@section css {
+    <link href="~/css/FAQ.css" rel="stylesheet" asp-append-version="true" />
+}

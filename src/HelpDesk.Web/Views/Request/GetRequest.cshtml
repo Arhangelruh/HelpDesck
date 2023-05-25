@@ -124,26 +124,15 @@
     </ol>
 </div>
 }
+
+<div class="request_body">
 <div class="container_request">
     <div class="description_request">
         <div class="requestadress">IP адрес: @Model.Ip</div>
         <div class="name_field">Описание</div>
         <div class="description">@Model.Description</div>
     </div>
-    <div class="users_request">
-        <div class="autor_request">
-            Автор:
-            @Model.Creator
-        </div>
-        <div class="admin_request">
-            В работе:
-            @Model.Admin
-        </div>
-    </div>
-</div>
-<div class="request_files">
-
-</div>
+    
 <div class="request_comments">
     @if (Model.Comments.Any())
     {
@@ -192,6 +181,30 @@
      </form>
  </div>
     </div>
+</div>
+<div class="request_extra">
+		<div class="users_request">
+			<div class="autor_request">
+				Автор:
+				@Model.Creator
+			</div>
+			<div class="admin_request">
+				В работе:
+				@Model.Admin
+			</div>
+		</div>
+		<div class="request_chat"> 
+            <input type="hidden" id="userName" value="@User.Identity.Name" />
+            <input type="hidden" id="userGroup" value="@Model.Id" />
+                <div class="chat_message">
+                    <div class="chat_message_name">Чат:</div>
+                    <div class="chat_message_text"><input type="text" id="message"/></div>
+                </div>
+            <div class="chat_list" id="chatroom"></div>
+        </div>
+</div>
+
+</div>
    
     @section css {
         <link href="~/css/request.css" rel="stylesheet" asp-append-version="true" />
@@ -200,4 +213,6 @@
     @section js {
         <script src="~/js/comments.js" asp-append-version="true"></script>
         <script src="~/js/addfile.js" asp-append-version="true"></script>
+        <script src="~/js/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
+        <script src="~/js/chat.js" asp-append-version="true"></script>
     }

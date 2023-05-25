@@ -14,13 +14,13 @@ namespace HelpDesk.BLL.Interfaces
         /// Get users from Active Directory.
         /// </summary>
         /// <returns>Active users list.</returns>
-        Task <List<UserDto>> ADGetUsers();
+        Task<List<UserDto>> ADGetUsers();
 
         /// <summary>
         /// Build Sid number from binary data
         /// </summary>
         /// <param name="sid"></param>
         /// <returns>string SID</returns>
-        Task <string> BuildOctetString(SecurityIdentifier sid);
+        Task<string> BuildOctetString(SecurityIdentifier sid);
     }
 }
